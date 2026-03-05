@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="purple_main">#3F3D89</color>
+    <color name="purple_light">#E0E0FF</color>
+    <color name="orange_accent">#F9A825</color>
+    <color name="gray_bg">#F8F9FA</color>
+    <color name="gray_text">#757575</color>
+    <color name="blue_icon">#1A237E</color>
+    <color name="red_icon">#C62828</color>
+    <color name="green_status">#4CAF50</color>
+    <color name="purple_badge">#F3E5F5</color>
+    <color name="purple_badge_text">#7E57C2</color>
+</resources>
