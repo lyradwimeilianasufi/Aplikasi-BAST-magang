@@ -12,5 +12,18 @@
 
         <!-- Apply Barlow Semi Condensed as default font family -->
         <item name="android:fontFamily">@font/barlow_semi_condensed</item>
+
+        <!-- Gunakan Style khusus untuk BottomNavigationView -->
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <!-- Menghilangkan indikator (lingkaran di belakang ikon aktif) secara aman -->
+        <item name="itemActiveIndicatorStyle">@style/Widget.App.BottomNavigationView.ActiveIndicator</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@android:color/transparent</item>
+        <item name="android:height">0dp</item>
     </style>
 </resources>
