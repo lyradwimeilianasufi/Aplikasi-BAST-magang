@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_beranda"
-        android:icon="@drawable/ic_home_page"
+        android:icon="@drawable/ic_beranda"
         android:title="Beranda" />
     <item
         android:id="@+id/nav_kehadiran"
-        android:icon="@drawable/ic_presence"
+        android:icon="@drawable/ic_kehadiran"
         android:title="Kehadiran" />
     <item
         android:id="@+id/nav_riwayat"
-        android:icon="@drawable/ic_history"
+        android:icon="@drawable/ic_riwayat"
         android:title="Riwayat" />
     <item
         android:id="@+id/nav_akun"
