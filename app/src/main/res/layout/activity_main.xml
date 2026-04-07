@@ -204,6 +204,7 @@
 
                 <!-- Masuk -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnAbsenMasukMain"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -211,7 +212,9 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="1dp"
-                    app:strokeColor="#EEEEEE">
+                    app:strokeColor="#EEEEEE"
+                    android:clickable="true"
+                    android:focusable="true">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -261,6 +264,7 @@
 
                 <!-- Keluar -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnAbsenKeluarMain"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -696,7 +700,7 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         app:itemIconSize="28dp"
         app:itemIconTint="@color/bnv_tab_item_color"
