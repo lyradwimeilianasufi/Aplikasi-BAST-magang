@@ -4,6 +4,8 @@
 
     <uses-feature android:name="android.hardware.camera.any" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".MainApplication"
@@ -29,6 +31,20 @@
             android:name=".CameraAbsenActivity"
             android:exported="false"
             android:theme="@style/Theme.AplikasiBAST.NoActionBar" />
+
+        <activity
+            android:name=".LocationAbsenActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".PreviewFotoAbsenActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AplikasiBAST.NoActionBar" />
+
+        <activity
+            android:name=".SuccessAbsenActivity"
+            android:exported="false"
+            android:theme="@style/Theme.App.Transparent" />
 
     </application>
 
