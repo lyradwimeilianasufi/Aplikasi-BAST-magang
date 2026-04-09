@@ -673,7 +673,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Maintenance"
+                                android:text="Perbaikan"
                                 android:textSize="12sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -691,7 +691,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="CCTV (3 Unit)"
+                                android:text="N90 (2 Unit)"
                                 android:textSize="12sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
