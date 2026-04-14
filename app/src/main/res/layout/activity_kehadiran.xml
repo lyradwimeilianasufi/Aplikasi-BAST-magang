@@ -237,7 +237,7 @@
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/historyHeader">
 
-                <!-- Item Hadir (Jumat) -->
+                <!-- Item 1 (Jumat) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -303,10 +303,10 @@
                                     android:orientation="horizontal">
 
                                     <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:background="@drawable/bg_circle_icon_blue"
-                                        android:padding="8dp"
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_circle_blue"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_arrow_down_left"
                                         app:tint="@color/white" />
 
@@ -341,10 +341,10 @@
                                     android:orientation="horizontal">
 
                                     <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:background="@drawable/bg_circle_icon_red"
-                                        android:padding="8dp"
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_circle_red"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_arrow_up_right"
                                         app:tint="@color/white" />
 
@@ -384,7 +384,7 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Item Izin (Kamis) -->
+                <!-- Item 2 (Kamis) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -450,10 +450,10 @@
                                     android:orientation="horizontal">
 
                                     <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:background="@drawable/bg_circle_icon_blue"
-                                        android:padding="8dp"
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_circle_blue"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_arrow_down_left"
                                         app:tint="@color/white" />
 
@@ -488,10 +488,10 @@
                                     android:orientation="horizontal">
 
                                     <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:background="@drawable/bg_circle_icon_red"
-                                        android:padding="8dp"
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_circle_red"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_arrow_up_right"
                                         app:tint="@color/white" />
 
@@ -531,7 +531,7 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Item Alpa (Rabu) -->
+                <!-- Item 3 (Rabu) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -597,10 +597,10 @@
                                     android:orientation="horizontal">
 
                                     <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:background="@drawable/bg_circle_icon_blue"
-                                        android:padding="8dp"
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_circle_blue"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_arrow_down_left"
                                         app:tint="@color/white" />
 
@@ -635,10 +635,10 @@
                                     android:orientation="horizontal">
 
                                     <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:background="@drawable/bg_circle_icon_red"
-                                        android:padding="8dp"
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_circle_red"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_arrow_up_right"
                                         app:tint="@color/white" />
 
@@ -678,7 +678,7 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Item Hadir (Selasa) -->
+                <!-- Item 4 (Selasa) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -744,10 +744,10 @@
                                     android:orientation="horizontal">
 
                                     <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:background="@drawable/bg_circle_icon_blue"
-                                        android:padding="8dp"
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_circle_blue"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_arrow_down_left"
                                         app:tint="@color/white" />
 
@@ -782,10 +782,10 @@
                                     android:orientation="horizontal">
 
                                     <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:background="@drawable/bg_circle_icon_red"
-                                        android:padding="8dp"
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_circle_red"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_arrow_up_right"
                                         app:tint="@color/white" />
 
@@ -825,7 +825,7 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Item Hadir (Senin) -->
+                <!-- Item 5 (Senin) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -891,10 +891,10 @@
                                     android:orientation="horizontal">
 
                                     <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:background="@drawable/bg_circle_icon_blue"
-                                        android:padding="8dp"
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_circle_blue"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_arrow_down_left"
                                         app:tint="@color/white" />
 
@@ -929,10 +929,10 @@
                                     android:orientation="horizontal">
 
                                     <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:background="@drawable/bg_circle_icon_red"
-                                        android:padding="8dp"
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:background="@drawable/bg_circle_red"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_arrow_up_right"
                                         app:tint="@color/white" />
 
