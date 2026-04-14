@@ -320,7 +320,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Absen Masuk"
-                                            android:textColor="#757575"
+                                            android:textColor="@color/black"
                                             android:textSize="11sp" />
 
                                         <TextView
@@ -358,7 +358,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Absen Keluar"
-                                            android:textColor="#757575"
+                                            android:textColor="@color/black"
                                             android:textSize="11sp" />
 
                                         <TextView
@@ -372,14 +372,28 @@
                                 </LinearLayout>
                             </LinearLayout>
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="12dp"
-                                android:text="Total Jam Kerja : 9 Jam 45 Menit"
-                                android:textColor="#757575"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Total Jam Kerja "
+                                    android:textColor="#757575"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="9 Jam 45 Menit"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -467,7 +481,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Absen Masuk"
-                                            android:textColor="#757575"
+                                            android:textColor="@color/black"
                                             android:textSize="11sp" />
 
                                         <TextView
@@ -505,7 +519,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Absen Keluar"
-                                            android:textColor="#757575"
+                                            android:textColor="@color/black"
                                             android:textSize="11sp" />
 
                                         <TextView
@@ -519,14 +533,28 @@
                                 </LinearLayout>
                             </LinearLayout>
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="12dp"
-                                android:text="Total Jam Kerja : -"
-                                android:textColor="#757575"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Total Jam Kerja "
+                                    android:textColor="#757575"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="-"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -614,7 +642,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Absen Masuk"
-                                            android:textColor="#757575"
+                                            android:textColor="@color/black"
                                             android:textSize="11sp" />
 
                                         <TextView
@@ -652,7 +680,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Absen Keluar"
-                                            android:textColor="#757575"
+                                            android:textColor="@color/black"
                                             android:textSize="11sp" />
 
                                         <TextView
@@ -666,14 +694,28 @@
                                 </LinearLayout>
                             </LinearLayout>
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="12dp"
-                                android:text="Total Jam Kerja : -"
-                                android:textColor="#757575"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Total Jam Kerja "
+                                    android:textColor="#757575"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="-"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -761,7 +803,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Absen Masuk"
-                                            android:textColor="#757575"
+                                            android:textColor="@color/black"
                                             android:textSize="11sp" />
 
                                         <TextView
@@ -799,7 +841,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Absen Keluar"
-                                            android:textColor="#757575"
+                                            android:textColor="@color/black"
                                             android:textSize="11sp" />
 
                                         <TextView
@@ -813,14 +855,28 @@
                                 </LinearLayout>
                             </LinearLayout>
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="12dp"
-                                android:text="Total Jam Kerja : 9 Jam 45 Menit"
-                                android:textColor="#757575"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Total Jam Kerja "
+                                    android:textColor="#757575"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="9 Jam 45 Menit"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -908,7 +964,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Absen Masuk"
-                                            android:textColor="#757575"
+                                            android:textColor="@color/black"
                                             android:textSize="11sp" />
 
                                         <TextView
@@ -946,7 +1002,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Absen Keluar"
-                                            android:textColor="#757575"
+                                            android:textColor="@color/black"
                                             android:textSize="11sp" />
 
                                         <TextView
@@ -960,14 +1016,28 @@
                                 </LinearLayout>
                             </LinearLayout>
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="12dp"
-                                android:text="Total Jam Kerja : 9 Jam 45 Menit"
-                                android:textColor="#757575"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Total Jam Kerja "
+                                    android:textColor="#757575"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="9 Jam 45 Menit"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
