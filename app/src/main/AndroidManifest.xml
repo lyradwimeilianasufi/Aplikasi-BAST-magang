@@ -28,6 +28,10 @@
         </activity>
 
         <activity
+            android:name=".RiwayatKehadiranActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".CameraAbsenActivity"
             android:exported="false"
             android:theme="@style/Theme.AplikasiBAST.NoActionBar" />
