@@ -42,7 +42,6 @@
             app:layout_constraintStart_toEndOf="@id/btnBack"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Garis Abu-abu Pembatas Toolbar -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -63,7 +62,7 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Work Info Card -->
+            <!-- Work Info Card (Aligned Implementation, No Middle Divider) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,7 +120,7 @@
                         app:layout_constraintStart_toStartOf="@id/labelTanggal"
                         app:layout_constraintTop_toBottomOf="@id/labelTanggal" />
 
-                    <!-- Jam Kerja Section -->
+                    <!-- Jam Kerja Section (Aligned horizontal with Tanggal) -->
                     <ImageView
                         android:id="@+id/ivClock"
                         android:layout_width="20dp"
@@ -210,7 +209,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- GARIS ABU-ABU DI BAWAH TOTAL JAM (Warna disesuaikan agar terlihat) -->
+            <!-- Garis Abu-abu Terang di bawah Total Jam Kerja -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -329,7 +328,7 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- DETAIL ABSEN KELUAR -->
+            <!-- DETAIL ABSEN KELUAR Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
