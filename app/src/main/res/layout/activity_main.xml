@@ -254,6 +254,7 @@
                             android:textSize="14sp"
                             android:textStyle="bold" />
                         <ImageView
+                            android:id="@+id/icFingerIn"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_alignParentEnd="true"
@@ -272,7 +273,9 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="1dp"
-                    app:strokeColor="#EEEEEE">
+                    app:strokeColor="#EEEEEE"
+                    android:clickable="true"
+                    android:focusable="true">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -312,6 +315,7 @@
                             android:textSize="14sp"
                             android:textStyle="bold" />
                         <ImageView
+                            android:id="@+id/icFingerOut"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_alignParentEnd="true"

@@ -18,28 +18,40 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // 1. Aktifkan Edge-to-Edge
         enableEdgeToEdge()
         
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
-        // 2. Handle Insets secara spesifik
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            
-            // Berikan padding atas ke root agar tidak tertutup Status Bar
             v.updatePadding(top = systemBars.top)
-            
-            // Berikan padding bawah KHUSUS ke BottomNavigationView 
-            // agar ikon tidak tertutup tombol navigasi sistem (ada yang menutupi)
             binding.bottomNavigation.updatePadding(bottom = systemBars.bottom)
-            
             insets
         }
 
         setupUI()
         setupListeners()
+        
+        // Cek apakah baru saja kembali dari absen berhasil
+        checkShowSuccessPopup()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        checkShowSuccessPopup()
+    }
+
+    private fun checkShowSuccessPopup() {
+        if (intent.getBooleanExtra("SHOW_SUCCESS_POPUP", false)) {
+            // Tampilkan popup sukses di atas MainActivity
+            val successIntent = Intent(this, SuccessAbsenActivity::class.java)
+            startActivity(successIntent)
+            
+            // Hapus flag agar tidak muncul berulang
+            intent.removeExtra("SHOW_SUCCESS_POPUP")
+        }
     }
 
     private fun setupUI() {
@@ -52,7 +64,36 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         binding.btnAbsenMasukMain.setOnClickListener {
-            startActivity(Intent(this, LocationAbsenActivity::class.java))
+            navigateToLocationAbsen()
         }
+
+        binding.icFingerIn.setOnClickListener {
+            navigateToLocationAbsen()
+        }
+
+        binding.btnAbsenKeluarMain.setOnClickListener {
+            navigateToLocationAbsen()
+        }
+        
+        binding.icFingerOut.setOnClickListener {
+            navigateToLocationAbsen()
+        }
+
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_beranda -> true
+                R.id.nav_riwayat -> {
+                    startActivity(Intent(this, RiwayatKehadiranActivity::class.java))
+                    true
+                }
+                R.id.nav_akun -> true
+                else -> false
+            }
+        }
+    }
+
+    private fun navigateToLocationAbsen() {
+        val intent = Intent(this, LocationAbsenActivity::class.java)
+        startActivity(intent)
     }
 }

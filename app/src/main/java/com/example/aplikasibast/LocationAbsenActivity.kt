@@ -1,5 +1,6 @@
 package com.example.aplikasibast
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +24,18 @@ class LocationAbsenActivity : AppCompatActivity() {
             insets
         }
 
+        setupListeners()
+    }
+
+    private fun setupListeners() {
         binding.btnBack.setOnClickListener {
             finish()
+        }
+
+        // Navigasi dari tombol ABSEN MASUK ke CameraAbsenActivity
+        binding.btnAbsenMasuk.setOnClickListener {
+            val intent = Intent(this, CameraAbsenActivity::class.java)
+            startActivity(intent)
         }
     }
 }

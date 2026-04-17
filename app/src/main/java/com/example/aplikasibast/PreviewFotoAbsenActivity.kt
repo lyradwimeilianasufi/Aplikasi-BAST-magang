@@ -1,8 +1,11 @@
 package com.example.aplikasibast
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.aplikasibast.databinding.ActivityPreviewFotoAbsenBinding
+import java.io.File
 
 class PreviewFotoAbsenActivity : AppCompatActivity() {
 
@@ -13,14 +16,24 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
         binding = ActivityPreviewFotoAbsenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Logika saat tombol X ditekan (kembali ke kamera)
+        val photoPath = intent.getStringExtra("FILE_PATH")
+        if (photoPath != null) {
+            val photoFile = File(photoPath)
+            if (photoFile.exists()) {
+                binding.ivPreview.setImageURI(Uri.fromFile(photoFile))
+            }
+        }
+
         binding.btnCancel.setOnClickListener {
             finish()
         }
 
-        // Logika saat tombol Check ditekan (simpan absen)
         binding.btnConfirm.setOnClickListener {
-            // Tambahkan logika simpan atau kirim ke server di sini
+            // Kembali ke MainActivity dan beri sinyal untuk menampilkan popup sukses
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.putExtra("SHOW_SUCCESS_POPUP", true)
+            startActivity(intent)
             finish()
         }
     }

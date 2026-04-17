@@ -1,5 +1,6 @@
 package com.example.aplikasibast
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,14 +16,23 @@ class SuccessAbsenActivity : AppCompatActivity() {
         binding = ActivitySuccessAbsenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Otomatis menutup popup setelah 2 detik dan kembali ke halaman sebelumnya
+        // Otomatis kembali ke beranda setelah 2 detik
         Handler(Looper.getMainLooper()).postDelayed({
-            finish()
+            goToMainActivity()
         }, 2000)
         
-        // Klik pada area transparan atau popup juga akan menutupnya
+        // Klik pada area popup juga akan langsung ke beranda
         binding.root.setOnClickListener {
-            finish()
+            goToMainActivity()
         }
+    }
+
+    private fun goToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        // FLAG_ACTIVITY_CLEAR_TOP akan menghapus semua activity di atas MainActivity (Lokasi, Kamera, Preview)
+        // FLAG_ACTIVITY_SINGLE_TOP memastikan MainActivity yang lama dipanggil kembali (tidak buat baru)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+        finish()
     }
 }
