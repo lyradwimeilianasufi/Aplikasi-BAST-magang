@@ -79,9 +79,19 @@ class MainActivity : AppCompatActivity() {
             navigateToLocationAbsen()
         }
 
+        // Navigasi "Lihat Semua" di bagian Tiket Aktif
+        binding.tvLihatSemuaTiket.setOnClickListener {
+            // Placeholder: Arahkan ke halaman tiket jika sudah ada
+            // startActivity(Intent(this, RiwayatTiketActivity::class.java))
+        }
+
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_beranda -> true
+                R.id.nav_kehadiran -> {
+                    startActivity(Intent(this, KehadiranActivity::class.java))
+                    true
+                }
                 R.id.nav_riwayat -> {
                     startActivity(Intent(this, RiwayatKehadiranActivity::class.java))
                     true

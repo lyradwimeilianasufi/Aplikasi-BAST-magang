@@ -28,6 +28,10 @@
         </activity>
 
         <activity
+            android:name=".KehadiranActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".RiwayatKehadiranActivity"
             android:exported="false" />
 
