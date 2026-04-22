@@ -40,6 +40,14 @@
             android:exported="false" />
 
         <activity
+            android:name=".ApprovalIzinActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DetailPengajuanIzinActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".CameraAbsenActivity"
             android:exported="false"
             android:theme="@style/Theme.AplikasiBAST.NoActionBar" />
