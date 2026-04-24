@@ -54,8 +54,10 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.extensions)
     
-    // Google Maps
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    // OpenStreetMap
+    implementation(libs.osmdroid.android)
+    
+    // Google Services for Location only
     implementation("com.google.android.gms:play-services-location:21.3.0")
     
     // Koin

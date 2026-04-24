@@ -5,16 +5,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.aplikasibast.databinding.ActivityApprovalIzinBinding
+import com.example.aplikasibast.databinding.ActivityApprovalIzinDitolakBinding
 
-class DaftarApprovalIzinActivity : AppCompatActivity() {
+class ApprovalIzinDitolakActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityApprovalIzinBinding
+    private lateinit var binding: ActivityApprovalIzinDitolakBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityApprovalIzinBinding.inflate(layoutInflater)
+        binding = ActivityApprovalIzinDitolakBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
