@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Label Tanggal -->
         <TextView
             android:id="@+id/lblTanggalPengajuan"
             android:layout_width="wrap_content"
@@ -24,7 +23,6 @@
             android:text="Tanggal Pengajuan"
             android:textColor="#BDBDBD"
             android:textSize="12sp"
-            android:letterSpacing="-0.01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,7 +36,6 @@
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:letterSpacing="-0.01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuan" />
 
@@ -66,7 +63,6 @@
             android:background="#F0F0F0"
             app:layout_constraintTop_toBottomOf="@id/tvTanggalPengajuan" />
 
-        <!-- Nama Teknisi -->
         <TextView
             android:id="@+id/lblNamaTeknisi"
             android:layout_width="wrap_content"
@@ -76,7 +72,6 @@
             android:text="Nama Teknisi"
             android:textColor="#BDBDBD"
             android:textSize="12sp"
-            android:letterSpacing="-0.01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dividerItem" />
 
@@ -86,15 +81,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:fontFamily="@font/barlow_semi_condensed"
-            android:text="Trisnuadi"
+            android:text="Trisnualdi"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:letterSpacing="-0.01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lblNamaTeknisi" />
 
-        <!-- Jenis Izin -->
         <TextView
             android:id="@+id/lblJenisIzin"
             android:layout_width="wrap_content"
@@ -104,7 +97,6 @@
             android:text="Jenis Izin"
             android:textColor="#BDBDBD"
             android:textSize="12sp"
-            android:letterSpacing="-0.01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvNamaTeknisi" />
 
@@ -118,11 +110,9 @@
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:letterSpacing="-0.01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lblJenisIzin" />
 
-        <!-- Periode Izin -->
         <TextView
             android:id="@+id/lblPeriodeIzin"
             android:layout_width="wrap_content"
@@ -132,7 +122,6 @@
             android:text="Periode Izin"
             android:textColor="#BDBDBD"
             android:textSize="12sp"
-            android:letterSpacing="-0.01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvJenisIzin" />
 
@@ -147,20 +136,18 @@
             android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:letterSpacing="-0.01"
             app:layout_constraintEnd_toStartOf="@id/layoutDuration"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lblPeriodeIzin" />
 
-        <!-- Box Durasi -->
         <LinearLayout
             android:id="@+id/layoutDuration"
-            android:layout_width="65dp"
-            android:layout_height="0dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:background="#F5F5F5"
             android:gravity="center"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/tvPeriodeIzin"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/lblJenisIzin">
 
@@ -170,7 +157,7 @@
                 android:fontFamily="@font/barlow_semi_condensed"
                 android:text="2"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -179,9 +166,8 @@
                 android:fontFamily="@font/barlow_semi_condensed"
                 android:text="Hari"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="11sp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </com.google.android.material.card.MaterialCardView>
