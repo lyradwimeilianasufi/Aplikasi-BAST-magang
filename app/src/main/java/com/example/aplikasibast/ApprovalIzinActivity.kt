@@ -45,17 +45,7 @@ class ApprovalIzinActivity : AppCompatActivity() {
     }
 
     private fun updateTabs(position: Int) {
-        // Simple logic to change tab appearance
-        binding.tabPengajuan.setBackgroundResource(if (position == 0) R.drawable.bg_tab_selected else R.drawable.bg_tab_unselected)
-        binding.tabPengajuan.setTextColor(if (position == 0) getColor(R.color.white) else getColor(R.color.purple_badge_text))
-
-        binding.tabDisetujui.setBackgroundResource(if (position == 1) R.drawable.bg_tab_selected else R.drawable.bg_tab_unselected)
-        binding.tabDisetujui.setTextColor(if (position == 1) getColor(R.color.white) else getColor(R.color.purple_badge_text))
-
-        binding.tabDitolak.setBackgroundResource(if (position == 2) R.drawable.bg_tab_selected else R.drawable.bg_tab_unselected)
-        binding.tabDitolak.setTextColor(if (position == 2) getColor(R.color.white) else getColor(R.color.purple_badge_text))
-        
-        // Logika untuk berpindah activity berdasarkan tab (jika diperlukan)
+        // Logika untuk berpindah activity berdasarkan tab
         when(position) {
             1 -> {
                 startActivity(Intent(this, ApprovalIzinSelesaiActivity::class.java))

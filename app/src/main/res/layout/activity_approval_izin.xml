@@ -43,7 +43,7 @@
         android:background="#E0E0E0"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <!-- Tabs: Pengajuan Aktif -->
+    <!-- Tabs -->
     <LinearLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
@@ -108,10 +108,7 @@
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
             android:paddingBottom="16dp">
-
-            <!-- Menggunakan Item Terpisah -->
             <include layout="@layout/item_approval_izin" />
-
         </LinearLayout>
     </ScrollView>
 

@@ -1,5 +1,6 @@
 package com.example.aplikasibast
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +24,29 @@ class ApprovalIzinDitolakActivity : AppCompatActivity() {
             insets
         }
 
+        setupUI()
+    }
+
+    private fun setupUI() {
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+
+        // Navigasi ke Halaman Pengajuan Izin Baru
+        binding.btnTambahPengajuan.setOnClickListener {
+            val intent = Intent(this, PengajuanIzinActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Tab click listeners untuk navigasi antar status
+        binding.tabPengajuan.setOnClickListener {
+            startActivity(Intent(this, ApprovalIzinActivity::class.java))
+            finish()
+        }
+        
+        binding.tabDisetujui.setOnClickListener {
+            startActivity(Intent(this, ApprovalIzinSelesaiActivity::class.java))
+            finish()
         }
     }
 }
