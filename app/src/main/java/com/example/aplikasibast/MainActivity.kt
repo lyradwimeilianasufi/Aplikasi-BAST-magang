@@ -79,6 +79,13 @@ class MainActivity : AppCompatActivity() {
             navigateToLocationAbsen()
         }
 
+        // Navigasi ke Halaman Approval Izin (Menggunakan index karena XML tidak boleh diubah)
+        // Index 2 adalah posisi menu "Pengajuan Izin" di dalam menuGrid
+        binding.menuGrid.getChildAt(2)?.setOnClickListener {
+            val intent = Intent(this, ApprovalIzinActivity::class.java)
+            startActivity(intent)
+        }
+
         // Navigasi "Lihat Semua" di bagian Tiket Aktif
         binding.tvLihatSemuaTiket.setOnClickListener {
             // Placeholder: Arahkan ke halaman tiket jika sudah ada

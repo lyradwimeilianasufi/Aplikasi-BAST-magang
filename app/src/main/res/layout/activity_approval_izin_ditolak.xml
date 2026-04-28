@@ -99,7 +99,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvNotification"
         app:layout_constraintTop_toBottomOf="@id/tabLayout">
 
         <LinearLayout
@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
-            android:paddingBottom="100dp">
+            android:paddingBottom="16dp">
 
             <!-- Card Item: Status Ditolak -->
             <com.google.android.material.card.MaterialCardView
@@ -285,12 +285,12 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Notifikasi di bagian bawah -->
+    <!-- Notifikasi (Tetap Ada) -->
     <TextView
         android:id="@+id/tvNotification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:background="#EEEEEE"
         android:paddingHorizontal="24dp"
         android:paddingVertical="10dp"
@@ -298,8 +298,30 @@
         android:textColor="@color/black"
         android:textSize="14sp"
         android:fontFamily="@font/barlow_semi_condensed"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnTambahContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Tombol Tambahkan Pengajuan -->
+    <LinearLayout
+        android:id="@+id/btnTambahContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTambahPengajuan"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:backgroundTint="#2D1B69"
+            android:text="TAMBAHKAN PENGAJUAN"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:fontFamily="@font/barlow_semi_condensed"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

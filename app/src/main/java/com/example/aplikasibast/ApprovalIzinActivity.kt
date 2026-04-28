@@ -1,5 +1,6 @@
 package com.example.aplikasibast
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -30,8 +31,14 @@ class ApprovalIzinActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+        // Navigasi ke Halaman Pengajuan Izin Baru
+        binding.btnTambahPengajuan.setOnClickListener {
+            val intent = Intent(this, PengajuanIzinActivity::class.java)
+            startActivity(intent)
+        }
         
-        // Tab click listeners (placeholder for now)
+        // Tab click listeners
         binding.tabPengajuan.setOnClickListener { updateTabs(0) }
         binding.tabDisetujui.setOnClickListener { updateTabs(1) }
         binding.tabDitolak.setOnClickListener { updateTabs(2) }
@@ -47,5 +54,17 @@ class ApprovalIzinActivity : AppCompatActivity() {
 
         binding.tabDitolak.setBackgroundResource(if (position == 2) R.drawable.bg_tab_selected else R.drawable.bg_tab_unselected)
         binding.tabDitolak.setTextColor(if (position == 2) getColor(R.color.white) else getColor(R.color.purple_badge_text))
+        
+        // Logika untuk berpindah activity berdasarkan tab (jika diperlukan)
+        when(position) {
+            1 -> {
+                startActivity(Intent(this, ApprovalIzinSelesaiActivity::class.java))
+                finish()
+            }
+            2 -> {
+                startActivity(Intent(this, ApprovalIzinDitolakActivity::class.java))
+                finish()
+            }
+        }
     }
 }

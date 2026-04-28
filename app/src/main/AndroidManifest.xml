@@ -76,6 +76,10 @@
             android:name=".ApprovalIzinDitolakActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".PengajuanIzinActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
