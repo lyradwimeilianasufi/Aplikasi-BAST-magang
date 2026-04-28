@@ -26,6 +26,7 @@ class CameraAbsenActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraAbsenBinding
     private lateinit var cameraExecutor: ExecutorService
     private var imageCapture: ImageCapture? = null
+    private var lensFacing = CameraSelector.LENS_FACING_FRONT
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -56,16 +57,25 @@ class CameraAbsenActivity : AppCompatActivity() {
     private fun setupListeners() {
         binding.btnBack.setOnClickListener { finish() }
 
-        // Listener untuk tombol jepret foto (btnCapture)
+        // Tombol ambil foto
         binding.btnCapture.setOnClickListener {
             takePhoto()
+        }
+
+        // Tombol switch kamera
+        binding.btnSwitchCamera.setOnClickListener {
+            lensFacing = if (CameraSelector.LENS_FACING_FRONT == lensFacing) {
+                CameraSelector.LENS_FACING_BACK
+            } else {
+                CameraSelector.LENS_FACING_FRONT
+            }
+            startCamera()
         }
     }
 
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
 
-        // Create time stamped name and output directory
         val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
             .format(System.currentTimeMillis())
         val photoFile = File(externalCacheDir, "$name.jpg")
@@ -78,6 +88,7 @@ class CameraAbsenActivity : AppCompatActivity() {
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e("CameraAbsen", "Photo capture failed: ${exc.message}", exc)
+                    Toast.makeText(baseContext, "Gagal mengambil foto", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
@@ -104,7 +115,9 @@ class CameraAbsenActivity : AppCompatActivity() {
             imageCapture = ImageCapture.Builder()
                 .build()
 
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            val cameraSelector = CameraSelector.Builder()
+                .requireLensFacing(lensFacing)
+                .build()
 
             try {
                 cameraProvider.unbindAll()
@@ -112,6 +125,7 @@ class CameraAbsenActivity : AppCompatActivity() {
                     this, cameraSelector, preview, imageCapture
                 )
             } catch (exc: Exception) {
+                Log.e("CameraAbsen", "Use case binding failed", exc)
                 Toast.makeText(this, "Gagal memulai kamera", Toast.LENGTH_SHORT).show()
             }
 
