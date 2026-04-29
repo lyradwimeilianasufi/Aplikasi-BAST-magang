@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fontFamily="@font/barlow_semi_condensed"
-    tools:context=".ApprovalIzinActivity">
+    tools:context=".RiwayatPengajuanIzinActivity">
 
     <!-- Toolbar -->
     <RelativeLayout
@@ -30,10 +30,48 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@id/btnBack"
-            android:text="Approval Izin"
+            android:text="Pengajuan Izin"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <!-- Restored Icon next to Title -->
+        <FrameLayout
+            android:id="@+id/btnNotification"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Using ic_dokumen as it matches the design perfectly -->
+                <ImageView
+                    android:id="@+id/ivIconBase"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_dokumen"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Red Dot Badge -->
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_circle_red"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </FrameLayout>
+
     </RelativeLayout>
 
     <View
@@ -53,7 +91,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbarDivider">
 
         <TextView
-            android:id="@+id/tabPengajuan"
+            android:id="@+id/tabDiajukan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -62,7 +100,7 @@
             android:backgroundTint="@color/purple_dark"
             android:gravity="center"
             android:paddingVertical="10dp"
-            android:text="PENGAJUAN"
+            android:text="DIAJUKAN"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -96,20 +134,46 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!-- Empty State -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/btnTambahContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tabLayout">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="16dp">
-            <include layout="@layout/item_approval_izin" />
-        </LinearLayout>
-    </ScrollView>
+            android:layout_marginTop="16dp"
+            android:text="Data Tidak Tersedia"
+            android:textColor="#BDBDBD"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Bottom Button Container -->
+    <LinearLayout
+        android:id="@+id/btnTambahContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTambahPengajuan"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:backgroundTint="#2D1B69"
+            android:text="TAMBAH PENGAJUAN"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:fontFamily="@font/barlow_semi_condensed"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
