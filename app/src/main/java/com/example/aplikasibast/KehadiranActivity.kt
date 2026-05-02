@@ -29,29 +29,40 @@ class KehadiranActivity : AppCompatActivity() {
         setupListeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Memastikan ikon Kehadiran aktif
+        binding.bottomNavigationInclude.bottomNavigation.selectedItemId = R.id.nav_kehadiran
+    }
+
     private fun setupListeners() {
         binding.tvLihatSemuaKehadiran.setOnClickListener {
             val intent = Intent(this, RiwayatKehadiranActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
         }
     }
 
     private fun setupNavigation() {
-        binding.bottomNavigationInclude.bottomNavigation.selectedItemId = R.id.nav_kehadiran
         binding.bottomNavigationInclude.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_beranda -> {
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    startActivity(intent)
                     true
                 }
-                R.id.nav_kehadiran -> true
+                R.id.nav_kehadiran -> true // Tetap di sini
                 R.id.nav_riwayat -> {
-                    startActivity(Intent(this, RiwayatKehadiranActivity::class.java))
-                    finish()
+                    val intent = Intent(this, RiwayatKehadiranActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    startActivity(intent)
                     true
                 }
-                R.id.nav_akun -> true
+                R.id.nav_akun -> {
+                    // startActivity(Intent(this, AkunActivity::class.java))
+                    true
+                }
                 else -> false
             }
         }

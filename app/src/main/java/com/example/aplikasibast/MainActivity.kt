@@ -17,9 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
         enableEdgeToEdge()
-        
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
@@ -32,26 +30,12 @@ class MainActivity : AppCompatActivity() {
 
         setupUI()
         setupListeners()
-        
-        // Cek apakah baru saja kembali dari absen berhasil
-        checkShowSuccessPopup()
     }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-        checkShowSuccessPopup()
-    }
-
-    private fun checkShowSuccessPopup() {
-        if (intent.getBooleanExtra("SHOW_SUCCESS_POPUP", false)) {
-            // Tampilkan popup sukses di atas MainActivity
-            val successIntent = Intent(this, SuccessAbsenActivity::class.java)
-            startActivity(successIntent)
-            
-            // Hapus flag agar tidak muncul berulang
-            intent.removeExtra("SHOW_SUCCESS_POPUP")
-        }
+    override fun onResume() {
+        super.onResume()
+        // Pastikan tab Beranda terpilih saat kembali ke halaman ini
+        binding.bottomNavigation.selectedItemId = R.id.nav_beranda
     }
 
     private fun setupUI() {
@@ -59,58 +43,40 @@ class MainActivity : AppCompatActivity() {
         binding.tvUserRole.text = viewModel.userRole
         binding.tvCurrentDate.text = viewModel.currentDay
         binding.tvWorkHours.text = viewModel.workHours
-        binding.bottomNavigation.selectedItemId = R.id.nav_beranda
     }
 
     private fun setupListeners() {
-        binding.btnAbsenMasukMain.setOnClickListener {
-            navigateToLocationAbsen()
-        }
-
-        binding.icFingerIn.setOnClickListener {
-            navigateToLocationAbsen()
-        }
-
-        binding.btnAbsenKeluarMain.setOnClickListener {
-            navigateToLocationAbsen()
-        }
-        
-        binding.icFingerOut.setOnClickListener {
-            navigateToLocationAbsen()
-        }
-
-        // Navigasi ke Halaman Approval Izin (Menggunakan index karena XML tidak boleh diubah)
-        // Index 2 adalah posisi menu "Pengajuan Izin" di dalam menuGrid
-        binding.menuGrid.getChildAt(2)?.setOnClickListener {
-            val intent = Intent(this, ApprovalIzinActivity::class.java)
-            startActivity(intent)
-        }
-
-        // Navigasi "Lihat Semua" di bagian Tiket Aktif
-        binding.tvLihatSemuaTiket.setOnClickListener {
-            // Placeholder: Arahkan ke halaman tiket jika sudah ada
-            // startActivity(Intent(this, RiwayatTiketActivity::class.java))
-        }
-
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_beranda -> true
                 R.id.nav_kehadiran -> {
-                    startActivity(Intent(this, KehadiranActivity::class.java))
+                    val intent = Intent(this, KehadiranActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    startActivity(intent)
                     true
                 }
                 R.id.nav_riwayat -> {
-                    startActivity(Intent(this, RiwayatKehadiranActivity::class.java))
+                    val intent = Intent(this, RiwayatKehadiranActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    startActivity(intent)
                     true
                 }
-                R.id.nav_akun -> true
+                R.id.nav_akun -> {
+                    // Navigasi ke halaman Akun jika sudah ada
+                    true
+                }
                 else -> false
             }
+        }
+
+        binding.btnAbsenMasukMain.setOnClickListener { navigateToLocationAbsen() }
+        binding.btnAbsenKeluarMain.setOnClickListener { navigateToLocationAbsen() }
+        binding.btnMenuIzin.setOnClickListener {
+            startActivity(Intent(this, RiwayatPengajuanIzinActivity::class.java))
         }
     }
 
     private fun navigateToLocationAbsen() {
-        val intent = Intent(this, LocationAbsenActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(this, LocationAbsenActivity::class.java))
     }
 }

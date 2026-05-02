@@ -1,0 +1,106 @@
+package com.example.aplikasibast
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.aplikasibast.databinding.ItemRiwayatAlpaBinding
+import com.example.aplikasibast.databinding.ItemRiwayatIzinBinding
+import com.example.aplikasibast.databinding.ItemRiwayatKehadiranBinding
+
+class RiwayatKehadiranAdapter(
+    private val list: List<RiwayatItem>,
+    private val onItemClick: (RiwayatItem) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        private const val TYPE_KEHADIRAN = 0
+        private const val TYPE_IZIN = 1
+        private const val TYPE_ALPA = 2
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (list[position]) {
+            is RiwayatItem.KehadiranData -> TYPE_KEHADIRAN
+            is RiwayatItem.IzinData -> TYPE_IZIN
+            is RiwayatItem.AlpaData -> TYPE_ALPA
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            TYPE_KEHADIRAN -> {
+                val binding = ItemRiwayatKehadiranBinding.inflate(inflater, parent, false)
+                KehadiranViewHolder(binding)
+            }
+            TYPE_IZIN -> {
+                val binding = ItemRiwayatIzinBinding.inflate(inflater, parent, false)
+                IzinViewHolder(binding)
+            }
+            TYPE_ALPA -> {
+                val binding = ItemRiwayatAlpaBinding.inflate(inflater, parent, false)
+                AlpaViewHolder(binding)
+            }
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = list[position]
+        when (holder) {
+            is KehadiranViewHolder -> holder.bind(item as RiwayatItem.KehadiranData)
+            is IzinViewHolder -> holder.bind(item as RiwayatItem.IzinData)
+            is AlpaViewHolder -> holder.bind(item as RiwayatItem.AlpaData)
+        }
+    }
+
+    override fun getItemCount(): Int = list.size
+
+    inner class KehadiranViewHolder(private val binding: ItemRiwayatKehadiranBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: RiwayatItem.KehadiranData) {
+            binding.tvTanggal.text = item.tanggal
+            binding.tvStatus.text = item.status
+            binding.tvJamMasuk.text = item.jamMasuk
+            binding.tvJamKeluar.text = item.jamKeluar
+            binding.tvTotalJam.text = item.totalJam
+            
+            binding.root.setOnClickListener {
+                onItemClick(item)
+            }
+        }
+    }
+
+    inner class IzinViewHolder(private val binding: ItemRiwayatIzinBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: RiwayatItem.IzinData) {
+            binding.tvTanggal.text = item.tanggal
+            binding.tvStatus.text = "Izin"
+            
+            binding.tvJamMasuk.text = " - "
+            binding.tvJamKeluar.text = " - "
+            binding.tvTotalJam.text = " - "
+            
+            binding.root.setOnClickListener {
+                onItemClick(item)
+            }
+        }
+    }
+
+    inner class AlpaViewHolder(private val binding: ItemRiwayatAlpaBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: RiwayatItem.AlpaData) {
+            binding.tvTanggal.text = item.tanggal
+            // Status untuk Alpa biasanya ditangani oleh ImageView ic_alpa di layout
+            // Namun kita tetap set teks jika diperlukan (meskipun di layout item_riwayat_alpa menggunakan ImageView)
+
+            binding.tvJamMasuk.text = " - "
+            binding.tvJamKeluar.text = " - "
+            binding.tvTotalJam.text = " - "
+            
+            binding.root.setOnClickListener {
+                onItemClick(item)
+            }
+        }
+    }
+}

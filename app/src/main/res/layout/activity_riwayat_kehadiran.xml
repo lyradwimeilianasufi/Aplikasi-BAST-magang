@@ -44,7 +44,22 @@
         android:background="#EEEEEE"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <!-- Content List -->
+    <!-- Preview Container (Hanya muncul di Layout Editor) -->
+    <LinearLayout
+        android:id="@+id/layoutPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/toolbarShadow">
+
+        <include layout="@layout/item_riwayat_kehadiran" />
+        <include layout="@layout/item_riwayat_izin" />
+        <include layout="@layout/item_riwayat_alpa" />
+    </LinearLayout>
+
+    <!-- Content List (Asli) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRiwayatKehadiran"
         android:layout_width="match_parent"
@@ -54,9 +69,9 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintTop_toBottomOf="@id/toolbarShadow"
-        tools:listitem="@layout/item_riwayat_kehadiran" />
+        tools:visibility="gone" />
 
-    <!-- Bottom Navigation (Assuming it exists based on previous layout) -->
+    <!-- Bottom Navigation -->
     <include
         android:id="@+id/bottomNavigation"
         layout="@layout/layout_bottom_nav"

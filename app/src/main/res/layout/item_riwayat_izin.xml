@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +34,7 @@
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                tools:text="Jumat, 06 Jan 2024" />
+                tools:text="Rabu, 01 Jan 2025" />
 
             <TextView
                 android:id="@+id/tvStatus"
@@ -41,16 +42,17 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/bg_badge_pill"
-                android:backgroundTint="#27AE60"
+                android:backgroundTint="#F2994A"
                 android:fontFamily="@font/barlow_semi_condensed"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="4dp"
                 android:textColor="@color/white"
                 android:textSize="11sp"
                 android:textStyle="bold"
-                tools:text="Hadir" />
+                tools:text="Izin" />
         </RelativeLayout>
 
+        <!-- Body -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,6 +64,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <!-- Absen Masuk Section -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -96,13 +99,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/barlow_semi_condensed"
+                            android:text=" - "
                             android:textColor="@color/black"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            tools:text="08:45 WIB" />
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Absen Keluar Section -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -137,14 +141,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/barlow_semi_condensed"
+                            android:text=" - "
                             android:textColor="@color/black"
                             android:textSize="13sp"
-                            android:textStyle="bold"
-                            tools:text="17:20 WIB" />
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Total Jam Kerja -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -165,10 +170,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/barlow_semi_condensed"
+                    android:text=" - "
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="bold"
-                    tools:text="9 Jam 45 Menit" />
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

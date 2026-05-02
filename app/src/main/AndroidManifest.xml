@@ -42,6 +42,14 @@
             android:exported="false" />
 
         <activity
+            android:name=".DetailKehadiranIzinActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DetailKehadiranAlpaActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ApprovalIzinActivity"
             android:exported="false" />
 

@@ -31,12 +31,6 @@ class ApprovalIzinActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-
-        // Navigasi ke Halaman Pengajuan Izin Baru
-        binding.btnTambahPengajuan.setOnClickListener {
-            val intent = Intent(this, PengajuanIzinActivity::class.java)
-            startActivity(intent)
-        }
         
         // Tab click listeners
         binding.tabPengajuan.setOnClickListener { updateTabs(0) }

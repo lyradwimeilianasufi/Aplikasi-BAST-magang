@@ -37,6 +37,12 @@ class RiwayatPengajuanIzinActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Navigasi ke halaman Approval Izin melalui ikon dokumen (pojok kanan atas)
+        binding.btnNotification.setOnClickListener {
+            val intent = Intent(this, ApprovalIzinActivity::class.java)
+            startActivity(intent)
+        }
+
         // Contoh switch tab sederhana (UI Only)
         binding.tabDiajukan.setOnClickListener {
             updateTabSelection(it.id)
