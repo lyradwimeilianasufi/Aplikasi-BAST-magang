@@ -58,6 +58,14 @@
             android:exported="false" />
 
         <activity
+            android:name=".DetailPengajuanActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DetailPengajuanDitolakActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".CameraAbsenActivity"
             android:exported="false"
             android:theme="@style/Theme.AplikasiBAST.NoActionBar" />

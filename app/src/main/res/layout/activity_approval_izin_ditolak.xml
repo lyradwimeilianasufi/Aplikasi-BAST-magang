@@ -99,7 +99,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/tvNotification"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tabLayout">
 
         <LinearLayout
@@ -284,22 +284,5 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <!-- Notifikasi (Tetap Ada) -->
-    <TextView
-        android:id="@+id/tvNotification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="#EEEEEE"
-        android:paddingHorizontal="24dp"
-        android:paddingVertical="10dp"
-        android:text="Data Berhasil Disimpan"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:fontFamily="@font/barlow_semi_condensed"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

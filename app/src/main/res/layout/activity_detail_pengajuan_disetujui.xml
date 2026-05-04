@@ -4,71 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="#F8F9FA"
     android:fontFamily="@font/barlow_semi_condensed"
-    tools:context=".DetailPengajuanIzinActivity">
+    tools:context=".DetailPengajuanActivity">
 
-    <!-- Toolbar -->
-    <RelativeLayout
-        android:id="@+id/toolbar"
+    <!-- Header / Toolbar -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:paddingHorizontal="16dp"
+        android:layout_height="60dp"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="12dp"
+            android:padding="8dp"
             android:src="@drawable/ic_back_white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/black" />
 
         <TextView
+            android:id="@+id/tvToolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_toEndOf="@id/btnBack"
+            android:layout_marginStart="8dp"
             android:fontFamily="@font/barlow_semi_condensed"
             android:text="Detail Pengajuan"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:letterSpacing="-0.02" />
-    </RelativeLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnBack"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Garis Abu-abu di bawah Detail Pengajuan -->
-    <View
-        android:id="@+id/toolbarDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#E0E0E0"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:paddingBottom="100dp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbarDivider">
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
-            <!-- Card Header: Tanggal & Status -->
+            <!-- Card 1: Tanggal Pengajuan -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#F0F0F0"
-                app:strokeWidth="1dp">
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -77,10 +78,9 @@
 
                     <ImageView
                         android:id="@+id/ivIconCalendar"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:src="@drawable/ic_material_symbols_date_range"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:tint="#4527A0" />
@@ -94,9 +94,8 @@
                         android:text="Tanggal Pengajuan"
                         android:textColor="#BDBDBD"
                         android:textSize="11sp"
-                        android:letterSpacing="-0.01"
                         app:layout_constraintStart_toEndOf="@id/ivIconCalendar"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="@id/ivIconCalendar" />
 
                     <TextView
                         android:id="@+id/tvTanggalPengajuan"
@@ -107,7 +106,6 @@
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:letterSpacing="-0.01"
                         app:layout_constraintStart_toStartOf="@id/lblTanggalPengajuan"
                         app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuan" />
 
@@ -116,30 +114,88 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_badge_pill"
-                        android:backgroundTint="#FFF8E1"
+                        android:backgroundTint="#E8F5E9"
                         android:fontFamily="@font/barlow_semi_condensed"
-                        android:paddingHorizontal="14dp"
+                        android:paddingHorizontal="12dp"
                         android:paddingVertical="4dp"
-                        android:text="DIAJUKAN"
-                        android:textColor="#FBC02D"
+                        android:text="DISETUJUI"
+                        android:textColor="#2E7D32"
                         android:textSize="10sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card Detail Info -->
+            <!-- Card 2: Tanggal Diproses -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#F0F0F0"
-                app:strokeWidth="1dp">
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:id="@+id/ivIconCalendarProcessed"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_material_symbols_date_range"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="#4527A0" />
+
+                    <TextView
+                        android:id="@+id/lblTanggalDiproses"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:fontFamily="@font/barlow_semi_condensed"
+                        android:text="Tanggal Diproses"
+                        android:textColor="#BDBDBD"
+                        android:textSize="11sp"
+                        app:layout_constraintStart_toEndOf="@id/ivIconCalendarProcessed"
+                        app:layout_constraintTop_toTopOf="@id/ivIconCalendarProcessed" />
+
+                    <TextView
+                        android:id="@+id/tvTanggalDiproses"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barlow_semi_condensed"
+                        android:text="Jumat, 03 Jan 2025"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="@id/lblTanggalDiproses"
+                        app:layout_constraintTop_toBottomOf="@id/lblTanggalDiproses" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/barlow_semi_condensed"
+                android:text="Detail Izin"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <!-- Card 3: Detail Informasi -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -148,16 +204,12 @@
                     android:paddingHorizontal="16dp"
                     android:paddingTop="12dp">
 
-                    <!-- Nama Teknisi -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
                         android:text="Nama Teknisi"
                         android:textColor="#BDBDBD"
-                        android:textSize="11sp"
-                        android:letterSpacing="-0.01" />
-
+                        android:textSize="11sp" />
                     <TextView
                         android:id="@+id/tvNamaTeknisi"
                         android:layout_width="wrap_content"
@@ -166,26 +218,20 @@
                         android:text="Trisnualdi"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="-0.01" />
-
+                        android:textStyle="bold" />
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="12dp"
                         android:background="#F5F5F5" />
 
-                    <!-- Jenis Izin -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/barlow_semi_condensed"
+                        android:layout_marginTop="12dp"
                         android:text="Jenis Izin"
                         android:textColor="#BDBDBD"
-                        android:textSize="11sp"
-                        android:letterSpacing="-0.01" />
-
+                        android:textSize="11sp" />
                     <TextView
                         android:id="@+id/tvJenisIzin"
                         android:layout_width="wrap_content"
@@ -194,26 +240,20 @@
                         android:text="Cuti"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="-0.01" />
-
+                        android:textStyle="bold" />
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="12dp"
                         android:background="#F5F5F5" />
 
-                    <!-- Jumlah Hari -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/barlow_semi_condensed"
+                        android:layout_marginTop="12dp"
                         android:text="Jumlah Hari"
                         android:textColor="#BDBDBD"
-                        android:textSize="11sp"
-                        android:letterSpacing="-0.01" />
-
+                        android:textSize="11sp" />
                     <TextView
                         android:id="@+id/tvJumlahHari"
                         android:layout_width="wrap_content"
@@ -222,26 +262,20 @@
                         android:text="2 Hari"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="-0.01" />
-
+                        android:textStyle="bold" />
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="12dp"
                         android:background="#F5F5F5" />
 
-                    <!-- Periode Izin -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/barlow_semi_condensed"
+                        android:layout_marginTop="12dp"
                         android:text="Periode Izin"
                         android:textColor="#BDBDBD"
-                        android:textSize="11sp"
-                        android:letterSpacing="-0.01" />
-
+                        android:textSize="11sp" />
                     <TextView
                         android:id="@+id/tvPeriodeIzin"
                         android:layout_width="wrap_content"
@@ -250,26 +284,20 @@
                         android:text="Senin, 05 Jan 2025 - Selasa, 06 Jan 2025"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="-0.01" />
-
+                        android:textStyle="bold" />
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="12dp"
                         android:background="#F5F5F5" />
 
-                    <!-- Alasan -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/barlow_semi_condensed"
+                        android:layout_marginTop="12dp"
                         android:text="Alasan"
                         android:textColor="#BDBDBD"
-                        android:textSize="11sp"
-                        android:letterSpacing="-0.01" />
-
+                        android:textSize="11sp" />
                     <TextView
                         android:id="@+id/tvAlasan"
                         android:layout_width="match_parent"
@@ -279,83 +307,42 @@
                         android:text="Keperluan Keluarga"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="-0.01" />
+                        android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- File Pendukung -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="24dp"
                 android:fontFamily="@font/barlow_semi_condensed"
                 android:text="File Pendukung"
                 android:textColor="@color/black"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:letterSpacing="-0.02" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
+            <!-- Lampiran Area -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#F0F0F0"
-                app:strokeWidth="1dp">
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#EEEEEE">
 
                 <ImageView
                     android:id="@+id/ivFilePendukung"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="60dp"
+                    android:scaleType="center"
                     android:src="@drawable/ic_gallery"
                     app:tint="#E0E0E0" />
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>
-
-    <!-- Bottom Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTolak"
-            android:layout_width="0dp"
-            android:layout_height="54dp"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/barlow_semi_condensed"
-            android:text="TOLAK"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:backgroundTint="#D50000"
-            app:cornerRadius="8dp"
-            android:letterSpacing="0.02" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSetujui"
-            android:layout_width="0dp"
-            android:layout_height="54dp"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/barlow_semi_condensed"
-            android:text="SETUJUI"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/purple_dark"
-            app:cornerRadius="8dp"
-            android:letterSpacing="0.02" />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
