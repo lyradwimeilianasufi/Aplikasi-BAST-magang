@@ -29,10 +29,12 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
         }
 
         binding.btnConfirm.setOnClickListener {
-            // Kembali ke MainActivity dan beri sinyal untuk menampilkan popup sukses
+            // Kembali ke MainActivity dan tampilkan dialog sukses
             val intent = Intent(this, MainActivity::class.java)
+            // FLAG_ACTIVITY_CLEAR_TOP akan menutup activity Lokasi & Kamera
+            // FLAG_ACTIVITY_SINGLE_TOP memastikan kita kembali ke instance MainActivity yang sudah ada
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            intent.putExtra("SHOW_SUCCESS_POPUP", true)
+            intent.putExtra("SHOW_SUCCESS_DIALOG", true)
             startActivity(intent)
             finish()
         }

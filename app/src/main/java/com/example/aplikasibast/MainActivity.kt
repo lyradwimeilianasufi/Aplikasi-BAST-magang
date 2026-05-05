@@ -1,13 +1,21 @@
 package com.example.aplikasibast
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.Window
+import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.example.aplikasibast.databinding.ActivityMainBinding
+import com.example.aplikasibast.databinding.ActivitySuccessAbsenBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +38,19 @@ class MainActivity : AppCompatActivity() {
 
         setupUI()
         setupListeners()
+
+        // Cek jika harus menampilkan popup sukses
+        if (intent.getBooleanExtra("SHOW_SUCCESS_DIALOG", false)) {
+            showSuccessDialog()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent.getBooleanExtra("SHOW_SUCCESS_DIALOG", false)) {
+            showSuccessDialog()
+        }
     }
 
     override fun onResume() {
@@ -78,5 +99,35 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToLocationAbsen() {
         startActivity(Intent(this, LocationAbsenActivity::class.java))
+    }
+
+    private fun showSuccessDialog() {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val dialogBinding = ActivitySuccessAbsenBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+
+        // Membuat background dialog transparan agar overlay di XML bekerja
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        
+        // Mengatur lebar dialog agar memenuhi layar (overlay)
+        dialog.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        )
+
+        dialog.show()
+
+        // Otomatis tutup dialog setelah 2 detik
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (dialog.isShowing) {
+                dialog.dismiss()
+            }
+        }, 2000)
+
+        // Klik pada dialog untuk menutup
+        dialogBinding.root.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 }

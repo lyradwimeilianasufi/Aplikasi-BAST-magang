@@ -11,17 +11,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.aplikasibast.databinding.ActivityDetailPengajuanIzinBinding
+import com.example.aplikasibast.databinding.ActivityDetailPengajuanDiajukanBinding
 import com.example.aplikasibast.databinding.DialogTolakPengajuanBinding
 
 class DetailPengajuanIzinActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityDetailPengajuanIzinBinding
+    private lateinit var binding: ActivityDetailPengajuanDiajukanBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityDetailPengajuanIzinBinding.inflate(layoutInflater)
+        binding = ActivityDetailPengajuanDiajukanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
