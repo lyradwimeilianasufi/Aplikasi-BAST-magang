@@ -108,7 +108,9 @@
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
             android:paddingBottom="16dp">
-            <include layout="@layout/item_approval_izin" />
+            <include
+                android:id="@+id/itemApproval"
+                layout="@layout/item_approval_izin" />
         </LinearLayout>
     </ScrollView>
 

@@ -217,46 +217,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Tanda U (Floating Speech Bubble Style) -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/uButtonWrapper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider">
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="60dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="-15dp"
-            app:cardCornerRadius="25dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="6dp"
-                app:cardCornerRadius="18dp"
-                app:cardBackgroundColor="#FF00CC"
-                app:cardElevation="0dp">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="U"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/barlow_semi_condensed" />
-            </com.google.android.material.card.MaterialCardView>
-        </com.google.android.material.card.MaterialCardView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <LinearLayout
         android:id="@+id/btnSubmitContainer"
         android:layout_width="match_parent"

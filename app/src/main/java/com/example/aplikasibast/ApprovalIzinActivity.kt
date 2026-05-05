@@ -36,6 +36,12 @@ class ApprovalIzinActivity : AppCompatActivity() {
         binding.tabPengajuan.setOnClickListener { updateTabs(0) }
         binding.tabDisetujui.setOnClickListener { updateTabs(1) }
         binding.tabDitolak.setOnClickListener { updateTabs(2) }
+
+        // Navigasi ke Detail Pengajuan (Diajukan)
+        binding.itemApproval.cvItemApprovalIzin.setOnClickListener {
+            val intent = Intent(this, DetailPengajuanIzinActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun updateTabs(position: Int) {
