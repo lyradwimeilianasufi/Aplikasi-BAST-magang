@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.aplikasibast.databinding.ItemRiwayatAlpaBinding
 import com.example.aplikasibast.databinding.ItemRiwayatIzinBinding
 import com.example.aplikasibast.databinding.ItemRiwayatKehadiranBinding
+import com.example.aplikasibast.databinding.ItemRiwayatLiburBinding
 
 class RiwayatKehadiranAdapter(
     private val list: List<RiwayatItem>,
@@ -16,6 +17,7 @@ class RiwayatKehadiranAdapter(
         private const val TYPE_KEHADIRAN = 0
         private const val TYPE_IZIN = 1
         private const val TYPE_ALPA = 2
+        private const val TYPE_LIBUR = 3
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -23,6 +25,7 @@ class RiwayatKehadiranAdapter(
             is RiwayatItem.KehadiranData -> TYPE_KEHADIRAN
             is RiwayatItem.IzinData -> TYPE_IZIN
             is RiwayatItem.AlpaData -> TYPE_ALPA
+            is RiwayatItem.LiburData -> TYPE_LIBUR
         }
     }
 
@@ -41,6 +44,10 @@ class RiwayatKehadiranAdapter(
                 val binding = ItemRiwayatAlpaBinding.inflate(inflater, parent, false)
                 AlpaViewHolder(binding)
             }
+            TYPE_LIBUR -> {
+                val binding = ItemRiwayatLiburBinding.inflate(inflater, parent, false)
+                LiburViewHolder(binding)
+            }
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -51,6 +58,7 @@ class RiwayatKehadiranAdapter(
             is KehadiranViewHolder -> holder.bind(item as RiwayatItem.KehadiranData)
             is IzinViewHolder -> holder.bind(item as RiwayatItem.IzinData)
             is AlpaViewHolder -> holder.bind(item as RiwayatItem.AlpaData)
+            is LiburViewHolder -> holder.bind(item as RiwayatItem.LiburData)
         }
     }
 
@@ -91,8 +99,22 @@ class RiwayatKehadiranAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.AlpaData) {
             binding.tvTanggal.text = item.tanggal
-            // Status untuk Alpa biasanya ditangani oleh ImageView ic_alpa di layout
-            // Namun kita tetap set teks jika diperlukan (meskipun di layout item_riwayat_alpa menggunakan ImageView)
+            
+            binding.tvJamMasuk.text = " - "
+            binding.tvJamKeluar.text = " - "
+            binding.tvTotalJam.text = " - "
+            
+            binding.root.setOnClickListener {
+                onItemClick(item)
+            }
+        }
+    }
+
+    inner class LiburViewHolder(private val binding: ItemRiwayatLiburBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: RiwayatItem.LiburData) {
+            binding.tvTanggal.text = item.tanggal
+            binding.tvStatus.text = "Libur"
 
             binding.tvJamMasuk.text = " - "
             binding.tvJamKeluar.text = " - "

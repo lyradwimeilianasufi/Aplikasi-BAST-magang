@@ -63,7 +63,8 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
             RiwayatItem.KehadiranData("Kamis, 02 Jan 2025", "Hadir", "08:30 WIB", "17:00 WIB", "9 Jam 30 Menit"),
             RiwayatItem.IzinData("Rabu, 01 Jan 2025", "Cuti Tahunan", "01 Jan 2025 - 02 Jan 2025", "2 Hari", "Izin"),
             RiwayatItem.AlpaData("Selasa, 31 Des 2024", "Alpa"),
-            RiwayatItem.KehadiranData("Senin, 30 Des 2024", "Hadir", "08:40 WIB", "17:05 WIB", "9 Jam 25 Menit")
+            RiwayatItem.LiburData("Senin, 30 Des 2024", "Libur"),
+            RiwayatItem.KehadiranData("Minggu, 29 Des 2024", "Hadir", "08:40 WIB", "17:05 WIB", "9 Jam 25 Menit")
         )
 
         val adapter = RiwayatKehadiranAdapter(items) { item ->
@@ -78,6 +79,11 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
                 }
                 is RiwayatItem.AlpaData -> {
                     val intent = Intent(this, DetailKehadiranAlpaActivity::class.java)
+                    startActivity(intent)
+                }
+                is RiwayatItem.LiburData -> {
+                    // Navigasi ke halaman Detail Libur yang baru dibuat
+                    val intent = Intent(this, DetailKehadiranLiburActivity::class.java)
                     startActivity(intent)
                 }
             }

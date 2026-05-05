@@ -50,6 +50,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".DetailKehadiranLiburActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ApprovalIzinActivity"
             android:exported="false" />
 

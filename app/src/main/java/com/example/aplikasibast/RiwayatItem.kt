@@ -21,4 +21,9 @@ sealed class RiwayatItem {
         val tanggal: String,
         val status: String
     ) : RiwayatItem()
+
+    data class LiburData(
+        val tanggal: String,
+        val status: String
+    ) : RiwayatItem()
 }
