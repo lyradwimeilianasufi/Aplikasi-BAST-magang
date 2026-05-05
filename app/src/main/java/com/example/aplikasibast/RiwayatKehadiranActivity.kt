@@ -59,12 +59,12 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         val items = listOf(
-            RiwayatItem.KehadiranData("Jumat, 03 Jan 2025", "Hadir", "08:45 WIB", "17:20 WIB", "9 Jam 45 Menit"),
-            RiwayatItem.KehadiranData("Kamis, 02 Jan 2025", "Hadir", "08:30 WIB", "17:00 WIB", "9 Jam 30 Menit"),
-            RiwayatItem.IzinData("Rabu, 01 Jan 2025", "Cuti Tahunan", "01 Jan 2025 - 02 Jan 2025", "2 Hari", "Izin"),
-            RiwayatItem.AlpaData("Selasa, 31 Des 2024", "Alpa"),
-            RiwayatItem.LiburData("Senin, 30 Des 2024", "Libur"),
-            RiwayatItem.KehadiranData("Minggu, 29 Des 2024", "Hadir", "08:40 WIB", "17:05 WIB", "9 Jam 25 Menit")
+            RiwayatItem.KehadiranData("Jumat, 06 Jan 2024", "Hadir", "08:45 WIB", "17:20 WIB", "9 Jam 45 Menit"),
+            RiwayatItem.IzinData("Kamis, 05 Jan 2024", "-", "-", "-", "Izin"),
+            RiwayatItem.AlpaData("Rabu, 04 Jan 2024", "Alpa"),
+            RiwayatItem.KehadiranData("Selasa, 03 Des 2024 [Take Over]", "Hadir", "08:45 WIB", "18:00", "9 Jam 30 Menit"),
+            RiwayatItem.KehadiranData("Senin, 02 Des 2024", "Hadir", "08:45 WIB", "17:20 WIB", "9 Jam 45 Menit"),
+            RiwayatItem.LiburData("Minggu, 01 Des 2024", "Libur")
         )
 
         val adapter = RiwayatKehadiranAdapter(items) { item ->
@@ -82,7 +82,6 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 is RiwayatItem.LiburData -> {
-                    // Navigasi ke halaman Detail Libur yang baru dibuat
                     val intent = Intent(this, DetailKehadiranLiburActivity::class.java)
                     startActivity(intent)
                 }

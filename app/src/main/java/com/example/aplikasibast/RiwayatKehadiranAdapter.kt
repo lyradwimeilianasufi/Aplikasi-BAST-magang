@@ -1,5 +1,9 @@
 package com.example.aplikasibast
 
+import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -67,7 +71,22 @@ class RiwayatKehadiranAdapter(
     inner class KehadiranViewHolder(private val binding: ItemRiwayatKehadiranBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.KehadiranData) {
-            binding.tvTanggal.text = item.tanggal
+            val text = item.tanggal
+            if (text.contains("[Take Over]")) {
+                val spannable = SpannableString(text)
+                val start = text.indexOf("[Take Over]")
+                val end = start + "[Take Over]".length
+                spannable.setSpan(
+                    ForegroundColorSpan(Color.parseColor("#FFB422")), // Warna Kuning/Oranye sesuai gambar
+                    start,
+                    end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                binding.tvTanggal.text = spannable
+            } else {
+                binding.tvTanggal.text = text
+            }
+
             binding.tvStatus.text = item.status
             binding.tvJamMasuk.text = item.jamMasuk
             binding.tvJamKeluar.text = item.jamKeluar
