@@ -68,7 +68,7 @@
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#E0E0E0"
+                app:strokeColor="#EEEEEE"
                 app:strokeWidth="1dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -86,27 +86,33 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:tint="#4A148C" />
 
-                    <TextView
-                        android:id="@+id/labelTanggal"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="Tanggal Pengajuan"
-                        android:textColor="#BDBDBD"
-                        android:textSize="11sp"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/tvStatusBadge"
                         app:layout_constraintStart_toEndOf="@id/ivCalendar"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/tvTanggalPengajuan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Jumat, 03 Jan 2025"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="@id/labelTanggal"
-                        app:layout_constraintTop_toBottomOf="@id/labelTanggal" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tanggal Pengajuan"
+                            android:textColor="#BDBDBD"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/tvTanggalPengajuan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Jumat, 03 Jan 2025"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvStatusBadge"
@@ -143,16 +149,16 @@
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#E0E0E0"
+                app:strokeColor="#EEEEEE"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingHorizontal="16dp">
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp">
 
-                    <!-- Jenis Izin -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -168,18 +174,18 @@
                             android:id="@+id/tvJenisIzin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:text="Cuti"
                             android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#F0F0F0" />
+                        android:background="#F5F5F5" />
 
-                    <!-- Jumlah Hari -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -195,18 +201,18 @@
                             android:id="@+id/tvJumlahHari"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:text="2 Hari"
                             android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#F0F0F0" />
+                        android:background="#F5F5F5" />
 
-                    <!-- Periode Izin -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -222,18 +228,18 @@
                             android:id="@+id/tvPeriodeIzin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:text="Senin, 05 Jan 2025 - Selasa, 06 Jan 2025"
                             android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#F0F0F0" />
+                        android:background="#F5F5F5" />
 
-                    <!-- Alasan -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -249,10 +255,11 @@
                             android:id="@+id/tvAlasan"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:text="Cuti Tahunan"
                             android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -267,7 +274,7 @@
                 android:textStyle="bold"
                 android:textSize="14sp" />
 
-            <!-- Card Bawah (File Pendukung) dengan Ikon Gallery yang JAUH LEBIH KECIL (24dp) -->
+            <!-- Card Bawah (File Pendukung) dengan Ikon Gallery KECIL (24dp) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
@@ -276,13 +283,13 @@
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#E0E0E0"
+                app:strokeColor="#EEEEEE"
                 app:strokeWidth="1dp">
 
                 <ImageView
                     android:id="@+id/ivFilePendukung"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_gravity="center"
                     android:alpha="0.2"
                     android:src="@drawable/ic_gallery" />
