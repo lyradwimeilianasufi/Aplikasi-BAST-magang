@@ -37,9 +37,9 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Navigasi ke Detail saat kartu diklik
+        // Navigasi ke Detail Izin (Halaman baru yang sesuai desain) saat kartu diklik
         binding.itemPengajuan1.cvItemRiwayat.setOnClickListener {
-            val intent = Intent(this, DetailPengajuanIzinActivity::class.java)
+            val intent = Intent(this, DetailIzinActivity::class.java)
             startActivity(intent)
         }
 
@@ -60,7 +60,7 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
 
         // Set Selected
         tabs[position].setBackgroundResource(R.drawable.bg_tab_selected)
-        tabs[position].backgroundTintList = getColorStateList(R.color.purple_dark)
+        tabs[position].backgroundTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.purple_dark))
         tabs[position].setTextColor(getColor(R.color.white))
     }
 }
