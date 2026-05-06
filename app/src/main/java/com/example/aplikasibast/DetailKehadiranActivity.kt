@@ -10,7 +10,7 @@ class DetailKehadiranActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_kehadiran)
+        setContentView(R.layout.activity_detail_kehadiran_hadir)
 
         // Tombol Back
         val btnBack = findViewById<ImageView>(R.id.btnBack)

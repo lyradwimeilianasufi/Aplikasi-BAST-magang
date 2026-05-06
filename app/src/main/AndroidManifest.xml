@@ -104,6 +104,10 @@
             android:name=".RiwayatPengajuanIzinActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".DaftarPengajuanIzinActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
