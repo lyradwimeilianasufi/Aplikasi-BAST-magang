@@ -5,10 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:fontFamily="@font/barlow_semi_condensed"
-    tools:context=".ApprovalIzinActivity">
+    tools:context=".DaftarPengajuanBaruActivity">
 
-    <!-- Toolbar -->
+    <!-- Header / Toolbar -->
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -30,40 +29,41 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@id/btnBack"
-            android:text="Approval Izin"
+            android:fontFamily="@font/barlow_semi_condensed"
+            android:text="Pengajuan Izin"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
     <View
-        android:id="@+id/toolbarDivider"
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#E0E0E0"
+        android:background="#EEEEEE"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <!-- Tabs -->
+    <!-- Tab Layout -->
     <LinearLayout
-        android:id="@+id/tabLayout"
+        android:id="@+id/layoutTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbarDivider">
+        app:layout_constraintTop_toBottomOf="@id/divider">
 
         <TextView
-            android:id="@+id/tabPengajuan"
+            android:id="@+id/tabDiajukan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_tab_selected"
-            android:backgroundTint="@color/purple_dark"
+            android:background="@drawable/bg_tab_baru_inactive"
+            android:fontFamily="@font/barlow_semi_condensed"
             android:gravity="center"
             android:paddingVertical="10dp"
-            android:text="PENGAJUAN"
-            android:textColor="@color/white"
+            android:text="DIAJUKAN"
+            android:textColor="#7E57C2"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -73,11 +73,12 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_tab_unselected"
+            android:background="@drawable/bg_tab_baru_active"
+            android:fontFamily="@font/barlow_semi_condensed"
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DISETUJUI"
-            android:textColor="@color/purple_badge_text"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -87,31 +88,56 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_tab_unselected"
+            android:background="@drawable/bg_tab_baru_inactive"
+            android:fontFamily="@font/barlow_semi_condensed"
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DITOLAK"
-            android:textColor="@color/purple_badge_text"
+            android:textColor="#7E57C2"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Content List -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout">
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@id/btnContainer"
+        app:layout_constraintTop_toBottomOf="@id/layoutTabs">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
             android:paddingBottom="16dp">
-            <include
-                android:id="@+id/itemApproval"
-                layout="@layout/item_approval_izin_diajukan" />
+
+            <!-- Card Item Preview -->
+            <include layout="@layout/item_pengajuan_izin_diajukan" />
+
         </LinearLayout>
     </ScrollView>
+
+    <!-- Bottom Button -->
+    <LinearLayout
+        android:id="@+id/btnContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTambahPengajuan"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:backgroundTint="#2D1B69"
+            android:fontFamily="@font/barlow_semi_condensed"
+            android:text="TAMBAH PENGAJUAN"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

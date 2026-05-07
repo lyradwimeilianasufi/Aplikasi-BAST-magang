@@ -30,6 +30,10 @@
         </activity>
 
         <activity
+            android:name=".DaftarPengajuanBaruActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".KehadiranActivity"
             android:exported="false" />
 

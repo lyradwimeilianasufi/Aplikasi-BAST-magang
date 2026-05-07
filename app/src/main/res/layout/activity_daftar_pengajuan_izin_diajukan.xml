@@ -117,7 +117,7 @@
             <!-- Sample Item 1 -->
             <include
                 android:id="@+id/itemPengajuan1"
-                layout="@layout/item_riwayat_pengajuan" />
+                layout="@layout/item_riwayat_pengajuan_diajukan" />
 
         </LinearLayout>
     </ScrollView>
