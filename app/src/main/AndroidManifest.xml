@@ -124,6 +124,10 @@
             android:name=".DaftarPengajuanIzinDitolakActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".DetailIzinDitolakActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

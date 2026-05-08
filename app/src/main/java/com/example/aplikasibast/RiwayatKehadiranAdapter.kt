@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aplikasibast.databinding.ItemRiwayatAlpaBinding
+import com.example.aplikasibast.databinding.ItemRiwayatHadirBinding
 import com.example.aplikasibast.databinding.ItemRiwayatIzinBinding
-import com.example.aplikasibast.databinding.ItemRiwayatKehadiranBinding
 import com.example.aplikasibast.databinding.ItemRiwayatLiburBinding
 
 class RiwayatKehadiranAdapter(
@@ -37,7 +37,7 @@ class RiwayatKehadiranAdapter(
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             TYPE_KEHADIRAN -> {
-                val binding = ItemRiwayatKehadiranBinding.inflate(inflater, parent, false)
+                val binding = ItemRiwayatHadirBinding.inflate(inflater, parent, false)
                 KehadiranViewHolder(binding)
             }
             TYPE_IZIN -> {
@@ -68,7 +68,7 @@ class RiwayatKehadiranAdapter(
 
     override fun getItemCount(): Int = list.size
 
-    inner class KehadiranViewHolder(private val binding: ItemRiwayatKehadiranBinding) :
+    inner class KehadiranViewHolder(private val binding: ItemRiwayatHadirBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.KehadiranData) {
             val text = item.tanggal

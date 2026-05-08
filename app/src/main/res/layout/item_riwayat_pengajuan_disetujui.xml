@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvItemRiwayat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="12dp"
     app:cardElevation="0dp"
     app:strokeColor="#EEEEEE"
-    app:strokeWidth="1dp">
+    app:strokeWidth="1dp"
+    android:clickable="true"
+    android:focusable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -31,7 +33,7 @@
             android:id="@+id/tvTanggalPengajuan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
             android:fontFamily="@font/barlow_semi_condensed"
             android:text="Jumat, 03 Jan 2025"
             android:textColor="@color/black"
@@ -50,14 +52,14 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="4dp"
             android:text="DISETUJUI"
-            android:textColor="#4CAF50"
+            android:textColor="#2E7D32"
             android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            android:id="@+id/divider"
+            android:id="@+id/dividerItem"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
@@ -74,13 +76,13 @@
             android:textColor="#BDBDBD"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/dividerItem" />
 
         <TextView
             android:id="@+id/tvJenisIzin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
             android:fontFamily="@font/barlow_semi_condensed"
             android:text="Cuti"
             android:textColor="@color/black"
@@ -105,7 +107,7 @@
             android:id="@+id/tvPeriodeIzin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
             android:layout_marginEnd="12dp"
             android:fontFamily="@font/barlow_semi_condensed"
             android:text="Senin, 05 Jan 2025 - Selasa, 06 Jan 2025"
@@ -128,13 +130,12 @@
             app:layout_constraintTop_toTopOf="@id/lblJenisIzin">
 
             <TextView
-                android:id="@+id/tvDurationValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/barlow_semi_condensed"
                 android:text="2"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -143,7 +144,7 @@
                 android:fontFamily="@font/barlow_semi_condensed"
                 android:text="Hari"
                 android:textColor="@color/black"
-                android:textSize="13sp" />
+                android:textSize="11sp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

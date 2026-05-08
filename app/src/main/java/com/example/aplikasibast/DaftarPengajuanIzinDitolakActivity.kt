@@ -37,21 +37,17 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Tab click listeners
+        // Navigasi ke halaman Detail Izin Ditolak saat kartu diklik
+        binding.itemPengajuanDitolak.cvItemRiwayat.setOnClickListener {
+            val intent = Intent(this, DetailIzinDitolakActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Navigasi Tab
         binding.tabDiajukan.setOnClickListener {
             val intent = Intent(this, DaftarPengajuanIzinActivity::class.java)
             startActivity(intent)
             finish()
-        }
-
-        binding.tabDisetujui.setOnClickListener {
-            // Logic for "DISETUJUI" tab can be added here
-        }
-
-        // Detail click listener for the sample item
-        binding.itemPengajuanDitolak.cvItemRiwayat.setOnClickListener {
-            val intent = Intent(this, DetailPengajuanDitolakActivity::class.java)
-            startActivity(intent)
         }
     }
 }
