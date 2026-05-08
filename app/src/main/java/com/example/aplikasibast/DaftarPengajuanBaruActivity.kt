@@ -5,16 +5,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.aplikasibast.databinding.ActivityDaftarPengajuanBaruBinding
+import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDiajukanBinding
 
 class DaftarPengajuanBaruActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityDaftarPengajuanBaruBinding
+    private lateinit var binding: ActivityDaftarPengajuanIzinDiajukanBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityDaftarPengajuanBaruBinding.inflate(layoutInflater)
+        binding = ActivityDaftarPengajuanIzinDiajukanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -31,7 +31,7 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // Logic sederhana untuk switch tab (hanya UI)
+        // Logic switch tab (UI Only)
         binding.tabDiajukan.setOnClickListener { updateTabSelection(0) }
         binding.tabDisetujui.setOnClickListener { updateTabSelection(1) }
         binding.tabDitolak.setOnClickListener { updateTabSelection(2) }

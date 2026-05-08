@@ -116,6 +116,10 @@
             android:name=".DetailIzinActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".DetailIzinDisetujuiActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
