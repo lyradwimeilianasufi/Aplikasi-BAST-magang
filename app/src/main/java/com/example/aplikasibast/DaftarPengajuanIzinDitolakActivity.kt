@@ -6,16 +6,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDiajukanBinding
+import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDitolakBinding
 
-class DaftarPengajuanIzinActivity : AppCompatActivity() {
+class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityDaftarPengajuanIzinDiajukanBinding
+    private lateinit var binding: ActivityDaftarPengajuanIzinDitolakBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityDaftarPengajuanIzinDiajukanBinding.inflate(layoutInflater)
+        binding = ActivityDaftarPengajuanIzinDitolakBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -37,21 +37,21 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Navigasi ke Detail Izin saat kartu diklik
-        binding.itemPengajuan1.cvItemRiwayat.setOnClickListener {
-            val intent = Intent(this, DetailIzinActivity::class.java)
-            startActivity(intent)
-        }
-
         // Tab click listeners
-        binding.tabDitolak.setOnClickListener {
-            val intent = Intent(this, DaftarPengajuanIzinDitolakActivity::class.java)
+        binding.tabDiajukan.setOnClickListener {
+            val intent = Intent(this, DaftarPengajuanIzinActivity::class.java)
             startActivity(intent)
-            finish() // Menghindari tumpukan activity saat berpindah tab
+            finish()
         }
 
         binding.tabDisetujui.setOnClickListener {
-            // Tambahkan navigasi ke halaman Disetujui jika sudah ada
+            // Logic for "DISETUJUI" tab can be added here
+        }
+
+        // Detail click listener for the sample item
+        binding.itemPengajuanDitolak.cvItemRiwayat.setOnClickListener {
+            val intent = Intent(this, DetailPengajuanDitolakActivity::class.java)
+            startActivity(intent)
         }
     }
 }

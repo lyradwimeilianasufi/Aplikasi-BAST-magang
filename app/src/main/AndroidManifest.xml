@@ -120,6 +120,10 @@
             android:name=".DetailIzinDisetujuiActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".DaftarPengajuanIzinDitolakActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

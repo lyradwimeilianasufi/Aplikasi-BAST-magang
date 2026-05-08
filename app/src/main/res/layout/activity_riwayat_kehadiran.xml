@@ -54,7 +54,7 @@
         tools:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/toolbarShadow">
 
-        <include layout="@layout/item_riwayat_kehadiran" />
+        <include layout="@layout/item_riwayat_hadir" />
         <include layout="@layout/item_riwayat_izin" />
         <include layout="@layout/item_riwayat_alpa" />
     </LinearLayout>
