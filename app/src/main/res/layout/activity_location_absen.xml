@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -25,35 +26,13 @@
 
     </LinearLayout>
 
-    <!-- Map View (OpenStreetMap) -->
+    <!-- Map View -->
     <org.osmdroid.views.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout" />
-
-    <!-- Floating Action Button (Icon Pink U) -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/btnMyLocation"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="-28dp"
-        app:cardCornerRadius="28dp"
-        app:cardBackgroundColor="#FF00CC"
-        app:cardElevation="4dp"
         app:layout_constraintBottom_toTopOf="@id/bottomCard"
-        app:layout_constraintEnd_toEndOf="parent">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="U"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintTop_toBottomOf="@id/headerLayout" />
 
     <!-- Bottom Card Info -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,7 +40,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_card"
-        android:padding="24dp"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <!-- Label Lokasi Terkini -->
@@ -73,7 +54,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Icon di luar shape ungu -->
+        <!-- Icon -->
         <ImageView
             android:id="@+id/ivLocationIcon"
             android:layout_width="24dp"
@@ -84,7 +65,7 @@
             app:layout_constraintTop_toBottomOf="@id/tvLabelTerkini"
             app:tint="#5D2D91" />
 
-        <!-- Kotak Alamat (Shape Ungu) -->
+        <!-- Kotak Alamat -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/addressCard"
             android:layout_width="0dp"

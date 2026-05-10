@@ -51,9 +51,10 @@ class LocationAbsenActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        // PERBAIKAN: Mengatur agar padding mengikuti tinggi bar navigasi sistem
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
@@ -137,10 +138,8 @@ class LocationAbsenActivity : AppCompatActivity() {
             val intent = Intent(this, CameraAbsenActivity::class.java)
             startActivity(intent)
         }
-
-        binding.btnMyLocation.setOnClickListener {
-            getCurrentLocation()
-        }
+        
+        // Listener btnMyLocation telah dihapus karena ID sudah tidak ada di layout XML
     }
 
     override fun onResume() {

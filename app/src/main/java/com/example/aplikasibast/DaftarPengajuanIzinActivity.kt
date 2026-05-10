@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDiajukanBinding
 
 class DaftarPengajuanIzinActivity : AppCompatActivity() {
@@ -14,13 +15,28 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // 1. Aktifkan mode Edge-to-Edge
         enableEdgeToEdge()
+        
         binding = ActivityDaftarPengajuanIzinDiajukanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+        // 2. Tangani Insets secara spesifik untuk elemen atas dan bawah
+        
+        // Atur Toolbar agar tidak tertutup Status Bar (jam, baterai, notch)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            v.updatePadding(top = bars.top)
+            insets
+        }
+
+        // Atur Container Tombol agar terangkat tepat di atas Navigasi Bar HP
+        ViewCompat.setOnApplyWindowInsetsListener(binding.btnTambahContainer) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            // Kita ambil padding asli (20dp) dan tambahkan dengan tinggi navigasi bar sistem
+            val padding20dp = (20 * resources.displayMetrics.density).toInt()
+            v.updatePadding(bottom = bars.bottom + padding20dp)
             insets
         }
 
@@ -37,21 +53,11 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Navigasi ke Detail Izin saat kartu diklik
-        binding.itemPengajuan1.cvItemRiwayat.setOnClickListener {
-            val intent = Intent(this, DetailIzinActivity::class.java)
-            startActivity(intent)
-        }
-
         // Tab click listeners
         binding.tabDitolak.setOnClickListener {
             val intent = Intent(this, DaftarPengajuanIzinDitolakActivity::class.java)
             startActivity(intent)
-            finish() // Menghindari tumpukan activity saat berpindah tab
-        }
-
-        binding.tabDisetujui.setOnClickListener {
-            // Tambahkan navigasi ke halaman Disetujui jika sudah ada
+            finish()
         }
     }
 }

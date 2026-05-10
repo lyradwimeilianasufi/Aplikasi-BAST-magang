@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8F9FA"
@@ -12,7 +13,8 @@
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
         android:background="@color/white"
         android:paddingHorizontal="16dp"
         app:layout_constraintTop_toTopOf="parent">
@@ -35,6 +37,13 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_pengajuan_izin" />
     </RelativeLayout>
 
     <View
@@ -114,10 +123,14 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="16dp">
 
-            <!-- Sample Item 1 -->
-            <include
-                android:id="@+id/itemPengajuan1"
-                layout="@layout/item_riwayat_pengajuan_diajukan" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="200dp"
+                android:text="Data Tidak Tersedia"
+                android:textColor="#BDBDBD"
+                android:textSize="14sp" />
 
         </LinearLayout>
     </ScrollView>
@@ -129,6 +142,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="8dp"
+        android:orientation="vertical"
         android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
