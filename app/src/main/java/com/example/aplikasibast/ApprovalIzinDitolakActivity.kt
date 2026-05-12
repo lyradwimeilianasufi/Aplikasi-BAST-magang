@@ -42,5 +42,11 @@ class ApprovalIzinDitolakActivity : AppCompatActivity() {
             startActivity(Intent(this, ApprovalIzinSelesaiActivity::class.java))
             finish()
         }
+
+        // Navigasi ke detail pengajuan ditolak saat card diklik
+        binding.cardDetailDitolak.setOnClickListener {
+            val intent = Intent(this, DetailPengajuanDitolakActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

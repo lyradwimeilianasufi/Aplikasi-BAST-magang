@@ -111,9 +111,12 @@
 
             <!-- Card Item: Status Ditolak -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardDetailDitolak"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="8dp"
+                android:clickable="true"
+                android:focusable="true"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"

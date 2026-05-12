@@ -1,6 +1,7 @@
 package com.example.aplikasibast
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -43,7 +44,8 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
         }
         
         binding.btnSetujui.setOnClickListener {
-            // Logic for approving
+            val intent = Intent(this, ApprovalIzinSelesaiActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -62,6 +64,9 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
             val alasan = dialogBinding.etAlasan.text.toString()
             if (alasan.isNotEmpty()) {
                 dialog.dismiss()
+                // Navigasi ke halaman Approval Izin Ditolak
+                val intent = Intent(this, ApprovalIzinDitolakActivity::class.java)
+                startActivity(intent)
             } else {
                 dialogBinding.tilAlasan.error = "Alasan tidak boleh kosong"
             }
