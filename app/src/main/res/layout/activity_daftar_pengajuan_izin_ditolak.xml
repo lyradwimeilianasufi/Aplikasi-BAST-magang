@@ -2,13 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8F9FA"
     android:fontFamily="@font/barlow_semi_condensed"
     tools:context=".DaftarPengajuanIzinDitolakActivity">
 
-    <!-- Toolbar -->
+    <!-- Header / Toolbar -->
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -26,6 +27,7 @@
             app:tint="@color/black" />
 
         <TextView
+            android:id="@+id/tvToolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -38,21 +40,21 @@
     </RelativeLayout>
 
     <View
-        android:id="@+id/toolbarDivider"
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#E0E0E0"
+        android:background="#EEEEEE"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <!-- Tabs -->
     <LinearLayout
-        android:id="@+id/tabLayout"
+        android:id="@+id/layoutTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="horizontal"
         android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbarDivider">
+        app:layout_constraintTop_toBottomOf="@id/divider">
 
         <TextView
             android:id="@+id/tabDiajukan"
@@ -61,10 +63,11 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:background="@drawable/bg_tab_unselected"
+            android:backgroundTint="#F3E5F5"
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DIAJUKAN"
-            android:textColor="@color/purple_badge_text"
+            android:textColor="#1A1363"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -75,10 +78,11 @@
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
             android:background="@drawable/bg_tab_unselected"
+            android:backgroundTint="#F3E5F5"
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DISETUJUI"
-            android:textColor="@color/purple_badge_text"
+            android:textColor="#1A1363"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -89,7 +93,7 @@
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:background="@drawable/bg_tab_selected"
-            android:backgroundTint="@color/purple_dark"
+            android:backgroundTint="#1A1363"
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DITOLAK"
@@ -105,7 +109,7 @@
         android:layout_height="0dp"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@id/btnTambahContainer"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout">
+        app:layout_constraintTop_toBottomOf="@id/layoutTabs">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -114,10 +118,148 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="16dp">
 
-            <!-- Item Ditolak -->
-            <include
-                android:id="@+id/itemPengajuanDitolak"
-                layout="@layout/item_riwayat_pengajuan_ditolak" />
+            <!-- Card Item (DITOLAK) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#EEEEEE"
+                app:strokeWidth="1dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/lblTanggalPengajuan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tanggal Pengajuan"
+                        android:textColor="#BDBDBD"
+                        android:textSize="11sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvTanggalPengajuan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Jumat, 03 Jan 2025"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuan" />
+
+                    <TextView
+                        android:id="@+id/tvStatusBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badge_pill"
+                        android:backgroundTint="#FFEBEE"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="DITOLAK"
+                        android:textColor="#EF5350"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/dividerItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="#F0F0F0"
+                        app:layout_constraintTop_toBottomOf="@id/tvTanggalPengajuan" />
+
+                    <TextView
+                        android:id="@+id/lblJenisIzin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Jenis Izin"
+                        android:textColor="#BDBDBD"
+                        android:textSize="11sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/dividerItem" />
+
+                    <TextView
+                        android:id="@+id/tvJenisIzin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Cuti"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lblJenisIzin" />
+
+                    <TextView
+                        android:id="@+id/lblPeriodeIzin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Periode Izin"
+                        android:textColor="#BDBDBD"
+                        android:textSize="11sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvJenisIzin" />
+
+                    <TextView
+                        android:id="@+id/tvPeriodeIzin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="12dp"
+                        android:text="Senin, 05 Jan 2025 - Selasa, 06 Jan 2025"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@id/layoutDuration"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lblPeriodeIzin" />
+
+                    <LinearLayout
+                        android:id="@+id/layoutDuration"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="#F5F5F5"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <TextView
+                            android:id="@+id/tvDurationValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDurationUnit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hari"
+                            android:textColor="@color/black"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>
@@ -129,6 +271,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="8dp"
+        android:orientation="vertical"
         android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -136,7 +279,7 @@
             android:id="@+id/btnTambahPengajuan"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:backgroundTint="@color/purple_dark"
+            android:backgroundTint="#1A1363"
             android:text="TAMBAH PENGAJUAN"
             android:textColor="@color/white"
             android:textStyle="bold"

@@ -52,7 +52,7 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="4dp"
             android:text="DITOLAK"
-            android:textColor="#F44336"
+            android:textColor="#EF5350"
             android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -120,8 +120,8 @@
 
         <LinearLayout
             android:id="@+id/layoutDuration"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="#F5F5F5"
             android:gravity="center"
             android:orientation="vertical"
