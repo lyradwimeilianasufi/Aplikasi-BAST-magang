@@ -38,7 +38,8 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
         }
 
         // Navigasi ke halaman Detail Izin Ditolak saat kartu diklik
-        binding.itemPengajuanDitolak.cvItemRiwayat.setOnClickListener {
+        // Memperbaiki Unresolved reference: mengganti itemPengajuanDitolak menjadi cardItem
+        binding.cardItem.setOnClickListener {
             val intent = Intent(this, DetailIzinDitolakActivity::class.java)
             startActivity(intent)
         }
@@ -46,6 +47,12 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
         // Navigasi Tab
         binding.tabDiajukan.setOnClickListener {
             val intent = Intent(this, DaftarPengajuanIzinActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        binding.tabDisetujui.setOnClickListener {
+            val intent = Intent(this, DaftarPengajuanBaruActivity::class.java)
             startActivity(intent)
             finish()
         }

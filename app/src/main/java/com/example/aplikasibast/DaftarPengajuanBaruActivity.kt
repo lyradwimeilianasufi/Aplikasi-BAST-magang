@@ -1,20 +1,21 @@
 package com.example.aplikasibast
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDiajukanBinding
+import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDisetujuiBinding
 
 class DaftarPengajuanBaruActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityDaftarPengajuanIzinDiajukanBinding
+    private lateinit var binding: ActivityDaftarPengajuanIzinDisetujuiBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityDaftarPengajuanIzinDiajukanBinding.inflate(layoutInflater)
+        binding = ActivityDaftarPengajuanIzinDisetujuiBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -31,24 +32,23 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // Logic switch tab (UI Only)
-        binding.tabDiajukan.setOnClickListener { updateTabSelection(0) }
-        binding.tabDisetujui.setOnClickListener { updateTabSelection(1) }
-        binding.tabDitolak.setOnClickListener { updateTabSelection(2) }
-    }
+        // Navigasi ke halaman Detail Izin Disetujui saat kartu diklik
+        binding.cardItem.setOnClickListener {
+            val intent = Intent(this, DetailIzinDisetujuiActivity::class.java)
+            startActivity(intent)
+        }
 
-    private fun updateTabSelection(index: Int) {
-        val tabs = listOf(binding.tabDiajukan, binding.tabDisetujui, binding.tabDitolak)
-        tabs.forEachIndexed { i, textView ->
-            if (i == index) {
-                textView.setBackgroundResource(R.drawable.bg_tab_selected)
-                textView.backgroundTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.purple_dark))
-                textView.setTextColor(getColor(R.color.white))
-            } else {
-                textView.setBackgroundResource(R.drawable.bg_tab_unselected)
-                textView.backgroundTintList = null
-                textView.setTextColor(getColor(R.color.purple_badge_text))
-            }
+        // Navigasi Tab
+        binding.tabDiajukan.setOnClickListener {
+            val intent = Intent(this, DaftarPengajuanIzinActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        binding.tabDitolak.setOnClickListener {
+            val intent = Intent(this, DaftarPengajuanIzinDitolakActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }

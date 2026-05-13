@@ -1,6 +1,7 @@
 package com.example.aplikasibast
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.activity.enableEdgeToEdge
@@ -76,7 +77,11 @@ class PengajuanIzinActivity : AppCompatActivity() {
         }
 
         binding.btnSubmit.setOnClickListener {
-            // Logika submit
+            // Navigasi ke halaman Daftar Pengajuan Izin
+            val intent = Intent(this, DaftarPengajuanIzinActivity::class.java)
+            startActivity(intent)
+            // Optional: tambahkan finish() jika tidak ingin kembali ke form pengajuan saat tekan tombol back
+            finish()
         }
     }
 }
