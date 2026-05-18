@@ -2,24 +2,30 @@ package com.example.aplikasibast
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class MainViewModel(private val repository: AppRepository) : ViewModel() {
     
-    // User Data
     val userName = "Trisnualdi"
     val userRole = "Teknisi"
-    val currentDay = "Kamis, 02 Jan 2024"
+    val currentDay = SimpleDateFormat("EEEE, dd MMM yyyy", Locale("id", "ID")).format(Calendar.getInstance().time)
     val workHours = "Full Day (06:00)"
-    val jamMasukTarget = "06:00"
-    val jamMasukActual = "-"
-    val jamKeluarTarget = "-"
-    val jamKeluarActual = "-"
 
-    // Kehadiran Data
+    // Aliran data kehadiran hari ini secara real-time
+    val todayKehadiran: StateFlow<KehadiranEntity?> = repository.allKehadiran
+        .map { list ->
+            val tanggal = SimpleDateFormat("EEEE, dd MMM yyyy", Locale("id", "ID")).format(Calendar.getInstance().time)
+            list.find { it.tanggal == tanggal }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
     val allKehadiran: Flow<List<KehadiranEntity>> = repository.allKehadiran
 
+    // Fungsi untuk mengambil detail kehadiran berdasarkan ID (Dibutuhkan oleh DetailKehadiranActivity)
     suspend fun getKehadiranById(id: Int): KehadiranEntity? {
         return repository.getKehadiranById(id)
     }
@@ -30,15 +36,21 @@ class MainViewModel(private val repository: AppRepository) : ViewModel() {
         }
     }
 
-    // Pengajuan Izin Data
-    fun getPengajuanByStatus(status: String): Flow<List<PengajuanIzinEntity>> {
-        return repository.getPengajuanByStatus(status)
+    fun updateKehadiran(kehadiran: KehadiranEntity) {
+        viewModelScope.launch {
+            repository.updateKehadiran(kehadiran)
+        }
     }
+
+    // --- Pengajuan Izin ---
+
+    fun getPengajuanByStatus(status: String): Flow<List<PengajuanIzinEntity>> = repository.getPengajuanByStatus(status)
 
     suspend fun getPengajuanById(id: Int): PengajuanIzinEntity? {
         return repository.getPengajuanById(id)
     }
 
+    // Fungsi untuk mengirim pengajuan izin (Dibutuhkan oleh PengajuanIzinActivity)
     fun submitPengajuanIzin(
         jenisIzin: String,
         tanggalMulai: String,

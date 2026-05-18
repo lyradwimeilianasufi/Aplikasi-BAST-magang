@@ -14,8 +14,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityMainBinding
 import com.example.aplikasibast.databinding.ActivitySuccessAbsenBinding
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -38,10 +40,50 @@ class MainActivity : AppCompatActivity() {
 
         setupUI()
         setupListeners()
+        observeViewModel()
 
         // Cek jika harus menampilkan popup sukses
         if (intent.getBooleanExtra("SHOW_SUCCESS_DIALOG", false)) {
             showSuccessDialog()
+        }
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            viewModel.todayKehadiran.collect { kehadiran ->
+                updateAttendanceUI(kehadiran)
+            }
+        }
+    }
+
+    private fun updateAttendanceUI(kehadiran: KehadiranEntity?) {
+        if (kehadiran == null) {
+            binding.tvInTime.text = "-"
+            binding.tvOutTime.text = "-"
+            binding.btnAbsenMasukMain.isEnabled = true
+            binding.btnAbsenMasukMain.alpha = 1.0f
+            binding.btnAbsenKeluarMain.isEnabled = false
+            binding.btnAbsenKeluarMain.alpha = 0.5f
+            binding.icFingerOut.alpha = 0.4f
+        } else {
+            binding.tvInTime.text = kehadiran.jamMasuk
+            binding.tvOutTime.text = kehadiran.jamKeluar
+            
+            if (kehadiran.jamKeluar == "-") {
+                // Sudah absen masuk, belum absen keluar
+                binding.btnAbsenMasukMain.isEnabled = false
+                binding.btnAbsenMasukMain.alpha = 0.5f
+                binding.btnAbsenKeluarMain.isEnabled = true
+                binding.btnAbsenKeluarMain.alpha = 1.0f
+                binding.icFingerOut.alpha = 1.0f
+            } else {
+                // Sudah absen keluar
+                binding.btnAbsenMasukMain.isEnabled = false
+                binding.btnAbsenMasukMain.alpha = 0.5f
+                binding.btnAbsenKeluarMain.isEnabled = false
+                binding.btnAbsenKeluarMain.alpha = 0.5f
+                binding.icFingerOut.alpha = 0.4f
+            }
         }
     }
 
@@ -90,15 +132,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnAbsenMasukMain.setOnClickListener { navigateToLocationAbsen() }
-        binding.btnAbsenKeluarMain.setOnClickListener { navigateToLocationAbsen() }
+        binding.btnAbsenMasukMain.setOnClickListener { navigateToLocationAbsen(true) }
+        binding.btnAbsenKeluarMain.setOnClickListener { navigateToLocationAbsen(false) }
         binding.btnMenuIzin.setOnClickListener {
             startActivity(Intent(this, RiwayatPengajuanIzinActivity::class.java))
         }
     }
 
-    private fun navigateToLocationAbsen() {
-        startActivity(Intent(this, LocationAbsenActivity::class.java))
+    private fun navigateToLocationAbsen(isMasuk: Boolean) {
+        val intent = Intent(this, LocationAbsenActivity::class.java)
+        intent.putExtra("IS_MASUK", isMasuk)
+        startActivity(intent)
     }
 
     private fun showSuccessDialog() {

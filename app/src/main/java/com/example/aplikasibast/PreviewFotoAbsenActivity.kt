@@ -5,7 +5,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityPreviewFotoAbsenBinding
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.text.SimpleDateFormat
@@ -40,6 +43,9 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
     }
 
     private fun saveAttendanceAndFinish(photoPath: String?) {
+        val isMasuk = intent.getBooleanExtra("IS_MASUK", true)
+        val lokasi = intent.getStringExtra("LOKASI") ?: "Lokasi tidak diketahui"
+        
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("EEEE, dd MMM yyyy", Locale("id", "ID"))
         val timeFormat = SimpleDateFormat("HH:mm 'WIB'", Locale("id", "ID"))
@@ -47,20 +53,39 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
         val tanggal = dateFormat.format(calendar.time)
         val jamSekarang = timeFormat.format(calendar.time)
 
-        // Simpan data kehadiran ke Room Database
-        // Catatan: Ini logika sederhana untuk "Absen Masuk"
-        val kehadiran = KehadiranEntity(
-            tanggal = tanggal,
-            status = "Hadir",
-            jamMasuk = jamSekarang,
-            jamKeluar = "-", // Akan diupdate saat absen keluar
-            totalJam = "-",
-            fotoPath = photoPath,
-            lokasi = "Gedung BAST" // Sesuai data dari LocationActivity nantinya
-        )
+        lifecycleScope.launch {
+            if (isMasuk) {
+                // Logika Absen Masuk: Buat data baru
+                val kehadiran = KehadiranEntity(
+                    tanggal = tanggal,
+                    status = "Hadir",
+                    jamMasuk = jamSekarang,
+                    jamKeluar = "-",
+                    totalJam = "-",
+                    fotoPath = photoPath,
+                    lokasi = lokasi
+                )
+                viewModel.insertKehadiran(kehadiran)
+                finishWithSuccess()
+            } else {
+                // Logika Absen Keluar: Cari data hari ini dan update
+                val todayKehadiran = viewModel.allKehadiran.first().find { it.tanggal == tanggal }
+                
+                if (todayKehadiran != null) {
+                    val updatedKehadiran = todayKehadiran.copy(
+                        jamKeluar = jamSekarang,
+                        totalJam = calculateTotalWorkHours(todayKehadiran.jamMasuk, jamSekarang)
+                    )
+                    viewModel.updateKehadiran(updatedKehadiran)
+                    finishWithSuccess()
+                } else {
+                    Toast.makeText(this@PreviewFotoAbsenActivity, "Data absen masuk tidak ditemukan untuk hari ini", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
-        viewModel.insertKehadiran(kehadiran)
-
+    private fun finishWithSuccess() {
         Toast.makeText(this, "Absensi berhasil disimpan", Toast.LENGTH_SHORT).show()
 
         // Kembali ke MainActivity dan tampilkan dialog sukses
@@ -69,5 +94,29 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
         intent.putExtra("SHOW_SUCCESS_DIALOG", true)
         startActivity(intent)
         finish()
+    }
+
+    private fun calculateTotalWorkHours(jamMasuk: String, jamKeluar: String): String {
+        return try {
+            val format = SimpleDateFormat("HH:mm", Locale("id", "ID"))
+            // Ambil bagian jam saja, misal "08:30 WIB" -> "08:30"
+            val startStr = jamMasuk.substringBefore(" WIB")
+            val endStr = jamKeluar.substringBefore(" WIB")
+            
+            val dateMasuk = format.parse(startStr)
+            val dateKeluar = format.parse(endStr)
+            
+            if (dateMasuk != null && dateKeluar != null) {
+                val diff = dateKeluar.time - dateMasuk.time
+                val hours = diff / (1000 * 60 * 60)
+                val minutes = (diff / (1000 * 60)) % 60
+                
+                String.format("%02d:%02d", hours, minutes)
+            } else {
+                "-"
+            }
+        } catch (e: Exception) {
+            "-"
+        }
     }
 }

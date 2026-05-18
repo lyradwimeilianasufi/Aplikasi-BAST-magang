@@ -13,8 +13,16 @@ class AppRepository(
         return kehadiranDao.getKehadiranById(id)
     }
 
+    suspend fun getKehadiranByTanggal(tanggal: String): KehadiranEntity? {
+        return kehadiranDao.getKehadiranByTanggal(tanggal)
+    }
+
     suspend fun insertKehadiran(kehadiran: KehadiranEntity) {
         kehadiranDao.insertKehadiran(kehadiran)
+    }
+
+    suspend fun updateKehadiran(kehadiran: KehadiranEntity) {
+        kehadiranDao.updateKehadiran(kehadiran)
     }
 
     // Pengajuan Izin

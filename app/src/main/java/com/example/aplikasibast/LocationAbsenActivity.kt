@@ -3,6 +3,7 @@ package com.example.aplikasibast
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Geocoder
 import android.os.Bundle
 import android.widget.Toast
@@ -26,10 +27,12 @@ class LocationAbsenActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLocationAbsenBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var userMarker: Marker? = null
+    private var isMasuk: Boolean = true
 
+    // PERBAIKAN: Menambahkan tipe data Map<String, Boolean> secara eksplisit untuk lambda permissions
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
+    ) { permissions: Map<String, Boolean> ->
         if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
             permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
         ) {
@@ -42,6 +45,9 @@ class LocationAbsenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Mengambil status dari Intent apakah user ingin Absen Masuk atau Keluar
+        isMasuk = intent.getBooleanExtra("IS_MASUK", true)
+
         // Inisialisasi OSMDroid sebelum setContentView
         Configuration.getInstance().userAgentValue = packageName
 
@@ -51,16 +57,25 @@ class LocationAbsenActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // PERBAIKAN: Mengatur agar padding mengikuti tinggi bar navigasi sistem
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        setupUI()
         setupMap()
         setupListeners()
         checkLocationPermissions()
+    }
+
+    private fun setupUI() {
+        // Jika Absen Keluar, ubah warna tombol menjadi merah sebagai penanda visual
+        if (!isMasuk) {
+            binding.btnAbsenMasuk.setColorFilter(Color.parseColor("#D32F2F")) // Merah (Absen Keluar)
+        } else {
+            binding.btnAbsenMasuk.clearColorFilter() // Default (Absen Masuk)
+        }
     }
 
     private fun setupMap() {
@@ -136,10 +151,11 @@ class LocationAbsenActivity : AppCompatActivity() {
 
         binding.btnAbsenMasuk.setOnClickListener {
             val intent = Intent(this, CameraAbsenActivity::class.java)
+            // Mengirim status Masuk/Keluar dan lokasi ke halaman kamera/preview foto
+            intent.putExtra("IS_MASUK", isMasuk)
+            intent.putExtra("LOKASI", binding.tvAlamatLengkap.text.toString())
             startActivity(intent)
         }
-        
-        // Listener btnMyLocation telah dihapus karena ID sudah tidak ada di layout XML
     }
 
     override fun onResume() {

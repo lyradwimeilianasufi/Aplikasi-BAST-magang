@@ -20,7 +20,8 @@ class DetailKehadiranActivity : AppCompatActivity() {
         binding = ActivityDetailKehadiranHadirBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val kehadiranId = intent.getIntOfExtra("KEHADIRAN_ID", -1)
+        // Menggunakan getIntExtra bawaan Android
+        val kehadiranId = intent.getIntExtra("KEHADIRAN_ID", -1)
         if (kehadiranId != -1) {
             loadDetailData(kehadiranId)
         }
@@ -46,6 +47,7 @@ class DetailKehadiranActivity : AppCompatActivity() {
 
     private fun loadDetailData(id: Int) {
         lifecycleScope.launch {
+            // Memanggil fungsi getKehadiranById yang sudah kita tambahkan di MainViewModel
             val data = viewModel.getKehadiranById(id)
             data?.let {
                 binding.tvTanggalKerja.text = it.tanggal
@@ -63,10 +65,5 @@ class DetailKehadiranActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-    
-    // Helper function for intent (fixes potential typo)
-    private fun Intent.getIntOfExtra(name: String, defaultValue: Int): Int {
-        return this.getIntExtra(name, defaultValue)
     }
 }

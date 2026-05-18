@@ -26,15 +26,30 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
         binding = ActivityDaftarPengajuanIzinDiajukanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Penanganan Insets secara spesifik agar elemen tidak tertutup sistem bar
         ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { _, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val statusBars = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
             
+            // 1. Atur tinggi spacer status bar agar toolbar tidak tertutup
             val spacerParams = binding.statusBarSpacer.layoutParams
-            spacerParams.height = systemBars.top
-            binding.statusBarSpacer.layoutParams = spacerParams
+            if (spacerParams.height != statusBars.top) {
+                spacerParams.height = statusBars.top
+                binding.statusBarSpacer.layoutParams = spacerParams
+            }
             
-            val paddingNormal = (20 * resources.displayMetrics.density).toInt()
-            binding.btnTambahContainer.updatePadding(bottom = systemBars.bottom + paddingNormal)
+            // 2. Angkat kontainer tombol di atas navigasi bar HP
+            // Padding asli 20dp dari XML + tinggi navigasi bar sistem
+            val density = resources.displayMetrics.density
+            val paddingNormal = (20 * density).toInt()
+            
+            // Menggunakan setPadding untuk memastikan semua sisi konsisten dan bottom terangkat
+            binding.btnTambahContainer.setPadding(
+                paddingNormal, // left
+                paddingNormal, // top
+                paddingNormal, // right
+                navBars.bottom + paddingNormal // bottom (nav bar + spacing)
+            )
             
             insets
         }
@@ -47,7 +62,6 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = PengajuanIzinAdapter { item ->
             val intent = Intent(this, DetailPengajuanIzinActivity::class.java)
-            // Anda bisa mengirimkan ID atau data melalui intent jika diperlukan
             startActivity(intent)
         }
         binding.rvPengajuan.layoutManager = LinearLayoutManager(this)
