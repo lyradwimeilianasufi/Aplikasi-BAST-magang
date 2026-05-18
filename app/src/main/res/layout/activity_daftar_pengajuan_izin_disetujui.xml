@@ -102,165 +102,16 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Content List -->
-    <ScrollView
-        android:id="@+id/scrollViewContent"
+    <!-- RecyclerView untuk menampilkan data DISETUJUI dari Database -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPengajuan"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@id/btnContainer"
-        app:layout_constraintTop_toBottomOf="@id/layoutTabs">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="16dp">
-
-            <!-- Card Item (DISETUJUI) -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="8dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#EEEEEE"
-                app:strokeWidth="1dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/lblTanggalPengajuan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tanggal Pengajuan"
-                        android:textColor="#BDBDBD"
-                        android:textSize="11sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvTanggalPengajuan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Jumat, 03 Jan 2025"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuan" />
-
-                    <TextView
-                        android:id="@+id/tvStatusBadge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_pill"
-                        android:backgroundTint="#E8F5E9"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="4dp"
-                        android:text="DISETUJUI"
-                        android:textColor="#4CAF50"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <View
-                        android:id="@+id/dividerItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="12dp"
-                        android:background="#F0F0F0"
-                        app:layout_constraintTop_toBottomOf="@id/tvTanggalPengajuan" />
-
-                    <TextView
-                        android:id="@+id/lblJenisIzin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Jenis Izin"
-                        android:textColor="#BDBDBD"
-                        android:textSize="11sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/dividerItem" />
-
-                    <TextView
-                        android:id="@+id/tvJenisIzin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Cuti"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lblJenisIzin" />
-
-                    <TextView
-                        android:id="@+id/lblPeriodeIzin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Periode Izin"
-                        android:textColor="#BDBDBD"
-                        android:textSize="11sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvJenisIzin" />
-
-                    <TextView
-                        android:id="@+id/tvPeriodeIzin"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="12dp"
-                        android:text="Senin, 05 Jan 2025 - Selasa, 06 Jan 2025"
-                        android:textColor="@color/black"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/layoutDuration"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lblPeriodeIzin" />
-
-                    <LinearLayout
-                        android:id="@+id/layoutDuration"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="#F5F5F5"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent">
-
-                        <TextView
-                            android:id="@+id/tvDurationValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="2"
-                            android:textColor="@color/black"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvDurationUnit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Hari"
-                            android:textColor="@color/black"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@id/layoutTabs"
+        tools:listitem="@layout/item_riwayat_pengajuan_diajukan" />
 
     <!-- Bottom Button -->
     <LinearLayout
@@ -268,8 +119,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:padding="20dp"
         android:elevation="8dp"
+        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton

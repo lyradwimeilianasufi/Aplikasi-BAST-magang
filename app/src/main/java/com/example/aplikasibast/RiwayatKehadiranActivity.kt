@@ -3,12 +3,17 @@ package com.example.aplikasibast
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplikasibast.databinding.ActivityRiwayatKehadiranBinding
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RiwayatKehadiranActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRiwayatKehadiranBinding
+    private val viewModel: MainViewModel by viewModel()
+    private lateinit var riwayatAdapter: RiwayatKehadiranAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,11 +23,11 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
         setupUI()
         setupNavigation()
         setupRecyclerView()
+        observeData()
     }
 
     override fun onResume() {
         super.onResume()
-        // Memastikan ikon Riwayat aktif saat halaman ini ditampilkan
         binding.bottomNavigation.bottomNavigation.selectedItemId = R.id.nav_riwayat
     }
 
@@ -47,50 +52,73 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                R.id.nav_riwayat -> true // Tetap di halaman ini
-                R.id.nav_akun -> {
-                    // startActivity(Intent(this, AkunActivity::class.java))
-                    true
-                }
+                R.id.nav_riwayat -> true
                 else -> false
             }
         }
     }
 
     private fun setupRecyclerView() {
-        val items = listOf(
-            RiwayatItem.KehadiranData("Jumat, 06 Jan 2024", "Hadir", "08:45 WIB", "17:20 WIB", "9 Jam 45 Menit"),
-            RiwayatItem.IzinData("Kamis, 05 Jan 2024", "-", "-", "-", "Izin"),
-            RiwayatItem.AlpaData("Rabu, 04 Jan 2024", "Alpa"),
-            RiwayatItem.KehadiranData("Selasa, 03 Des 2024 [Take Over]", "Hadir", "08:45 WIB", "18:00", "9 Jam 30 Menit"),
-            RiwayatItem.KehadiranData("Senin, 02 Des 2024", "Hadir", "08:45 WIB", "17:20 WIB", "9 Jam 45 Menit"),
-            RiwayatItem.LiburData("Minggu, 01 Des 2024", "Libur")
-        )
-
-        val adapter = RiwayatKehadiranAdapter(items) { item ->
-            when (item) {
-                is RiwayatItem.KehadiranData -> {
-                    val intent = Intent(this, DetailKehadiranActivity::class.java)
-                    startActivity(intent)
-                }
-                is RiwayatItem.IzinData -> {
-                    val intent = Intent(this, DetailKehadiranIzinActivity::class.java)
-                    startActivity(intent)
-                }
-                is RiwayatItem.AlpaData -> {
-                    val intent = Intent(this, DetailKehadiranAlpaActivity::class.java)
-                    startActivity(intent)
-                }
-                is RiwayatItem.LiburData -> {
-                    val intent = Intent(this, DetailKehadiranLiburActivity::class.java)
-                    startActivity(intent)
-                }
+        riwayatAdapter = RiwayatKehadiranAdapter(emptyList()) { item ->
+            val intent = when (item) {
+                is RiwayatItem.KehadiranData -> Intent(this, DetailKehadiranActivity::class.java)
+                is RiwayatItem.IzinData -> Intent(this, DetailKehadiranIzinActivity::class.java)
+                is RiwayatItem.AlpaData -> Intent(this, DetailKehadiranAlpaActivity::class.java)
+                is RiwayatItem.LiburData -> Intent(this, DetailKehadiranLiburActivity::class.java)
             }
+            
+            // Kirim ID agar halaman detail bisa mengambil data dari DB
+            val id = when(item) {
+                is RiwayatItem.KehadiranData -> item.id
+                is RiwayatItem.IzinData -> item.id
+                is RiwayatItem.AlpaData -> item.id
+                is RiwayatItem.LiburData -> item.id
+            }
+            intent.putExtra("KEHADIRAN_ID", id)
+            startActivity(intent)
         }
 
         binding.rvRiwayatKehadiran.apply {
             layoutManager = LinearLayoutManager(this@RiwayatKehadiranActivity)
-            this.adapter = adapter
+            adapter = riwayatAdapter
+        }
+    }
+
+    private fun observeData() {
+        lifecycleScope.launch {
+            viewModel.allKehadiran.collect { listKehadiran ->
+                val items = listKehadiran.map { entity ->
+                    when (entity.status) {
+                        "Hadir" -> RiwayatItem.KehadiranData(
+                            id = entity.id,
+                            tanggal = entity.tanggal,
+                            status = entity.status,
+                            jamMasuk = entity.jamMasuk,
+                            jamKeluar = entity.jamKeluar,
+                            totalJam = entity.totalJam
+                        )
+                        "Izin" -> RiwayatItem.IzinData(
+                            id = entity.id,
+                            tanggal = entity.tanggal,
+                            jenisIzin = "Izin",
+                            periode = "-",
+                            durasi = "-",
+                            status = "Izin"
+                        )
+                        "Alpa" -> RiwayatItem.AlpaData(
+                            id = entity.id,
+                            tanggal = entity.tanggal,
+                            status = "Alpa"
+                        )
+                        else -> RiwayatItem.LiburData(
+                            id = entity.id,
+                            tanggal = entity.tanggal,
+                            status = entity.status
+                        )
+                    }
+                }
+                riwayatAdapter.updateData(items)
+            }
         }
     }
 }

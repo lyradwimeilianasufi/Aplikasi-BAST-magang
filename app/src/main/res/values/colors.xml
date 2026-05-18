@@ -17,4 +17,12 @@
     <color name="green_status">#4CAF50</color>
     <color name="purple_badge">#F3E5F5</color>
     <color name="purple_badge_text">#7E57C2</color>
+
+    <!-- Badge Colors -->
+    <color name="yellow_badge_bg">#FFF8E1</color>
+    <color name="yellow_badge_text">#FBC02D</color>
+    <color name="green_badge_bg">#E8F5E9</color>
+    <color name="green_badge_text">#4CAF50</color>
+    <color name="red_badge_bg">#FFEBEE</color>
+    <color name="red_badge_text">#EF5350</color>
 </resources>

@@ -4,16 +4,21 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.aplikasibast.databinding.ActivityPengajuanIzinBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class PengajuanIzinActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPengajuanIzinBinding
+    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,16 +38,9 @@ class PengajuanIzinActivity : AppCompatActivity() {
     }
 
     private fun setupDropdown() {
-        // Daftar item sesuai urutan di gambar: Sakit, Izin, Cuti
         val items = listOf("Sakit", "Izin", "Cuti")
-        
-        // Menggunakan R.layout.item_dropdown_izin yang sudah diperbarui dengan warna teks hitam
         val adapter = ArrayAdapter(this, R.layout.item_dropdown_izin, items)
-        
-        // Memasang adapter ke AutoCompleteTextView
         binding.spinnerJenisIzin.setAdapter(adapter)
-        
-        // Memastikan dropdown muncul saat diklik dan tidak memfilter teks
         binding.spinnerJenisIzin.setOnTouchListener { _, _ ->
             binding.spinnerJenisIzin.showDropDown()
             false
@@ -77,11 +75,36 @@ class PengajuanIzinActivity : AppCompatActivity() {
         }
 
         binding.btnSubmit.setOnClickListener {
+            val jenisIzin = binding.spinnerJenisIzin.text.toString()
+            val tglMulai = binding.etTanggalMulai.text.toString()
+            val tglSelesai = binding.etTanggalSelesai.text.toString()
+            val alasan = binding.etAlasan.text.toString()
+
+            if (jenisIzin.isEmpty() || tglMulai.isEmpty() || tglSelesai.isEmpty() || alasan.isEmpty()) {
+                Toast.makeText(this, "Harap isi semua data", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Simpan ke Database via ViewModel
+            viewModel.submitPengajuanIzin(
+                jenisIzin = jenisIzin,
+                tanggalMulai = tglMulai,
+                tanggalSelesai = tglSelesai,
+                alasan = alasan,
+                tanggalPengajuan = getCurrentFormattedDate()
+            )
+
+            Toast.makeText(this, "Pengajuan berhasil dikirim", Toast.LENGTH_SHORT).show()
+            
             // Navigasi ke halaman Daftar Pengajuan Izin
             val intent = Intent(this, DaftarPengajuanIzinActivity::class.java)
             startActivity(intent)
-            // Optional: tambahkan finish() jika tidak ingin kembali ke form pengajuan saat tekan tombol back
             finish()
         }
+    }
+
+    private fun getCurrentFormattedDate(): String {
+        val sdf = SimpleDateFormat("EEEE, dd MMM yyyy", Locale("id", "ID"))
+        return sdf.format(Calendar.getInstance().time)
     }
 }

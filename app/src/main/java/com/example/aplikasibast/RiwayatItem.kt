@@ -2,6 +2,7 @@ package com.example.aplikasibast
 
 sealed class RiwayatItem {
     data class KehadiranData(
+        val id: Int = 0,
         val tanggal: String,
         val status: String,
         val jamMasuk: String,
@@ -10,6 +11,7 @@ sealed class RiwayatItem {
     ) : RiwayatItem()
 
     data class IzinData(
+        val id: Int = 0,
         val tanggal: String,
         val jenisIzin: String,
         val periode: String,
@@ -18,11 +20,13 @@ sealed class RiwayatItem {
     ) : RiwayatItem()
 
     data class AlpaData(
+        val id: Int = 0,
         val tanggal: String,
         val status: String
     ) : RiwayatItem()
 
     data class LiburData(
+        val id: Int = 0,
         val tanggal: String,
         val status: String
     ) : RiwayatItem()

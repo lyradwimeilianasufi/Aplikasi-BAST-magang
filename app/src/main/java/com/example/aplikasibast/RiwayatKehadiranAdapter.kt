@@ -13,7 +13,7 @@ import com.example.aplikasibast.databinding.ItemRiwayatIzinBinding
 import com.example.aplikasibast.databinding.ItemRiwayatLiburBinding
 
 class RiwayatKehadiranAdapter(
-    private val list: List<RiwayatItem>,
+    private var list: List<RiwayatItem>,
     private val onItemClick: (RiwayatItem) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -22,6 +22,12 @@ class RiwayatKehadiranAdapter(
         private const val TYPE_IZIN = 1
         private const val TYPE_ALPA = 2
         private const val TYPE_LIBUR = 3
+    }
+
+    // Fungsi untuk memperbarui data secara dinamis dari Activity
+    fun updateData(newList: List<RiwayatItem>) {
+        this.list = newList
+        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -77,7 +83,7 @@ class RiwayatKehadiranAdapter(
                 val start = text.indexOf("[Take Over]")
                 val end = start + "[Take Over]".length
                 spannable.setSpan(
-                    ForegroundColorSpan(Color.parseColor("#FFB422")), // Warna Kuning/Oranye sesuai gambar
+                    ForegroundColorSpan(Color.parseColor("#FFB422")),
                     start,
                     end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
