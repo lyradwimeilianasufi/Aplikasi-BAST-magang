@@ -91,14 +91,19 @@
                 android:fontFamily="@font/barlow_semi_condensed" />
         </com.google.android.material.card.MaterialCardView>
 
-        <ImageView
+        <!-- MENGGANTI IMAGEVIEW DENGAN MATERIAL BUTTON -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAbsenMasuk"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="56dp"
             android:layout_marginTop="24dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_absen_masuk"
+            android:text="ABSEN MASUK"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:fontFamily="@font/barlow_semi_condensed"
+            app:backgroundTint="#290F65"
+            app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/addressCard" />

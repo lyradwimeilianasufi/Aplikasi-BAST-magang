@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         setupListeners()
         observeViewModel()
 
-        // Cek jika harus menampilkan popup sukses
         if (intent.getBooleanExtra("SHOW_SUCCESS_DIALOG", false)) {
             showSuccessDialog()
         }
@@ -57,33 +56,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateAttendanceUI(kehadiran: KehadiranEntity?) {
+        // UNTUK DEVELOPMENT: Tombol dibuat selalu aktif agar bisa absen berkali-kali
+        binding.btnAbsenMasukMain.isEnabled = true
+        binding.btnAbsenMasukMain.alpha = 1.0f
+        binding.btnAbsenKeluarMain.isEnabled = true
+        binding.btnAbsenKeluarMain.alpha = 1.0f
+        binding.icFingerOut.alpha = 1.0f
+
         if (kehadiran == null) {
             binding.tvInTime.text = "-"
             binding.tvOutTime.text = "-"
-            binding.btnAbsenMasukMain.isEnabled = true
-            binding.btnAbsenMasukMain.alpha = 1.0f
-            binding.btnAbsenKeluarMain.isEnabled = false
-            binding.btnAbsenKeluarMain.alpha = 0.5f
-            binding.icFingerOut.alpha = 0.4f
         } else {
             binding.tvInTime.text = kehadiran.jamMasuk
             binding.tvOutTime.text = kehadiran.jamKeluar
-            
-            if (kehadiran.jamKeluar == "-") {
-                // Sudah absen masuk, belum absen keluar
-                binding.btnAbsenMasukMain.isEnabled = false
-                binding.btnAbsenMasukMain.alpha = 0.5f
-                binding.btnAbsenKeluarMain.isEnabled = true
-                binding.btnAbsenKeluarMain.alpha = 1.0f
-                binding.icFingerOut.alpha = 1.0f
-            } else {
-                // Sudah absen keluar
-                binding.btnAbsenMasukMain.isEnabled = false
-                binding.btnAbsenMasukMain.alpha = 0.5f
-                binding.btnAbsenKeluarMain.isEnabled = false
-                binding.btnAbsenKeluarMain.alpha = 0.5f
-                binding.icFingerOut.alpha = 0.4f
-            }
         }
     }
 
@@ -97,7 +82,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Pastikan tab Beranda terpilih saat kembali ke halaman ini
         binding.bottomNavigation.selectedItemId = R.id.nav_beranda
     }
 
@@ -124,10 +108,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                R.id.nav_akun -> {
-                    // Navigasi ke halaman Akun jika sudah ada
-                    true
-                }
+                R.id.nav_akun -> true
                 else -> false
             }
         }
@@ -151,10 +132,7 @@ class MainActivity : AppCompatActivity() {
         val dialogBinding = ActivitySuccessAbsenBinding.inflate(layoutInflater)
         dialog.setContentView(dialogBinding.root)
 
-        // Membuat background dialog transparan agar overlay di XML bekerja
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        
-        // Mengatur lebar dialog agar memenuhi layar (overlay)
         dialog.window?.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT
@@ -162,14 +140,12 @@ class MainActivity : AppCompatActivity() {
 
         dialog.show()
 
-        // Otomatis tutup dialog setelah 2 detik
         Handler(Looper.getMainLooper()).postDelayed({
             if (dialog.isShowing) {
                 dialog.dismiss()
             }
         }, 2000)
 
-        // Klik pada dialog untuk menutup
         dialogBinding.root.setOnClickListener {
             dialog.dismiss()
         }

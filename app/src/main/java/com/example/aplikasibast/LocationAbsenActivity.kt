@@ -3,6 +3,7 @@ package com.example.aplikasibast
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.location.Geocoder
 import android.os.Bundle
@@ -29,7 +30,6 @@ class LocationAbsenActivity : AppCompatActivity() {
     private var userMarker: Marker? = null
     private var isMasuk: Boolean = true
 
-    // PERBAIKAN: Menambahkan tipe data Map<String, Boolean> secara eksplisit untuk lambda permissions
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions: Map<String, Boolean> ->
@@ -45,10 +45,8 @@ class LocationAbsenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Mengambil status dari Intent apakah user ingin Absen Masuk atau Keluar
         isMasuk = intent.getBooleanExtra("IS_MASUK", true)
 
-        // Inisialisasi OSMDroid sebelum setContentView
         Configuration.getInstance().userAgentValue = packageName
 
         enableEdgeToEdge()
@@ -70,11 +68,14 @@ class LocationAbsenActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        // Jika Absen Keluar, ubah warna tombol menjadi merah sebagai penanda visual
         if (!isMasuk) {
-            binding.btnAbsenMasuk.setColorFilter(Color.parseColor("#D32F2F")) // Merah (Absen Keluar)
+            // Jika Absen Keluar: Ubah teks dan warna tombol menjadi merah
+            binding.btnAbsenMasuk.text = "ABSEN KELUAR"
+            binding.btnAbsenMasuk.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#D32F2F"))
         } else {
-            binding.btnAbsenMasuk.clearColorFilter() // Default (Absen Masuk)
+            // Jika Absen Masuk: Gunakan teks default dan warna ungu gelap
+            binding.btnAbsenMasuk.text = "ABSEN MASUK"
+            binding.btnAbsenMasuk.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#290F65"))
         }
     }
 
@@ -151,7 +152,6 @@ class LocationAbsenActivity : AppCompatActivity() {
 
         binding.btnAbsenMasuk.setOnClickListener {
             val intent = Intent(this, CameraAbsenActivity::class.java)
-            // Mengirim status Masuk/Keluar dan lokasi ke halaman kamera/preview foto
             intent.putExtra("IS_MASUK", isMasuk)
             intent.putExtra("LOKASI", binding.tvAlamatLengkap.text.toString())
             startActivity(intent)
