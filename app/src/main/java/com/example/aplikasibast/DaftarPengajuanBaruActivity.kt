@@ -26,13 +26,22 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { _, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Mengambil insets untuk System Bars DAN Display Cutout (area kamera/notch)
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
             
-            // Atur padding atas Toolbar agar tidak tertutup Status Bar
-            binding.toolbar.updatePadding(top = systemBars.top)
+            // Jarak dasar horizontal (16dp)
+            val density = resources.displayMetrics.density
+            val basePadding = (16 * density).toInt()
+
+            // Atur padding Toolbar: atas untuk notch, samping untuk kamera di pojok
+            binding.toolbar.updatePadding(
+                top = systemBars.top,
+                left = basePadding + systemBars.left,
+                right = basePadding + systemBars.right
+            )
             
             // Atur padding bawah tombol container agar tidak tertutup Navigasi Bar HP
-            val paddingNormal = (20 * resources.displayMetrics.density).toInt()
+            val paddingNormal = (20 * density).toInt()
             binding.btnContainer.updatePadding(bottom = systemBars.bottom + paddingNormal)
             
             insets
@@ -45,7 +54,6 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = PengajuanIzinAdapter { item ->
-            // Navigasi ke halaman Detail Izin Disetujui saat kartu diklik
             val intent = Intent(this, DetailIzinDisetujuiActivity::class.java)
             startActivity(intent)
         }
@@ -55,7 +63,6 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
 
     private fun observeData() {
         lifecycleScope.launch {
-            // Ambil data dengan status DISETUJUI dari Database Room
             viewModel.getPengajuanByStatus("DISETUJUI").collect { list ->
                 adapter.submitList(list)
             }
@@ -72,7 +79,6 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Navigasi Tab
         binding.tabDiajukan.setOnClickListener {
             val intent = Intent(this, DaftarPengajuanIzinActivity::class.java)
             startActivity(intent)
