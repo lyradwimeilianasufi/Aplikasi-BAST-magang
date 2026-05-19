@@ -2,52 +2,57 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8F9FA"
     android:fontFamily="@font/barlow_semi_condensed"
     tools:context=".DetailKehadiranActivity">
 
-    <!-- Header / Toolbar -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Header / Toolbar Wrapper -->
+    <LinearLayout
         android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="12dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_back_white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/black" />
-
-        <TextView
-            android:id="@+id/tvToolbarTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:fontFamily="@font/barlow_semi_condensed"
-            android:text="Detail Kehadiran"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btnBack"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
+        <!-- Konten Toolbar Utama -->
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0"
-            app:layout_constraintBottom_toBottomOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="60dp">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_back_white"
+                app:tint="@color/black" />
+
+            <TextView
+                android:id="@+id/tvToolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="4dp"
+                android:layout_toEndOf="@id/btnBack"
+                android:fontFamily="@font/barlow_semi_condensed"
+                android:text="Detail Kehadiran"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="#E0E0E0" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -62,7 +67,7 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Work Info Card (Aligned Implementation, No Middle Divider) -->
+            <!-- Work Info Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +89,6 @@
                         android:orientation="vertical"
                         app:layout_constraintGuide_percent="0.45" />
 
-                    <!-- Tanggal Kerja Section -->
                     <ImageView
                         android:id="@+id/ivCalendar"
                         android:layout_width="20dp"
@@ -120,7 +124,6 @@
                         app:layout_constraintStart_toStartOf="@id/labelTanggal"
                         app:layout_constraintTop_toBottomOf="@id/labelTanggal" />
 
-                    <!-- Jam Kerja Section (Aligned horizontal with Tanggal) -->
                     <ImageView
                         android:id="@+id/ivClock"
                         android:layout_width="20dp"
@@ -160,7 +163,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Summary Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -209,14 +211,12 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Garis Abu-abu Terang di bawah Total Jam Kerja -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:background="#E0E0E0" />
 
-            <!-- DETAIL ABSEN MASUK -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -328,7 +328,6 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- DETAIL ABSEN KELUAR Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

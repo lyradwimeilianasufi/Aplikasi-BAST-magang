@@ -1,7 +1,11 @@
 package com.example.aplikasibast
 
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityDetailKehadiranAlpaBinding
 import kotlinx.coroutines.launch
@@ -14,8 +18,17 @@ class DetailKehadiranAlpaActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 1. Aktifkan mode Edge-to-Edge
+        enableEdgeToEdge()
         binding = ActivityDetailKehadiranAlpaBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 2. Tangani insets agar Toolbar tidak tertutup Status Bar/Notch
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbarLayout) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(top = systemBars.top)
+            insets
+        }
 
         val kehadiranId = intent.getIntExtra("KEHADIRAN_ID", -1)
         if (kehadiranId != -1) {
@@ -37,7 +50,6 @@ class DetailKehadiranAlpaActivity : AppCompatActivity() {
             data?.let {
                 binding.tvTanggalKerja.text = it.tanggal
                 binding.tvStatusBadge.text = it.status
-                // Karena Alpa, jam biasanya kosong
                 binding.tvTotalJamKerja.text = "-"
                 binding.tvWaktuMasuk.text = "-"
                 binding.tvWaktuKeluar.text = "-"

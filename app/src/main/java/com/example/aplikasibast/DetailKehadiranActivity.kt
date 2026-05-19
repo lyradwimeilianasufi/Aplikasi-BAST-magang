@@ -4,7 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityDetailKehadiranHadirBinding
 import kotlinx.coroutines.launch
@@ -18,8 +22,17 @@ class DetailKehadiranActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Aktifkan mode Edge-to-Edge
+        enableEdgeToEdge()
         binding = ActivityDetailKehadiranHadirBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Tangani insets agar Toolbar tidak tertutup Status Bar/Kamera
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbarLayout) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(top = systemBars.top)
+            insets
+        }
 
         val kehadiranId = intent.getIntExtra("KEHADIRAN_ID", -1)
         if (kehadiranId != -1) {

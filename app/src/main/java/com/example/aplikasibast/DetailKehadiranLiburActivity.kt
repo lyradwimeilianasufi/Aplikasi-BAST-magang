@@ -1,7 +1,11 @@
 package com.example.aplikasibast
 
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityDetailKehadiranLiburBinding
 import kotlinx.coroutines.launch
@@ -14,8 +18,17 @@ class DetailKehadiranLiburActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 1. Aktifkan mode Edge-to-Edge agar aplikasi bisa mendeteksi area kamera/notch
+        enableEdgeToEdge()
         binding = ActivityDetailKehadiranLiburBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 2. Tambahkan padding dinamis agar Toolbar tidak tertutup Status Bar/Notch
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbarLayout) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(top = systemBars.top)
+            insets
+        }
 
         val kehadiranId = intent.getIntExtra("KEHADIRAN_ID", -1)
         if (kehadiranId != -1) {
