@@ -45,6 +45,13 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_pengajuan_izin" />
     </RelativeLayout>
 
     <View
@@ -71,7 +78,7 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:background="@drawable/bg_tab_selected"
-            android:backgroundTint="#1A1363"
+            android:backgroundTint="@color/purple_dark"
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DIAJUKAN"
@@ -86,11 +93,10 @@
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
             android:background="@drawable/bg_tab_unselected"
-            android:backgroundTint="#F3E5F5"
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DISETUJUI"
-            android:textColor="#1A1363"
+            android:textColor="@color/purple_badge_text"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -101,11 +107,10 @@
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:background="@drawable/bg_tab_unselected"
-            android:backgroundTint="#F3E5F5"
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DITOLAK"
-            android:textColor="#1A1363"
+            android:textColor="@color/purple_badge_text"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -118,8 +123,7 @@
         android:padding="16dp"
         android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@id/btnTambahContainer"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout"
-        tools:listitem="@layout/item_riwayat_pengajuan_diajukan" />
+        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
     <!-- Bottom Button Container -->
     <LinearLayout
@@ -136,11 +140,12 @@
             android:id="@+id/btnTambahPengajuan"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:backgroundTint="#1A1363"
+            android:backgroundTint="@color/purple_dark"
             android:text="TAMBAH PENGAJUAN"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="14sp"
+            android:fontFamily="@font/barlow_semi_condensed"
             app:cornerRadius="8dp" />
     </LinearLayout>
 

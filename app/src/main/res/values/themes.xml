@@ -17,22 +17,10 @@
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
     </style>
 
-    <style name="Theme.AplikasiBAST.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
-    <!-- Tema khusus untuk Success Dialog -->
-    <style name="Theme.App.Transparent" parent="Theme.AplikasiBAST.NoActionBar">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
-    </style>
+    <!-- Definisi NoActionBar (sama dengan tema utama karena parent-nya sudah NoActionBar) -->
+    <style name="Theme.AplikasiBAST.NoActionBar" parent="Theme.AplikasiBAST" />
 
     <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <!-- Menghilangkan indikator (lingkaran di belakang ikon aktif) secara aman -->
         <item name="itemActiveIndicatorStyle">@style/Widget.App.BottomNavigationView.ActiveIndicator</item>
     </style>
 
@@ -50,5 +38,15 @@
     <style name="BottomNavInactive" parent="TextAppearance.Material3.LabelSmall">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>
+    </style>
+
+    <!-- Style Transparan untuk Activity Popup/Success -->
+    <style name="Theme.App.Transparent" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 </resources>

@@ -3,6 +3,7 @@ package com.example.aplikasibast
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityDetailKehadiranHadirBinding
@@ -20,7 +21,6 @@ class DetailKehadiranActivity : AppCompatActivity() {
         binding = ActivityDetailKehadiranHadirBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Menggunakan getIntExtra bawaan Android
         val kehadiranId = intent.getIntExtra("KEHADIRAN_ID", -1)
         if (kehadiranId != -1) {
             loadDetailData(kehadiranId)
@@ -47,20 +47,31 @@ class DetailKehadiranActivity : AppCompatActivity() {
 
     private fun loadDetailData(id: Int) {
         lifecycleScope.launch {
-            // Memanggil fungsi getKehadiranById yang sudah kita tambahkan di MainViewModel
             val data = viewModel.getKehadiranById(id)
-            data?.let {
-                binding.tvTanggalKerja.text = it.tanggal
-                binding.tvWaktuMasuk.text = it.jamMasuk
-                binding.tvWaktuKeluar.text = it.jamKeluar
-                binding.tvTotalJamKerja.text = it.totalJam
-                binding.tvStatusBadge.text = it.status
+            data?.let { kehadiran ->
+                binding.tvTanggalKerja.text = kehadiran.tanggal
+                binding.tvWaktuMasuk.text = kehadiran.jamMasuk
+                binding.tvWaktuKeluar.text = kehadiran.jamKeluar
+                binding.tvTotalJamKerja.text = kehadiran.totalJam
+                binding.tvStatusBadge.text = kehadiran.status
                 
-                // Tampilkan foto jika ada
-                it.fotoPath?.let { path ->
+                // 1. Tampilkan Foto Absen Masuk
+                kehadiran.fotoMasukPath?.let { path ->
                     val file = File(path)
                     if (file.exists()) {
+                        binding.ivFotoMasuk.setImageURI(null) // Reset cache
                         binding.ivFotoMasuk.setImageURI(Uri.fromFile(file))
+                    }
+                }
+
+                // 2. Tampilkan Foto Absen Keluar (Pastikan jamKeluar bukan default "-")
+                if (kehadiran.jamKeluar != "-") {
+                    kehadiran.fotoKeluarPath?.let { path ->
+                        val file = File(path)
+                        if (file.exists()) {
+                            binding.ivFotoKeluar.setImageURI(null) // Reset cache
+                            binding.ivFotoKeluar.setImageURI(Uri.fromFile(file))
+                        }
                     }
                 }
             }

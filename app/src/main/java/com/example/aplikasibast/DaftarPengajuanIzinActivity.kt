@@ -6,7 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDiajukanBinding
@@ -22,34 +22,25 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        // 1. Aktifkan mode Edge-to-Edge
         enableEdgeToEdge()
+        
         binding = ActivityDaftarPengajuanIzinDiajukanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Penanganan Insets secara spesifik agar elemen tidak tertutup sistem bar
-        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { _, insets ->
-            val statusBars = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            val navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+        // 2. Tangani Insets secara menyeluruh pada root layout
+        // Ini memastikan tombol di bawah otomatis terangkat di atas navigasi HP
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             
-            // 1. Atur tinggi spacer status bar agar toolbar tidak tertutup
-            val spacerParams = binding.statusBarSpacer.layoutParams
-            if (spacerParams.height != statusBars.top) {
-                spacerParams.height = statusBars.top
-                binding.statusBarSpacer.layoutParams = spacerParams
+            // Berikan padding (kiri, atas, kanan, bawah) sesuai area aman sistem
+            // Kita biarkan padding top tetap 0 karena kita menggunakan statusBarSpacer secara manual
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
+            
+            // Sesuaikan tinggi spacer status bar di bagian atas agar toolbar tidak tertutup notch/jam
+            binding.statusBarSpacer.updateLayoutParams {
+                height = systemBars.top
             }
-            
-            // 2. Angkat kontainer tombol di atas navigasi bar HP
-            // Padding asli 20dp dari XML + tinggi navigasi bar sistem
-            val density = resources.displayMetrics.density
-            val paddingNormal = (20 * density).toInt()
-            
-            // Menggunakan setPadding untuk memastikan semua sisi konsisten dan bottom terangkat
-            binding.btnTambahContainer.setPadding(
-                paddingNormal, // left
-                paddingNormal, // top
-                paddingNormal, // right
-                navBars.bottom + paddingNormal // bottom (nav bar + spacing)
-            )
             
             insets
         }
@@ -62,6 +53,7 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = PengajuanIzinAdapter { item ->
             val intent = Intent(this, DetailPengajuanIzinActivity::class.java)
+            intent.putExtra("PENGAJUAN_ID", item.id)
             startActivity(intent)
         }
         binding.rvPengajuan.layoutManager = LinearLayoutManager(this)
@@ -86,14 +78,9 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Tab click listeners
-        binding.tabDisetujui.setOnClickListener {
-            startActivity(Intent(this, DaftarPengajuanBaruActivity::class.java))
-            finish()
-        }
-        
         binding.tabDitolak.setOnClickListener {
-            startActivity(Intent(this, DaftarPengajuanIzinDitolakActivity::class.java))
+            val intent = Intent(this, DaftarPengajuanIzinDitolakActivity::class.java)
+            startActivity(intent)
             finish()
         }
     }

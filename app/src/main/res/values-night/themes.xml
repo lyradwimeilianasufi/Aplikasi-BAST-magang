@@ -1,7 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.AplikasiBAST" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.AplikasiBAST" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/purple_main</item>
+        <item name="android:statusBarColor">@color/purple_main</item>
+    </style>
+
+    <!-- Definisi NoActionBar untuk mode malam -->
+    <style name="Theme.AplikasiBAST.NoActionBar" parent="Theme.AplikasiBAST" />
+
+    <!-- Style Transparan untuk Activity Popup/Success di mode malam -->
+    <style name="Theme.App.Transparent" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 </resources>

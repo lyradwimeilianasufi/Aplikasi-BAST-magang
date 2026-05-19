@@ -11,6 +11,8 @@ data class KehadiranEntity(
     val jamMasuk: String,
     val jamKeluar: String,
     val totalJam: String,
-    val fotoPath: String? = null,
-    val lokasi: String? = null
+    val fotoMasukPath: String? = null,
+    val fotoKeluarPath: String? = null,
+    val lokasiMasuk: String? = null,
+    val lokasiKeluar: String? = null
 )

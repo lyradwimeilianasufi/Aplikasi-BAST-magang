@@ -62,8 +62,8 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                     jamMasuk = jamSekarang,
                     jamKeluar = "-",
                     totalJam = "-",
-                    fotoPath = photoPath,
-                    lokasi = lokasi
+                    fotoMasukPath = photoPath,
+                    lokasiMasuk = lokasi
                 )
                 viewModel.insertKehadiran(kehadiran)
                 finishWithSuccess()
@@ -74,6 +74,8 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                 if (todayKehadiran != null) {
                     val updatedKehadiran = todayKehadiran.copy(
                         jamKeluar = jamSekarang,
+                        fotoKeluarPath = photoPath,
+                        lokasiKeluar = lokasi,
                         totalJam = calculateTotalWorkHours(todayKehadiran.jamMasuk, jamSekarang)
                     )
                     viewModel.updateKehadiran(updatedKehadiran)
@@ -111,7 +113,7 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                 val hours = diff / (1000 * 60 * 60)
                 val minutes = (diff / (1000 * 60)) % 60
                 
-                String.format("%02d:%02d", hours, minutes)
+                String.format("%02d Jam %02d Menit", hours, minutes)
             } else {
                 "-"
             }

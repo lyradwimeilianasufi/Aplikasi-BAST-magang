@@ -25,7 +25,7 @@ class MainViewModel(private val repository: AppRepository) : ViewModel() {
 
     val allKehadiran: Flow<List<KehadiranEntity>> = repository.allKehadiran
 
-    // Fungsi untuk mengambil detail kehadiran berdasarkan ID (Dibutuhkan oleh DetailKehadiranActivity)
+    // Fungsi untuk mengambil detail kehadiran berdasarkan ID
     suspend fun getKehadiranById(id: Int): KehadiranEntity? {
         return repository.getKehadiranById(id)
     }
@@ -50,7 +50,6 @@ class MainViewModel(private val repository: AppRepository) : ViewModel() {
         return repository.getPengajuanById(id)
     }
 
-    // Fungsi untuk mengirim pengajuan izin (Dibutuhkan oleh PengajuanIzinActivity)
     fun submitPengajuanIzin(
         jenisIzin: String,
         tanggalMulai: String,
