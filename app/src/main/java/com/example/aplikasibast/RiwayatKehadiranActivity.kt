@@ -2,7 +2,11 @@ package com.example.aplikasibast
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplikasibast.databinding.ActivityRiwayatKehadiranBinding
@@ -17,8 +21,20 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 1. Aktifkan mode Edge-to-Edge
+        enableEdgeToEdge()
         binding = ActivityRiwayatKehadiranBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 2. Tangani insets agar Toolbar tidak tertutup status bar/notch
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { _, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            
+            // Berikan padding atas pada toolbarLayout sesuai tinggi status bar
+            binding.toolbarLayout.updatePadding(top = systemBars.top)
+            
+            insets
+        }
 
         setupUI()
         setupNavigation()
@@ -67,7 +83,6 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
                 is RiwayatItem.LiburData -> Intent(this, DetailKehadiranLiburActivity::class.java)
             }
             
-            // Kirim ID agar halaman detail bisa mengambil data dari DB
             val id = when(item) {
                 is RiwayatItem.KehadiranData -> item.id
                 is RiwayatItem.IzinData -> item.id

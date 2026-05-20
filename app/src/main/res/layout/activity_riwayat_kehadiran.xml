@@ -2,47 +2,58 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8F9FA"
     android:fontFamily="@font/barlow_semi_condensed"
     tools:context=".RiwayatKehadiranActivity">
 
-    <!-- Custom Toolbar -->
-    <RelativeLayout
-        android:id="@+id/toolbar"
+    <!-- Header / Toolbar Wrapper -->
+    <LinearLayout
+        android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@color/white"
-        android:paddingHorizontal="16dp"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_back_white"
-            app:tint="@color/black" />
+        <!-- Konten Toolbar Utama -->
+        <RelativeLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:paddingHorizontal="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="24dp"
-            android:layout_toEndOf="@id/btnBack"
-            android:text="RIWAYAT KEHADIRAN"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="-12dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_back_white"
+                app:tint="@color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/btnBack"
+                android:text="RIWAYAT KEHADIRAN"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:id="@+id/toolbarShadow"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#EEEEEE"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout" />
 
     <!-- Preview Container (Hanya muncul di Layout Editor) -->
     <LinearLayout
