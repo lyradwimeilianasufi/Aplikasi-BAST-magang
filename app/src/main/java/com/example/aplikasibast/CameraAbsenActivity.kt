@@ -94,8 +94,13 @@ class CameraAbsenActivity : AppCompatActivity() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val intent = Intent(this@CameraAbsenActivity, PreviewFotoAbsenActivity::class.java)
                     intent.putExtra("FILE_PATH", photoFile.absolutePath)
+                    
+                    // Meneruskan data dari activity sebelumnya (LocationAbsenActivity)
                     intent.putExtra("IS_MASUK", this@CameraAbsenActivity.intent.getBooleanExtra("IS_MASUK", true))
                     intent.putExtra("LOKASI", this@CameraAbsenActivity.intent.getStringExtra("LOKASI"))
+                    intent.putExtra("LAT", this@CameraAbsenActivity.intent.getDoubleExtra("LAT", 0.0))
+                    intent.putExtra("LNG", this@CameraAbsenActivity.intent.getDoubleExtra("LNG", 0.0))
+
                     startActivity(intent)
                 }
             }

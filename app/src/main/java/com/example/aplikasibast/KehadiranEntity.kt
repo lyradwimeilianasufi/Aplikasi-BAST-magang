@@ -14,5 +14,9 @@ data class KehadiranEntity(
     val fotoMasukPath: String? = null,
     val fotoKeluarPath: String? = null,
     val lokasiMasuk: String? = null,
-    val lokasiKeluar: String? = null
+    val lokasiKeluar: String? = null,
+    val latMasuk: Double? = null,
+    val lngMasuk: Double? = null,
+    val latKeluar: Double? = null,
+    val lngKeluar: Double? = null
 )

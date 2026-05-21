@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.location.Geocoder
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +30,10 @@ class LocationAbsenActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var userMarker: Marker? = null
     private var isMasuk: Boolean = true
+    private var isViewOnly: Boolean = false
+    
+    private var currentLat: Double = 0.0
+    private var currentLng: Double = 0.0
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -45,10 +50,10 @@ class LocationAbsenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        isViewOnly = intent.getBooleanExtra("IS_VIEW_ONLY", false)
         isMasuk = intent.getBooleanExtra("IS_MASUK", true)
 
         Configuration.getInstance().userAgentValue = packageName
-
         enableEdgeToEdge()
         binding = ActivityLocationAbsenBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -61,19 +66,47 @@ class LocationAbsenActivity : AppCompatActivity() {
             insets
         }
 
-        setupUI()
         setupMap()
         setupListeners()
-        checkLocationPermissions()
+
+        if (isViewOnly) {
+            setupViewOnlyMode()
+        } else {
+            setupUI()
+            checkLocationPermissions()
+        }
+    }
+
+    private fun setupViewOnlyMode() {
+        binding.btnAbsenMasuk.visibility = View.GONE
+        binding.tvLabelTitle.text = intent.getStringExtra("TITLE_TO_VIEW") ?: "Detail Lokasi"
+        
+        val time = intent.getStringExtra("TIME_TO_VIEW")
+        if (!time.isNullOrEmpty() && time != "-") {
+            binding.tvWaktuDetail.text = "Waktu: $time"
+            binding.tvWaktuDetail.visibility = View.VISIBLE
+        }
+
+        val lat = intent.getDoubleExtra("LAT_TO_VIEW", 0.0)
+        val lng = intent.getDoubleExtra("LNG_TO_VIEW", 0.0)
+        val address = intent.getStringExtra("ADDRESS_TO_VIEW")
+
+        binding.tvAlamatLengkap.text = address ?: "Alamat tidak tersedia"
+        
+        if (lat != 0.0 && lng != 0.0) {
+            updateMapPosition(GeoPoint(lat, lng))
+        }
     }
 
     private fun setupUI() {
+        binding.btnAbsenMasuk.visibility = View.VISIBLE
+        binding.tvWaktuDetail.visibility = View.GONE
+        binding.tvLabelTitle.text = "Lokasi Terkini Anda"
+        
         if (!isMasuk) {
-            // Jika Absen Keluar: Ubah teks dan warna tombol menjadi merah
             binding.btnAbsenMasuk.text = "ABSEN KELUAR"
             binding.btnAbsenMasuk.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#D32F2F"))
         } else {
-            // Jika Absen Masuk: Gunakan teks default dan warna ungu gelap
             binding.btnAbsenMasuk.text = "ABSEN MASUK"
             binding.btnAbsenMasuk.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#290F65"))
         }
@@ -82,44 +115,32 @@ class LocationAbsenActivity : AppCompatActivity() {
     private fun setupMap() {
         binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
         binding.mapView.setMultiTouchControls(true)
-        val mapController = binding.mapView.controller
-        mapController.setZoom(18.0)
+        binding.mapView.controller.setZoom(18.0)
     }
 
     private fun checkLocationPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
         } else {
             getCurrentLocation()
         }
     }
 
     private fun getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) return
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return
 
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
-                val userPoint = GeoPoint(location.latitude, location.longitude)
-                updateMapPosition(userPoint)
-                getAddressFromLocation(location.latitude, location.longitude)
-            } else {
-                Toast.makeText(this, "Gagal mendapatkan lokasi. Pastikan GPS aktif.", Toast.LENGTH_SHORT).show()
+                currentLat = location.latitude
+                currentLng = location.longitude
+                updateMapPosition(GeoPoint(currentLat, currentLng))
+                getAddressFromLocation(currentLat, currentLng)
             }
         }
     }
 
     private fun updateMapPosition(point: GeoPoint) {
         binding.mapView.controller.animateTo(point)
-        
         if (userMarker == null) {
             userMarker = Marker(binding.mapView)
             binding.mapView.overlays.add(userMarker)
@@ -133,27 +154,23 @@ class LocationAbsenActivity : AppCompatActivity() {
         try {
             val geocoder = Geocoder(this, Locale.getDefault())
             val addresses = geocoder.getFromLocation(lat, lng, 1)
-
-            if (addresses != null && addresses.isNotEmpty()) {
-                val address = addresses[0].getAddressLine(0)
-                binding.tvAlamatLengkap.text = address
-            } else {
-                binding.tvAlamatLengkap.text = "Alamat tidak ditemukan"
+            if (!addresses.isNullOrEmpty()) {
+                binding.tvAlamatLengkap.text = addresses[0].getAddressLine(0)
             }
         } catch (e: Exception) {
-            binding.tvAlamatLengkap.text = "Gagal mengambil alamat: ${e.message}"
+            binding.tvAlamatLengkap.text = "Gagal mengambil alamat"
         }
     }
 
     private fun setupListeners() {
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
+        binding.btnBack.setOnClickListener { finish() }
 
         binding.btnAbsenMasuk.setOnClickListener {
             val intent = Intent(this, CameraAbsenActivity::class.java)
             intent.putExtra("IS_MASUK", isMasuk)
             intent.putExtra("LOKASI", binding.tvAlamatLengkap.text.toString())
+            intent.putExtra("LAT", currentLat)
+            intent.putExtra("LNG", currentLng)
             startActivity(intent)
         }
     }

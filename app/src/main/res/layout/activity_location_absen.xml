@@ -45,13 +45,30 @@
         android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- Label Lokasi Terkini -->
-        <ImageView
-            android:id="@+id/tvLabelTerkini"
-            android:layout_width="139dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_lokasi_terkini_anda"
+        <!-- Label Title (Dynamic) -->
+        <TextView
+            android:id="@+id/tvLabelTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/barlow_semi_condensed"
+            android:text="Lokasi Terkini Anda"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Label Waktu (Hanya muncul saat View Only) -->
+        <TextView
+            android:id="@+id/tvWaktuDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/barlow_semi_condensed"
+            android:text="Waktu: 08:45 WIB"
+            android:textColor="@color/gray_text"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Icon -->
@@ -62,7 +79,7 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_target_location"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvLabelTerkini"
+            app:layout_constraintTop_toBottomOf="@id/tvLabelTitle"
             app:tint="#5D2D91" />
 
         <!-- Kotak Alamat -->
@@ -78,7 +95,7 @@
             app:strokeWidth="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/ivLocationIcon"
-            app:layout_constraintTop_toBottomOf="@id/tvLabelTerkini">
+            app:layout_constraintTop_toBottomOf="@id/tvLabelTitle">
 
             <TextView
                 android:id="@+id/tvAlamatLengkap"
@@ -91,7 +108,7 @@
                 android:fontFamily="@font/barlow_semi_condensed" />
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- MENGGANTI IMAGEVIEW DENGAN MATERIAL BUTTON -->
+        <!-- Tombol Absen -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAbsenMasuk"
             android:layout_width="match_parent"

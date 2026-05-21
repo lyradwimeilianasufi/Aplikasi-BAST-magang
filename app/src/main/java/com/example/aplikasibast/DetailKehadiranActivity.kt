@@ -19,15 +19,22 @@ class DetailKehadiranActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailKehadiranHadirBinding
     private val viewModel: MainViewModel by viewModel()
+    
+    private var lokasiMasuk: String? = null
+    private var lokasiKeluar: String? = null
+    private var latMasuk: Double? = null
+    private var lngMasuk: Double? = null
+    private var latKeluar: Double? = null
+    private var lngKeluar: Double? = null
+    private var jamMasuk: String? = null
+    private var jamKeluar: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Aktifkan mode Edge-to-Edge
         enableEdgeToEdge()
         binding = ActivityDetailKehadiranHadirBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Tangani insets agar Toolbar tidak tertutup Status Bar/Kamera
         ViewCompat.setOnApplyWindowInsetsListener(binding.toolbarLayout) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updatePadding(top = systemBars.top)
@@ -48,20 +55,44 @@ class DetailKehadiranActivity : AppCompatActivity() {
         }
 
         binding.btnLihatLokasiMasuk.setOnClickListener {
-            val intent = Intent(this, LocationAbsenActivity::class.java)
-            startActivity(intent)
+            lokasiMasuk?.let { address ->
+                navigateToViewLocation(address, "Lokasi Absen Masuk", jamMasuk, latMasuk, lngMasuk)
+            }
         }
 
         binding.btnLihatLokasiKeluar.setOnClickListener {
-            val intent = Intent(this, LocationAbsenActivity::class.java)
-            startActivity(intent)
+            lokasiKeluar?.let { address ->
+                navigateToViewLocation(address, "Lokasi Absen Keluar", jamKeluar, latKeluar, lngKeluar)
+            }
         }
+    }
+
+    private fun navigateToViewLocation(address: String, title: String, time: String?, lat: Double?, lng: Double?) {
+        val intent = Intent(this, LocationAbsenActivity::class.java)
+        intent.putExtra("IS_VIEW_ONLY", true)
+        intent.putExtra("ADDRESS_TO_VIEW", address)
+        intent.putExtra("TITLE_TO_VIEW", title)
+        intent.putExtra("TIME_TO_VIEW", time)
+        if (lat != null && lng != null) {
+            intent.putExtra("LAT_TO_VIEW", lat)
+            intent.putExtra("LNG_TO_VIEW", lng)
+        }
+        startActivity(intent)
     }
 
     private fun loadDetailData(id: Int) {
         lifecycleScope.launch {
             val data = viewModel.getKehadiranById(id)
             data?.let { kehadiran ->
+                lokasiMasuk = kehadiran.lokasiMasuk
+                lokasiKeluar = kehadiran.lokasiKeluar
+                latMasuk = kehadiran.latMasuk
+                lngMasuk = kehadiran.lngMasuk
+                latKeluar = kehadiran.latKeluar
+                lngKeluar = kehadiran.lngKeluar
+                jamMasuk = kehadiran.jamMasuk
+                jamKeluar = kehadiran.jamKeluar
+
                 binding.tvTanggalKerja.text = kehadiran.tanggal
                 binding.tvWaktuMasuk.text = kehadiran.jamMasuk
                 binding.tvWaktuKeluar.text = kehadiran.jamKeluar
@@ -72,17 +103,17 @@ class DetailKehadiranActivity : AppCompatActivity() {
                 kehadiran.fotoMasukPath?.let { path ->
                     val file = File(path)
                     if (file.exists()) {
-                        binding.ivFotoMasuk.setImageURI(null) // Reset cache
+                        binding.ivFotoMasuk.setImageURI(null)
                         binding.ivFotoMasuk.setImageURI(Uri.fromFile(file))
                     }
                 }
 
-                // 2. Tampilkan Foto Absen Keluar (Pastikan jamKeluar bukan default "-")
+                // 2. Tampilkan Foto Absen Keluar
                 if (kehadiran.jamKeluar != "-") {
                     kehadiran.fotoKeluarPath?.let { path ->
                         val file = File(path)
                         if (file.exists()) {
-                            binding.ivFotoKeluar.setImageURI(null) // Reset cache
+                            binding.ivFotoKeluar.setImageURI(null)
                             binding.ivFotoKeluar.setImageURI(Uri.fromFile(file))
                         }
                     }
