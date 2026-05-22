@@ -13,7 +13,7 @@ class MainViewModel(private val repository: AppRepository) : ViewModel() {
     val userName = "Trisnualdi"
     val userRole = "Teknisi"
     val currentDay = SimpleDateFormat("EEEE, dd MMM yyyy", Locale("id", "ID")).format(Calendar.getInstance().time)
-    val workHours = "Full Day (06:00)"
+    val workHours = "Reguler (09:00-17:00)"
 
     // Aliran data kehadiran hari ini secara real-time
     val todayKehadiran: StateFlow<KehadiranEntity?> = repository.allKehadiran
