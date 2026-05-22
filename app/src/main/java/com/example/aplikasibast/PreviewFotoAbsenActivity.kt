@@ -57,10 +57,25 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             if (isMasuk) {
-                // Logika Absen Masuk: Buat data baru dengan koordinat
+                // Logika Absen Masuk: Tentukan status (Hadir atau Telat)
+                // Jam masuk reguler: 09:00:00. Lebih dari itu dianggap Telat.
+                val limit = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 9)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                
+                // Jika waktu sekarang (calendar) setelah limit (09:00:00), maka Telat
+                val status = if (calendar.after(limit)) {
+                    "Telat"
+                } else {
+                    "Hadir"
+                }
+
                 val kehadiran = KehadiranEntity(
                     tanggal = tanggal,
-                    status = "Hadir",
+                    status = status,
                     jamMasuk = jamSekarang,
                     jamKeluar = "-",
                     totalJam = "-",
@@ -70,9 +85,9 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                     lngMasuk = lng
                 )
                 viewModel.insertKehadiran(kehadiran)
-                finishWithSuccess()
+                finishWithSuccess(isMasuk)
             } else {
-                // Logika Absen Keluar: Cari data hari ini dan update dengan koordinat keluar
+                // Logika Absen Keluar: Cari data hari ini dan update
                 val todayKehadiran = viewModel.allKehadiran.first().find { it.tanggal == tanggal }
                 
                 if (todayKehadiran != null) {
@@ -85,7 +100,7 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                         totalJam = calculateTotalWorkHours(todayKehadiran.jamMasuk, jamSekarang)
                     )
                     viewModel.updateKehadiran(updatedKehadiran)
-                    finishWithSuccess()
+                    finishWithSuccess(isMasuk)
                 } else {
                     Toast.makeText(this@PreviewFotoAbsenActivity, "Data absen masuk tidak ditemukan", Toast.LENGTH_SHORT).show()
                 }
@@ -93,11 +108,14 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
         }
     }
 
-    private fun finishWithSuccess() {
-        Toast.makeText(this, "Absensi berhasil disimpan", Toast.LENGTH_SHORT).show()
+    private fun finishWithSuccess(isMasuk: Boolean) {
+        val message = if (isMasuk) "Absen Masuk Berhasil" else "Berhasil melakukan absen keluar"
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         intent.putExtra("SHOW_SUCCESS_DIALOG", true)
+        intent.putExtra("SUCCESS_MESSAGE", message)
         startActivity(intent)
         finish()
     }
@@ -112,7 +130,9 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
             val dateKeluar = format.parse(endStr)
             
             if (dateMasuk != null && dateKeluar != null) {
-                val diff = dateKeluar.time - dateMasuk.time
+                var diff = dateKeluar.time - dateMasuk.time
+                if (diff < 0) diff += 24 * 60 * 60 * 1000 // Jika lewat tengah malam
+
                 val hours = diff / (1000 * 60 * 60)
                 val minutes = (diff / (1000 * 60)) % 60
                 String.format("%02d Jam %02d Menit", hours, minutes)

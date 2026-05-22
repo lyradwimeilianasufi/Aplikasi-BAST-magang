@@ -1,5 +1,6 @@
 package com.example.aplikasibast
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableString
@@ -94,6 +95,12 @@ class RiwayatKehadiranAdapter(
             }
 
             binding.tvStatus.text = item.status
+            
+            // Set warna badge menjadi hijau untuk status Hadir maupun Telat
+            if (item.status.equals("Telat", ignoreCase = true) || item.status.equals("Hadir", ignoreCase = true)) {
+                binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60")) // Green
+            }
+
             binding.tvJamMasuk.text = item.jamMasuk
             binding.tvJamKeluar.text = item.jamKeluar
             binding.tvTotalJam.text = item.totalJam

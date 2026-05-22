@@ -104,7 +104,7 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
             viewModel.allKehadiran.collect { listKehadiran ->
                 val items = listKehadiran.map { entity ->
                     when (entity.status) {
-                        "Hadir" -> RiwayatItem.KehadiranData(
+                        "Hadir", "Telat" -> RiwayatItem.KehadiranData(
                             id = entity.id,
                             tanggal = entity.tanggal,
                             status = entity.status,

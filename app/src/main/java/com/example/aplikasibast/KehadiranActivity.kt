@@ -67,7 +67,7 @@ class KehadiranActivity : AppCompatActivity() {
             viewModel.allKehadiran.collect { listKehadiran ->
                 val items = listKehadiran.map { entity ->
                     when (entity.status) {
-                        "Hadir" -> RiwayatItem.KehadiranData(
+                        "Hadir", "Telat" -> RiwayatItem.KehadiranData(
                             id = entity.id,
                             tanggal = entity.tanggal,
                             status = entity.status,
@@ -102,7 +102,7 @@ class KehadiranActivity : AppCompatActivity() {
     }
 
     private fun updateSummary(list: List<KehadiranEntity>) {
-        val hadirCount = list.count { it.status.equals("Hadir", ignoreCase = true) }
+        val hadirCount = list.count { it.status.equals("Hadir", ignoreCase = true) || it.status.equals("Telat", ignoreCase = true) }
         val izinCount = list.count { it.status.equals("Izin", ignoreCase = true) }
         val alpaCount = list.count { it.status.equals("Alpa", ignoreCase = true) }
 
