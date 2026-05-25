@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -34,6 +35,11 @@ class LocationAbsenActivity : AppCompatActivity() {
     
     private var currentLat: Double = 0.0
     private var currentLng: Double = 0.0
+
+    // Koordinat Kantor: Jl. Krekot Bunder Raya No.26
+    private val OFFICE_LAT = -6.162164
+    private val OFFICE_LNG = 106.830588
+    private val MAX_RADIUS = 100.0 // Radius maksimal dalam meter
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -166,12 +172,32 @@ class LocationAbsenActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener { finish() }
 
         binding.btnAbsenMasuk.setOnClickListener {
-            val intent = Intent(this, CameraAbsenActivity::class.java)
-            intent.putExtra("IS_MASUK", isMasuk)
-            intent.putExtra("LOKASI", binding.tvAlamatLengkap.text.toString())
-            intent.putExtra("LAT", currentLat)
-            intent.putExtra("LNG", currentLng)
-            startActivity(intent)
+            if (currentLat == 0.0 && currentLng == 0.0) {
+                Toast.makeText(this, "Lokasi belum terdeteksi. Mohon tunggu sebentar.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Hitung jarak antara lokasi pengguna dan kantor
+            val results = FloatArray(1)
+            Location.distanceBetween(currentLat, currentLng, OFFICE_LAT, OFFICE_LNG, results)
+            val distanceInMeters = results[0]
+
+            if (distanceInMeters <= MAX_RADIUS) {
+                // Dalam radius 100m, boleh absen
+                val intent = Intent(this, CameraAbsenActivity::class.java)
+                intent.putExtra("IS_MASUK", isMasuk)
+                intent.putExtra("LOKASI", binding.tvAlamatLengkap.text.toString())
+                intent.putExtra("LAT", currentLat)
+                intent.putExtra("LNG", currentLng)
+                startActivity(intent)
+            } else {
+                // Di luar radius, tampilkan peringatan
+                val message = String.format(
+                    "Gagal: Anda berada di luar radius absen (%.0f meter dari lokasi). Maksimal radius adalah 100m.",
+                    distanceInMeters
+                )
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
