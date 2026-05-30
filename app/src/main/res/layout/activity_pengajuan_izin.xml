@@ -182,28 +182,48 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/barlow_semi_condensed"
-                android:text="Upload File"
+                android:text="Upload Bukti (Opsional)"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- Upload Area -->
-            <LinearLayout
+            <!-- Upload Area with Preview -->
+            <FrameLayout
                 android:id="@+id/btnUpload"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="150dp"
                 android:background="@drawable/bg_dashed_upload"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:id="@+id/layoutPlaceholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_camera"
+                        app:tint="#5D2D91" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Klik untuk pilih foto"
+                        android:textSize="12sp"
+                        android:textColor="#5D2D91"/>
+                </LinearLayout>
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@android:drawable/ic_menu_camera"
-                    app:tint="#5D2D91" />
-
-            </LinearLayout>
+                    android:id="@+id/ivPreviewLampiran"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"

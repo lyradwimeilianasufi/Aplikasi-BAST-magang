@@ -8,55 +8,73 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class MainViewModel(private val repository: AppRepository) : ViewModel() {
+class MainViewModel(
+    private val repository: AppRepository,
+    private val sessionManager: SessionManager
+) : ViewModel() {
     
-    val userName = "Trisnualdi"
-    val userRole = "Teknisi"
-    val currentDay = SimpleDateFormat("EEEE, dd MMM yyyy", Locale("id", "ID")).format(Calendar.getInstance().time)
+    val userName = sessionManager.getUserName() ?: "User"
+    val userRole = sessionManager.getUserRole() ?: "Staff"
+    
+    // Format UI untuk tampilan di Dashboard
+    val currentDayUI = SimpleDateFormat(AppConstants.DATE_FORMAT_UI, Locale("id", "ID")).format(Calendar.getInstance().time)
+    
+    // Variabel yang sempat hilang
     val workHours = "Reguler (09:00-17:00)"
-
-    // Aliran data kehadiran hari ini secara real-time
-    val todayKehadiran: StateFlow<KehadiranEntity?> = repository.allKehadiran
-        .map { list ->
-            val tanggal = SimpleDateFormat("EEEE, dd MMM yyyy", Locale("id", "ID")).format(Calendar.getInstance().time)
-            list.find { it.tanggal == tanggal }
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    
+    // Format DB untuk pembandingan data
+    private val todayDb = SimpleDateFormat(AppConstants.DATE_FORMAT_DB, Locale.US).format(Calendar.getInstance().time)
 
     val allKehadiran: Flow<List<KehadiranEntity>> = repository.allKehadiran
 
-    // Fungsi untuk mengambil detail kehadiran berdasarkan ID
-    suspend fun getKehadiranById(id: Int): KehadiranEntity? {
-        return repository.getKehadiranById(id)
+    // State utama untuk Dashboard (Menggabungkan data Absensi dan Izin)
+    val dashboardState: StateFlow<DashboardData> = combine(
+        repository.allKehadiran,
+        repository.getPengajuanByStatus(AppConstants.STATUS_DISETUJUI)
+    ) { kehadiranList, izinList ->
+        val todayAbsen = kehadiranList.find { it.tanggal == currentDayUI } // Cek absen berdasarkan tanggal UI yang tersimpan
+        val activeIzin = izinList.find { todayDb >= it.tanggalMulai && todayDb <= it.tanggalSelesai }
+        
+        val status = when {
+            todayAbsen != null -> "Hadir"
+            activeIzin != null -> "Izin"
+            isWeekend() -> "Libur"
+            isAfterWorkHours() -> "Alpa"
+            else -> userRole
+        }
+
+        DashboardData(
+            kehadiran = todayAbsen,
+            currentStatus = status,
+            isIzinActive = activeIzin != null
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DashboardData())
+
+    // --- Helper Functions ---
+    private fun isWeekend(): Boolean {
+        val day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        return day == Calendar.SATURDAY || day == Calendar.SUNDAY
     }
 
+    private fun isAfterWorkHours(): Boolean {
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 17
+    }
+
+    suspend fun getKehadiranById(id: Int) = repository.getKehadiranById(id)
+
     fun insertKehadiran(kehadiran: KehadiranEntity) {
-        viewModelScope.launch {
-            repository.insertKehadiran(kehadiran)
-        }
+        viewModelScope.launch { repository.insertKehadiran(kehadiran) }
     }
 
     fun updateKehadiran(kehadiran: KehadiranEntity) {
-        viewModelScope.launch {
-            repository.updateKehadiran(kehadiran)
-        }
+        viewModelScope.launch { repository.updateKehadiran(kehadiran) }
     }
 
-    // --- Pengajuan Izin ---
-
-    fun getPengajuanByStatus(status: String): Flow<List<PengajuanIzinEntity>> = repository.getPengajuanByStatus(status)
-
-    suspend fun getPengajuanById(id: Int): PengajuanIzinEntity? {
-        return repository.getPengajuanById(id)
-    }
+    fun getPengajuanByStatus(status: String) = repository.getPengajuanByStatus(status)
 
     fun submitPengajuanIzin(
-        jenisIzin: String,
-        tanggalMulai: String,
-        tanggalSelesai: String,
-        alasan: String,
-        tanggalPengajuan: String,
-        lampiranPath: String? = null
+        jenisIzin: String, tanggalMulai: String, tanggalSelesai: String,
+        alasan: String, tanggalPengajuan: String, lampiranPath: String? = null
     ) {
         viewModelScope.launch {
             val entity = PengajuanIzinEntity(
@@ -65,15 +83,16 @@ class MainViewModel(private val repository: AppRepository) : ViewModel() {
                 tanggalMulai = tanggalMulai,
                 tanggalSelesai = tanggalSelesai,
                 alasan = alasan,
-                lampiranPath = lampiranPath
+                lampiranPath = lampiranPath,
+                teknisiNama = userName
             )
             repository.insertPengajuan(entity)
         }
     }
-    
-    fun updateStatusIzin(id: Int, status: String) {
-        viewModelScope.launch {
-            repository.updatePengajuanStatus(id, status)
-        }
-    }
 }
+
+data class DashboardData(
+    val kehadiran: KehadiranEntity? = null,
+    val currentStatus: String = "",
+    val isIzinActive: Boolean = false
+)

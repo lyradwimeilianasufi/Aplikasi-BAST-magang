@@ -6,7 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDitolakBinding
@@ -21,21 +21,25 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // 1. Aktifkan mode Edge-to-Edge
         enableEdgeToEdge()
+        
         binding = ActivityDaftarPengajuanIzinDitolakBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { _, insets ->
+        // 2. Tangani Insets secara menyeluruh pada root layout
+        // Ini memastikan tombol di bawah otomatis terangkat di atas navigasi HP
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             
-            // Atur padding atas Toolbar menggunakan statusBarSpacer agar tidak tertutup sistem
-            val spacerParams = binding.statusBarSpacer.layoutParams
-            spacerParams.height = systemBars.top
-            binding.statusBarSpacer.layoutParams = spacerParams
+            // Memberikan padding pada root layout mengikuti area aman sistem
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
             
-            // Atur padding bawah container tombol
-            val paddingNormal = (20 * resources.displayMetrics.density).toInt()
-            binding.btnTambahContainer.updatePadding(bottom = systemBars.bottom + paddingNormal)
+            // Sesuaikan tinggi spacer status bar agar toolbar tidak tertutup
+            binding.statusBarSpacer.updateLayoutParams {
+                height = systemBars.top
+            }
             
             insets
         }
@@ -47,8 +51,8 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = PengajuanIzinAdapter { item ->
-            // Navigasi ke halaman Detail Izin Ditolak saat kartu diklik
             val intent = Intent(this, DetailIzinDitolakActivity::class.java)
+            intent.putExtra("PENGAJUAN_ID", item.id)
             startActivity(intent)
         }
         binding.rvPengajuan.layoutManager = LinearLayoutManager(this)
@@ -57,7 +61,6 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
 
     private fun observeData() {
         lifecycleScope.launch {
-            // Ambil data dengan status DITOLAK dari Database Room
             viewModel.getPengajuanByStatus("DITOLAK").collect { list ->
                 adapter.submitList(list)
             }
@@ -82,6 +85,7 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
         }
 
         binding.tabDisetujui.setOnClickListener {
+            // Arahkan ke DaftarPengajuanBaruActivity jika itu digunakan untuk tab Disetujui
             val intent = Intent(this, DaftarPengajuanBaruActivity::class.java)
             startActivity(intent)
             finish()

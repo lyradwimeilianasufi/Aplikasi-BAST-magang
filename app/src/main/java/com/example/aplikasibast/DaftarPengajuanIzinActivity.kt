@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDiajukanBinding
@@ -28,19 +29,20 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
         binding = ActivityDaftarPengajuanIzinDiajukanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 2. Tangani Insets secara menyeluruh pada root layout
-        // Ini memastikan tombol di bawah otomatis terangkat di atas navigasi HP
-        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { v, insets ->
+        // 2. Tangani Insets secara presisi
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { _, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             
-            // Berikan padding (kiri, atas, kanan, bawah) sesuai area aman sistem
-            // Kita biarkan padding top tetap 0 karena kita menggunakan statusBarSpacer secara manual
-            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
-            
-            // Sesuaikan tinggi spacer status bar di bagian atas agar toolbar tidak tertutup notch/jam
+            // Atur tinggi spacer status bar di bagian atas agar toolbar tidak tertutup
             binding.statusBarSpacer.updateLayoutParams {
                 height = systemBars.top
             }
+            
+            // Angkat kontainer tombol di atas navigasi bar HP
+            // Kita ambil padding asli (20dp) dan tambahkan dengan tinggi navigasi bar sistem
+            val density = resources.displayMetrics.density
+            val padding20dp = (20 * density).toInt()
+            binding.btnTambahContainer.updatePadding(bottom = systemBars.bottom + padding20dp)
             
             insets
         }
@@ -78,9 +80,13 @@ class DaftarPengajuanIzinActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.tabDisetujui.setOnClickListener {
+            startActivity(Intent(this, DaftarPengajuanBaruActivity::class.java))
+            finish()
+        }
+
         binding.tabDitolak.setOnClickListener {
-            val intent = Intent(this, DaftarPengajuanIzinDitolakActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, DaftarPengajuanIzinDitolakActivity::class.java))
             finish()
         }
     }

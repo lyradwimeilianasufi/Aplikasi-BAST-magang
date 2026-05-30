@@ -9,7 +9,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,12 +17,8 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityMainBinding
 import com.example.aplikasibast.databinding.ActivitySuccessAbsenBinding
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,102 +40,61 @@ class MainActivity : AppCompatActivity() {
 
         setupUI()
         setupListeners()
-        observeViewModel()
+        observeDashboardState()
 
-        handleSuccessIntent(intent)
-    }
-
-    private fun handleSuccessIntent(intent: Intent?) {
-        if (intent?.getBooleanExtra("SHOW_SUCCESS_DIALOG", false) == true) {
-            val message = intent.getStringExtra("SUCCESS_MESSAGE") ?: "Absen Masuk Berhasil"
-            showSuccessDialog(message)
+        if (intent.getBooleanExtra("SHOW_SUCCESS_DIALOG", false)) {
+            showSuccessDialog(intent.getStringExtra("SUCCESS_MESSAGE") ?: "Berhasil")
         }
     }
 
-    private fun observeViewModel() {
+    private fun setupUI() {
+        binding.tvUserName.text = viewModel.userName
+        binding.tvCurrentDate.text = viewModel.currentDayUI
+        binding.tvWorkHours.text = viewModel.workHours
+    }
+
+    private fun observeDashboardState() {
         lifecycleScope.launch {
-            viewModel.todayKehadiran.collect { kehadiran ->
-                updateAttendanceUI(kehadiran)
-            }
-        }
-    }
-
-    private fun updateAttendanceUI(kehadiran: KehadiranEntity?) {
-        val calendar = Calendar.getInstance()
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-        val isWeekend = dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY
-
-        if (kehadiran == null) {
-            binding.tvInTime.text = "-"
-            binding.tvOutTime.text = "-"
-            
-            if (isWeekend) {
-                binding.tvUserRole.text = "Libur"
-            } else {
-                checkOtherStatuses()
-            }
-            
-            binding.btnAbsenMasukMain.isEnabled = !isWeekend
-            binding.btnAbsenMasukMain.alpha = if (isWeekend) 0.5f else 1.0f
-            binding.btnAbsenKeluarMain.isEnabled = false
-            binding.btnAbsenKeluarMain.alpha = 0.5f
-            binding.icFingerOut.alpha = 0.4f
-        } else {
-            binding.tvInTime.text = kehadiran.jamMasuk
-            binding.tvOutTime.text = kehadiran.jamKeluar
-            binding.tvUserRole.text = kehadiran.status
-
-            if (kehadiran.jamKeluar == "-") {
-                binding.btnAbsenMasukMain.isEnabled = false
-                binding.btnAbsenMasukMain.alpha = 0.5f
-                binding.btnAbsenKeluarMain.isEnabled = true
-                binding.btnAbsenKeluarMain.alpha = 1.0f
-                binding.icFingerOut.alpha = 1.0f
-            } else {
-                binding.btnAbsenMasukMain.isEnabled = false
-                binding.btnAbsenMasukMain.alpha = 0.5f
-                binding.btnAbsenKeluarMain.isEnabled = false
-                binding.btnAbsenKeluarMain.alpha = 0.5f
-                binding.icFingerOut.alpha = 0.4f
-            }
-        }
-    }
-
-    private fun checkOtherStatuses() {
-        lifecycleScope.launch {
-            val today = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
-            val approvedIzin = viewModel.getPengajuanByStatus("Disetujui").first()
-            val isIzin = approvedIzin.any { it.tanggalMulai <= today && it.tanggalSelesai >= today }
-            
-            if (isIzin) {
-                binding.tvUserRole.text = "Izin"
-            } else {
-                val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                if (hour >= 17) {
-                    binding.tvUserRole.text = "Alpa"
+            viewModel.dashboardState.collect { state ->
+                // Update Label Status (Hadir, Izin, Teknisi, dll)
+                binding.tvUserRole.text = state.currentStatus
+                
+                // Update Info Absensi
+                val kehadiran = state.kehadiran
+                if (kehadiran == null) {
+                    binding.tvInTime.text = "-"
+                    binding.tvOutTime.text = "-"
+                    updateButtonState(true) // Tombol Masuk Aktif
                 } else {
-                    binding.tvUserRole.text = viewModel.userRole
+                    binding.tvInTime.text = kehadiran.jamMasuk
+                    binding.tvOutTime.text = kehadiran.jamKeluar
+                    
+                    if (kehadiran.jamKeluar == "-") {
+                        updateButtonState(false) // Tombol Keluar Aktif
+                    } else {
+                        disableAllButtons() // Sudah lengkap
+                    }
                 }
             }
         }
     }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-        handleSuccessIntent(intent)
+    private fun updateButtonState(isMasuk: Boolean) {
+        // Development mode: Tombol dibuat selalu aktif agar mudah ditest
+        binding.btnAbsenMasukMain.isEnabled = true
+        binding.btnAbsenMasukMain.alpha = if (isMasuk) 1.0f else 0.5f
+        
+        binding.btnAbsenKeluarMain.isEnabled = true
+        binding.btnAbsenKeluarMain.alpha = if (!isMasuk) 1.0f else 0.5f
+        
+        binding.icFingerOut.alpha = if (!isMasuk) 1.0f else 0.4f
     }
 
-    override fun onResume() {
-        super.onResume()
-        binding.bottomNavigation.selectedItemId = R.id.nav_beranda
-    }
-
-    private fun setupUI() {
-        binding.tvUserName.text = viewModel.userName
-        binding.tvUserRole.text = viewModel.userRole
-        binding.tvCurrentDate.text = viewModel.currentDay
-        binding.tvWorkHours.text = viewModel.workHours
+    private fun disableAllButtons() {
+        binding.btnAbsenMasukMain.isEnabled = true // Tetap aktif untuk development
+        binding.btnAbsenKeluarMain.isEnabled = true
+        binding.btnAbsenMasukMain.alpha = 0.5f
+        binding.btnAbsenKeluarMain.alpha = 0.5f
     }
 
     private fun setupListeners() {
@@ -148,38 +102,26 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_beranda -> true
                 R.id.nav_kehadiran -> {
-                    val intent = Intent(this, KehadiranActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                    startActivity(intent)
+                    startActivity(Intent(this, KehadiranActivity::class.java))
                     true
                 }
                 R.id.nav_riwayat -> {
-                    val intent = Intent(this, RiwayatKehadiranActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                    startActivity(intent)
+                    startActivity(Intent(this, RiwayatKehadiranActivity::class.java))
                     true
                 }
-                R.id.nav_akun -> true
                 else -> false
             }
         }
 
-        binding.btnAbsenMasukMain.setOnClickListener { navigateToLocationAbsen(true) }
-        binding.btnAbsenKeluarMain.setOnClickListener { navigateToLocationAbsen(false) }
+        binding.btnAbsenMasukMain.setOnClickListener { navigateToAbsen(true) }
+        binding.btnAbsenKeluarMain.setOnClickListener { navigateToAbsen(false) }
+        
         binding.btnMenuIzin.setOnClickListener {
-            startActivity(Intent(this, RiwayatPengajuanIzinActivity::class.java))
+            startActivity(Intent(this, DaftarPengajuanIzinActivity::class.java))
         }
     }
 
-    private fun navigateToLocationAbsen(isMasuk: Boolean) {
-        if (!isMasuk) {
-            val calendar = Calendar.getInstance()
-            val hour = calendar.get(Calendar.HOUR_OF_DAY)
-            if (hour < 17) {
-                Toast.makeText(this, "Belum saatnya absen keluar. Awal absen keluar jam 17:00", Toast.LENGTH_SHORT).show()
-                return
-            }
-        }
+    private fun navigateToAbsen(isMasuk: Boolean) {
         val intent = Intent(this, LocationAbsenActivity::class.java)
         intent.putExtra("IS_MASUK", isMasuk)
         startActivity(intent)
@@ -190,25 +132,10 @@ class MainActivity : AppCompatActivity() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val dialogBinding = ActivitySuccessAbsenBinding.inflate(layoutInflater)
         dialog.setContentView(dialogBinding.root)
-
         dialogBinding.tvSuccessMessage.text = message
-
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT
-        )
-
+        dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
         dialog.show()
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (dialog.isShowing) {
-                dialog.dismiss()
-            }
-        }, 2000)
-
-        dialogBinding.root.setOnClickListener {
-            dialog.dismiss()
-        }
+        Handler(Looper.getMainLooper()).postDelayed({ if (dialog.isShowing) dialog.dismiss() }, 2000)
     }
 }

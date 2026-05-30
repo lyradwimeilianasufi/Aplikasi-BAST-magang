@@ -29,105 +29,34 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".DaftarPengajuanBaruActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".KehadiranActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".RiwayatKehadiranActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailKehadiranActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailKehadiranIzinActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailKehadiranAlpaActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailKehadiranLiburActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ApprovalIzinActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailPengajuanIzinActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailPengajuanActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailPengajuanDitolakActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".CameraAbsenActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AplikasiBAST" />
-
-        <activity
-            android:name=".LocationAbsenActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".PreviewFotoAbsenActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AplikasiBAST" />
+        <activity android:name=".DaftarPengajuanBaruActivity" android:exported="false" />
+        <activity android:name=".KehadiranActivity" android:exported="false" />
+        <activity android:name=".RiwayatKehadiranActivity" android:exported="false" />
+        <activity android:name=".DetailKehadiranActivity" android:exported="false" />
+        <activity android:name=".DetailKehadiranIzinActivity" android:exported="false" />
+        <activity android:name=".DetailKehadiranAlpaActivity" android:exported="false" />
+        <activity android:name=".DetailKehadiranLiburActivity" android:exported="false" />
+        <activity android:name=".ApprovalIzinActivity" android:exported="false" />
+        <activity android:name=".DetailPengajuanIzinActivity" android:exported="false" />
+        <activity android:name=".DetailPengajuanActivity" android:exported="false" />
+        <activity android:name=".DetailPengajuanDitolakActivity" android:exported="false" />
+        <activity android:name=".CameraAbsenActivity" android:exported="false" />
+        <activity android:name=".LocationAbsenActivity" android:exported="false" />
+        <activity android:name=".PreviewFotoAbsenActivity" android:exported="false" />
+        <activity android:name=".ApprovalIzinSelesaiActivity" android:exported="false" />
+        <activity android:name=".ApprovalIzinDitolakActivity" android:exported="false" />
+        <activity android:name=".PengajuanIzinActivity" android:exported="false" />
+        <activity android:name=".RiwayatPengajuanIzinActivity" android:exported="false" />
+        <activity android:name=".DaftarPengajuanIzinActivity" android:exported="false" />
+        <activity android:name=".DetailIzinActivity" android:exported="false" />
+        <activity android:name=".DetailIzinDisetujuiActivity" android:exported="false" />
+        <activity android:name=".DaftarPengajuanIzinDitolakActivity" android:exported="false" />
+        <activity android:name=".DetailIzinDitolakActivity" android:exported="false" />
 
         <activity
             android:name=".SuccessAbsenActivity"
             android:exported="false"
             android:theme="@style/Theme.App.Transparent" />
 
-        <activity
-            android:name=".ApprovalIzinSelesaiActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ApprovalIzinDitolakActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".PengajuanIzinActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".RiwayatPengajuanIzinActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DaftarPengajuanIzinActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailIzinActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailIzinDisetujuiActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DaftarPengajuanIzinDitolakActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailIzinDitolakActivity"
-            android:exported="false" />
-
     </application>
-
 </manifest>

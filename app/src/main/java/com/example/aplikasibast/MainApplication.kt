@@ -21,6 +21,9 @@ class MainApplication : Application() {
 }
 
 val appModule = module {
+    // Session Manager
+    single { SessionManager(androidContext()) }
+
     // Room Database
     single {
         Room.databaseBuilder(
@@ -37,6 +40,6 @@ val appModule = module {
     // Repository
     single { AppRepository(get(), get()) }
 
-    // ViewModels
-    viewModel { MainViewModel(get()) }
+    // ViewModels - Menambahkan get() kedua untuk SessionManager
+    viewModel { MainViewModel(get(), get()) }
 }

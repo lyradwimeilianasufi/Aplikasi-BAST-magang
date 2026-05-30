@@ -6,7 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDisetujuiBinding
@@ -21,28 +21,22 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // 1. Aktifkan mode Edge-to-Edge
         enableEdgeToEdge()
+        
         binding = ActivityDaftarPengajuanIzinDisetujuiBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { _, insets ->
-            // Mengambil insets untuk System Bars DAN Display Cutout (area kamera/notch)
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+        // 2. Tangani Insets agar tombol tidak tertutup navigasi bar
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             
-            // Jarak dasar horizontal (16dp)
-            val density = resources.displayMetrics.density
-            val basePadding = (16 * density).toInt()
-
-            // Atur padding Toolbar: atas untuk notch, samping untuk kamera di pojok
-            binding.toolbar.updatePadding(
-                top = systemBars.top,
-                left = basePadding + systemBars.left,
-                right = basePadding + systemBars.right
-            )
+            // Atur padding root agar otomatis menyesuaikan dengan area aman sistem
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
             
-            // Atur padding bawah tombol container agar tidak tertutup Navigasi Bar HP
-            val paddingNormal = (20 * density).toInt()
-            binding.btnContainer.updatePadding(bottom = systemBars.bottom + paddingNormal)
+            // Atur tinggi spacer status bar di bagian atas
+            binding.toolbar.setPadding(0, systemBars.top, 0, 0)
             
             insets
         }
@@ -55,6 +49,7 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = PengajuanIzinAdapter { item ->
             val intent = Intent(this, DetailIzinDisetujuiActivity::class.java)
+            intent.putExtra("PENGAJUAN_ID", item.id)
             startActivity(intent)
         }
         binding.rvPengajuan.layoutManager = LinearLayoutManager(this)
