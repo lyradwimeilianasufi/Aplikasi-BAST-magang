@@ -57,9 +57,20 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             if (isMasuk) {
-                // Logika Jam Masuk Dinonaktifkan Sementara (Selalu Hadir)
-                // Sebelumnya: Jika lewat jam 09:00 maka Telat
-                val status = "Hadir"
+                // Logika Jam Masuk diaktifkan kembali (Jam 9 pagi)
+                val limit = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 9)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                
+                // Jika waktu sekarang (calendar) setelah limit (09:00:00), maka Telat
+                val status = if (calendar.after(limit)) {
+                    "Telat"
+                } else {
+                    "Hadir"
+                }
 
                 val kehadiran = KehadiranEntity(
                     tanggal = tanggal,
