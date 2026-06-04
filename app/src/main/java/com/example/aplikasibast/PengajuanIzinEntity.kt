@@ -13,5 +13,7 @@ data class PengajuanIzinEntity(
     val alasan: String,
     val status: String = "DIAJUKAN", // DIAJUKAN, DISETUJUI, DITOLAK
     val lampiranPath: String? = null,
-    val teknisiNama: String = "Trisnualdi" // Default untuk magang ini
+    val teknisiNama: String = "Trisnualdi",
+    val alasanPenolakan: String? = null,
+    val tanggalDiproses: String? = null
 )

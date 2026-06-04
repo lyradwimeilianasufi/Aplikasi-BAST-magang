@@ -1,41 +1,77 @@
 package com.example.aplikasibast
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityDetailPengajuanDitolakBinding
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class DetailPengajuanDitolakActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailPengajuanDitolakBinding
+    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 1. Mengaktifkan mode Edge-to-Edge
         enableEdgeToEdge()
         binding = ActivityDetailPengajuanDitolakBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 2. Menangani insets agar toolbar tidak tertutup status bar/notch/kamera
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { _, insets ->
-            // Mengambil insets untuk System Bars DAN Display Cutout (area kamera)
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            
-            // Memberikan padding atas pada toolbar sesuai tinggi status bar + notch
             binding.toolbarLayout.updatePadding(top = systemBars.top)
-            
             insets
         }
 
-        setupUI()
+        val pengajuanId = intent.getIntExtra("PENGAJUAN_ID", -1)
+        if (pengajuanId != -1) {
+            loadData(pengajuanId)
+        }
+
+        binding.btnBack.setOnClickListener { finish() }
     }
 
-    private fun setupUI() {
-        binding.btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+    private fun loadData(id: Int) {
+        lifecycleScope.launch {
+            val data = viewModel.getPengajuanById(id)
+            data?.let {
+                binding.tvNamaTeknisi.text = it.teknisiNama
+                binding.tvJenisIzin.text = it.jenisIzin
+                binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                binding.tvAlasan.text = it.alasan
+                binding.tvTanggalPengajuan.text = it.tanggalPengajuan
+                // Catatan: Anda bisa menambahkan kolom tanggalDiproses di Entity nanti jika diperlukan
+                binding.tvTanggalDiproses.text = it.tanggalPengajuan 
+
+                binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"
+
+                it.lampiranPath?.let { path ->
+                    val file = File(path)
+                    if (file.exists()) {
+                        binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
+                        binding.ivFilePendukung.alpha = 1.0f
+                    }
+                }
+            }
         }
+    }
+
+    private fun hitungDurasi(mulai: String, selesai: String): Long {
+        return try {
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val d1 = sdf.parse(mulai)
+            val d2 = sdf.parse(selesai)
+            TimeUnit.MILLISECONDS.toDays(d2!!.time - d1!!.time) + 1
+        } catch (e: Exception) { 1 }
     }
 }

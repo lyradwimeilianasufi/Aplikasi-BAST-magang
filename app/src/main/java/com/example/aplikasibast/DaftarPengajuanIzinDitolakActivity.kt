@@ -2,12 +2,15 @@ package com.example.aplikasibast
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDitolakBinding
 import kotlinx.coroutines.launch
@@ -22,21 +25,16 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // 1. Aktifkan mode Edge-to-Edge
         enableEdgeToEdge()
         
         binding = ActivityDaftarPengajuanIzinDitolakBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 2. Tangani Insets secara menyeluruh pada root layout
-        // Ini memastikan tombol di bawah otomatis terangkat di atas navigasi HP
         ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             
-            // Memberikan padding pada root layout mengikuti area aman sistem
             v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
             
-            // Sesuaikan tinggi spacer status bar agar toolbar tidak tertutup
             binding.statusBarSpacer.updateLayoutParams {
                 height = systemBars.top
             }
@@ -51,6 +49,7 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = PengajuanIzinAdapter { item ->
+            // SISI RIWAYAT: Diarahkan ke DetailIzinDitolakActivity (Read-Only)
             val intent = Intent(this, DetailIzinDitolakActivity::class.java)
             intent.putExtra("PENGAJUAN_ID", item.id)
             startActivity(intent)
@@ -61,8 +60,20 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
 
     private fun observeData() {
         lifecycleScope.launch {
-            viewModel.getPengajuanByStatus("DITOLAK").collect { list ->
-                adapter.submitList(list)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Mengambil data dengan status DITOLAK secara real-time
+                viewModel.getPengajuanByStatus(AppConstants.STATUS_DITOLAK).collect { list ->
+                    adapter.submitList(list)
+                    
+                    // Menangani visibilitas: Tampilkan list jika data ada, jika tidak tampilkan pesan kosong
+                    if (list.isEmpty()) {
+                        binding.rvPengajuan.visibility = View.GONE
+                        binding.scrollViewContent.visibility = View.VISIBLE
+                    } else {
+                        binding.rvPengajuan.visibility = View.VISIBLE
+                        binding.scrollViewContent.visibility = View.GONE
+                    }
+                }
             }
         }
     }
@@ -70,6 +81,11 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
     private fun setupUI() {
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+
+        // Navigasi ke Halaman Approval Izin (Panel Kontrol)
+        binding.btnApproval.setOnClickListener {
+            startActivity(Intent(this, ApprovalIzinActivity::class.java))
         }
 
         binding.btnTambahPengajuan.setOnClickListener {
@@ -85,7 +101,6 @@ class DaftarPengajuanIzinDitolakActivity : AppCompatActivity() {
         }
 
         binding.tabDisetujui.setOnClickListener {
-            // Arahkan ke DaftarPengajuanBaruActivity jika itu digunakan untuk tab Disetujui
             val intent = Intent(this, DaftarPengajuanBaruActivity::class.java)
             startActivity(intent)
             finish()

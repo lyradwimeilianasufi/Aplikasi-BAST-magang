@@ -60,6 +60,7 @@ class MainViewModel(
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 17
     }
 
+    // Kehadiran
     suspend fun getKehadiranById(id: Int) = repository.getKehadiranById(id)
 
     fun insertKehadiran(kehadiran: KehadiranEntity) {
@@ -70,7 +71,16 @@ class MainViewModel(
         viewModelScope.launch { repository.updateKehadiran(kehadiran) }
     }
 
+    // Pengajuan Izin
     fun getPengajuanByStatus(status: String) = repository.getPengajuanByStatus(status)
+
+    suspend fun getPengajuanById(id: Int) = repository.getPengajuanById(id)
+
+    fun updatePengajuan(pengajuan: PengajuanIzinEntity) {
+        viewModelScope.launch {
+            repository.insertPengajuan(pengajuan) // Menggunakan insert dengan REPLACE atau buat fungsi update
+        }
+    }
 
     fun submitPengajuanIzin(
         jenisIzin: String, tanggalMulai: String, tanggalSelesai: String,

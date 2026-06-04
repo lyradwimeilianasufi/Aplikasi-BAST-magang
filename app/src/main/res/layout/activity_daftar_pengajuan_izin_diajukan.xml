@@ -46,6 +46,31 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <!-- Ikon Approval dengan Badge Merah -->
+        <FrameLayout
+            android:id="@+id/btnApproval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_hugeicons_validation_approval" />
+
+            <!-- Dot Merah Notifikasi -->
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/orange_circle"
+                android:backgroundTint="#E53935" />
+        </FrameLayout>
     </RelativeLayout>
 
     <View
@@ -72,7 +97,7 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:background="@drawable/bg_tab_selected"
-            android:backgroundTint="#1A1363"
+            android:backgroundTint="@color/purple_dark"
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DIAJUKAN"
@@ -90,7 +115,7 @@
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DISETUJUI"
-            android:textColor="#1A1363"
+            android:textColor="@color/purple_badge_text"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -104,20 +129,58 @@
             android:gravity="center"
             android:paddingVertical="10dp"
             android:text="DITOLAK"
-            android:textColor="#1A1363"
+            android:textColor="@color/purple_badge_text"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Content List -->
+    <!-- RecyclerView untuk Daftar Pengajuan -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPengajuan"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="16dp"
         android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/btnTambahContainer"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+        tools:listitem="@layout/item_pengajuan_izin" />
+
+    <!-- Content List / Empty State -->
+    <ScrollView
+        android:id="@+id/scrollViewContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/btnTambahContainer"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp">
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="80dp"
+                android:alpha="0.1"
+                android:src="@drawable/ic_dokumen" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Data Tidak Tersedia"
+                android:textColor="#BDBDBD"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <!-- Bottom Button Container -->
     <LinearLayout
@@ -134,7 +197,7 @@
             android:id="@+id/btnTambahPengajuan"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:backgroundTint="#1A1363"
+            android:backgroundTint="@color/purple_dark"
             android:text="TAMBAH PENGAJUAN"
             android:textColor="@color/white"
             android:textStyle="bold"

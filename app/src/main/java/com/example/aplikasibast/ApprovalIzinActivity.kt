@@ -2,15 +2,24 @@ package com.example.aplikasibast
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplikasibast.databinding.ActivityApprovalIzinDiajukanBinding
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ApprovalIzinActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityApprovalIzinDiajukanBinding
+    private val viewModel: MainViewModel by viewModel()
+    private lateinit var adapter: PengajuanIzinAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,37 +33,45 @@ class ApprovalIzinActivity : AppCompatActivity() {
             insets
         }
 
+        setupRecyclerView()
+        observeData()
         setupUI()
     }
 
-    private fun setupUI() {
-        binding.btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-        
-        // Tab click listeners
-        binding.tabPengajuan.setOnClickListener { updateTabs(0) }
-        binding.tabDisetujui.setOnClickListener { updateTabs(1) }
-        binding.tabDitolak.setOnClickListener { updateTabs(2) }
-
-        // Navigasi ke Detail Pengajuan (Diajukan)
-        binding.itemApproval.cvItemApprovalIzin.setOnClickListener {
+    private fun setupRecyclerView() {
+        // Gunakan adapter yang sama, atau buat khusus approval jika layout berbeda
+        adapter = PengajuanIzinAdapter { item ->
             val intent = Intent(this, DetailPengajuanIzinActivity::class.java)
+            intent.putExtra("PENGAJUAN_ID", item.id)
             startActivity(intent)
+        }
+        binding.rvApproval.layoutManager = LinearLayoutManager(this)
+        binding.rvApproval.adapter = adapter
+    }
+
+    private fun observeData() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Admin melihat SEMUA pengajuan yang berstatus DIAJUKAN
+                viewModel.getPengajuanByStatus("DIAJUKAN").collect { list ->
+                    adapter.submitList(list)
+                    binding.rvApproval.visibility = if (list.isEmpty()) View.GONE else View.VISIBLE
+                    binding.emptyState.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+                }
+            }
         }
     }
 
-    private fun updateTabs(position: Int) {
-        // Logika untuk berpindah activity berdasarkan tab
-        when(position) {
-            1 -> {
-                startActivity(Intent(this, ApprovalIzinSelesaiActivity::class.java))
-                finish()
-            }
-            2 -> {
-                startActivity(Intent(this, ApprovalIzinDitolakActivity::class.java))
-                finish()
-            }
+    private fun setupUI() {
+        binding.btnBack.setOnClickListener { finish() }
+        
+        binding.tabDisetujui.setOnClickListener {
+            startActivity(Intent(this, ApprovalIzinSelesaiActivity::class.java))
+            finish()
+        }
+        binding.tabDitolak.setOnClickListener {
+            startActivity(Intent(this, ApprovalIzinDitolakActivity::class.java))
+            finish()
         }
     }
 }

@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aplikasibast.databinding.ItemRiwayatPengajuanDiajukanBinding
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class PengajuanIzinAdapter(private val onClick: (PengajuanIzinEntity) -> Unit) :
     ListAdapter<PengajuanIzinEntity, PengajuanIzinAdapter.ViewHolder>(DiffCallback) {
@@ -28,8 +31,9 @@ class PengajuanIzinAdapter(private val onClick: (PengajuanIzinEntity) -> Unit) :
             tvPeriodeIzin.text = "${item.tanggalMulai} - ${item.tanggalSelesai}"
             tvStatusBadge.text = item.status
             
-            // Set durasi (Contoh sederhana: durasi statis atau hitung selisih tanggal)
-            tvDurationValue.text = "1" // Anda bisa menambahkan logika hitung hari nanti
+            // Hitung durasi hari secara akurat
+            val durasi = hitungDurasiHari(item.tanggalMulai, item.tanggalSelesai)
+            tvDurationValue.text = durasi.toString()
 
             // Atur warna badge berdasarkan status
             when (item.status) {
@@ -48,6 +52,22 @@ class PengajuanIzinAdapter(private val onClick: (PengajuanIzinEntity) -> Unit) :
             }
 
             root.setOnClickListener { onClick(item) }
+        }
+    }
+
+    private fun hitungDurasiHari(mulai: String, selesai: String): Long {
+        return try {
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val dateMulai = sdf.parse(mulai)
+            val dateSelesai = sdf.parse(selesai)
+            
+            if (dateMulai != null && dateSelesai != null) {
+                val diffInMillis = dateSelesai.time - dateMulai.time
+                val days = TimeUnit.MILLISECONDS.toDays(diffInMillis)
+                days + 1 // +1 agar inklusif (contoh: Tgl 1 s/d Tgl 1 = 1 hari)
+            } else 1
+        } catch (e: Exception) {
+            1
         }
     }
 

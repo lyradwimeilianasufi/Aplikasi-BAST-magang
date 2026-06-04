@@ -8,16 +8,25 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityDetailPengajuanDiajukanBinding
 import com.example.aplikasibast.databinding.DialogTolakPengajuanBinding
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class DetailPengajuanIzinActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailPengajuanDiajukanBinding
+    private val viewModel: MainViewModel by viewModel()
+    private var pengajuanId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,27 +34,68 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
         binding = ActivityDetailPengajuanDiajukanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        pengajuanId = intent.getIntExtra("PENGAJUAN_ID", -1)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        loadData()
         setupUI()
     }
 
+    private fun loadData() {
+        if (pengajuanId != -1) {
+            lifecycleScope.launch {
+                val data = viewModel.getPengajuanById(pengajuanId)
+                data?.let {
+                    binding.tvNamaTeknisi.text = it.teknisiNama
+                    binding.tvJenisIzin.text = it.jenisIzin
+                    binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                    binding.tvAlasan.text = it.alasan
+                    binding.tvTanggalPengajuan.text = it.tanggalPengajuan
+                }
+            }
+        }
+    }
+
     private fun setupUI() {
-        binding.btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
+        binding.btnBack.setOnClickListener { finish() }
         
-        binding.btnTolak.setOnClickListener {
-            showTolakDialog()
-        }
+        binding.btnTolak.setOnClickListener { showTolakDialog() }
         
         binding.btnSetujui.setOnClickListener {
-            val intent = Intent(this, ApprovalIzinSelesaiActivity::class.java)
-            startActivity(intent)
+            updateStatus("DISETUJUI", null)
+        }
+    }
+
+    private fun updateStatus(status: String, alasanTolak: String?) {
+        lifecycleScope.launch {
+            val data = viewModel.getPengajuanById(pengajuanId)
+            data?.let {
+                val today = SimpleDateFormat("dd MMM yyyy", Locale("id", "ID")).format(Calendar.getInstance().time)
+                
+                // Update status, tanggal proses, dan alasan jika ditolak
+                val updatedData = it.copy(
+                    status = status,
+                    tanggalDiproses = today,
+                    alasanPenolakan = alasanTolak
+                )
+                
+                viewModel.updatePengajuan(updatedData)
+                
+                val nextActivity = if (status == "DISETUJUI") {
+                    ApprovalIzinSelesaiActivity::class.java
+                } else {
+                    ApprovalIzinDitolakActivity::class.java
+                }
+                
+                Toast.makeText(this@DetailPengajuanIzinActivity, "Status berhasil diperbarui", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this@DetailPengajuanIzinActivity, nextActivity))
+                finish()
+            }
         }
     }
 
@@ -54,8 +104,6 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val dialogBinding = DialogTolakPengajuanBinding.inflate(layoutInflater)
         dialog.setContentView(dialogBinding.root)
-
-        // 1. Buat background window dialog transparan agar rounded corner CardView terlihat
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         dialogBinding.btnClose.setOnClickListener { dialog.dismiss() }
@@ -64,30 +112,18 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
             val alasan = dialogBinding.etAlasan.text.toString()
             if (alasan.isNotEmpty()) {
                 dialog.dismiss()
-                // Navigasi ke halaman Approval Izin Ditolak
-                val intent = Intent(this, ApprovalIzinDitolakActivity::class.java)
-                startActivity(intent)
+                updateStatus("DITOLAK", alasan)
             } else {
                 dialogBinding.tilAlasan.error = "Alasan tidak boleh kosong"
             }
         }
 
-        // 2. Tampilkan dialog terlebih dahulu
         dialog.show()
-
-        // 3. Atur LayoutParams SETELAH dialog.show() untuk memastikan posisi di TENGAH
         dialog.window?.let { window ->
             val layoutParams = WindowManager.LayoutParams()
             layoutParams.copyFrom(window.attributes)
-            
-            val displayMetrics = resources.displayMetrics
-            // Lebar 85% dari layar agar proporsional
-            layoutParams.width = (displayMetrics.widthPixels * 0.85).toInt()
-            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-            
-            // PAKSA POSISI KE TENGAH LAYAR
+            layoutParams.width = (resources.displayMetrics.widthPixels * 0.85).toInt()
             layoutParams.gravity = Gravity.CENTER
-            
             window.attributes = layoutParams
         }
     }

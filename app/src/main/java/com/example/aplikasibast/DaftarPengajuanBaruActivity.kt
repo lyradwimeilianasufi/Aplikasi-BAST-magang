@@ -2,12 +2,14 @@ package com.example.aplikasibast
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplikasibast.databinding.ActivityDaftarPengajuanIzinDisetujuiBinding
 import kotlinx.coroutines.launch
@@ -21,23 +23,14 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // 1. Aktifkan mode Edge-to-Edge
         enableEdgeToEdge()
-        
         binding = ActivityDaftarPengajuanIzinDisetujuiBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 2. Tangani Insets agar tombol tidak tertutup navigasi bar
         ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            
-            // Atur padding root agar otomatis menyesuaikan dengan area aman sistem
             v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
-            
-            // Atur tinggi spacer status bar di bagian atas
             binding.toolbar.setPadding(0, systemBars.top, 0, 0)
-            
             insets
         }
 
@@ -48,25 +41,42 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = PengajuanIzinAdapter { item ->
+            // Navigasi ke detail riwayat disetujui (Read-Only)
             val intent = Intent(this, DetailIzinDisetujuiActivity::class.java)
             intent.putExtra("PENGAJUAN_ID", item.id)
             startActivity(intent)
         }
+        // Pastikan LayoutManager terpasang agar list muncul
         binding.rvPengajuan.layoutManager = LinearLayoutManager(this)
         binding.rvPengajuan.adapter = adapter
     }
 
     private fun observeData() {
         lifecycleScope.launch {
-            viewModel.getPengajuanByStatus("DISETUJUI").collect { list ->
-                adapter.submitList(list)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Memantau status DISETUJUI secara real-time
+                viewModel.getPengajuanByStatus(AppConstants.STATUS_DISETUJUI).collect { list ->
+                    adapter.submitList(list)
+                    
+                    // Logika Visibilitas: Tampilkan list jika data ada
+                    if (list.isEmpty()) {
+                        binding.rvPengajuan.visibility = View.GONE
+                        binding.scrollViewContent.visibility = View.VISIBLE
+                    } else {
+                        binding.rvPengajuan.visibility = View.VISIBLE
+                        binding.scrollViewContent.visibility = View.GONE
+                    }
+                }
             }
         }
     }
 
     private fun setupUI() {
-        binding.btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+        binding.btnBack.setOnClickListener { finish() }
+
+        // Navigasi ke Halaman Approval Izin (Panel Kontrol)
+        binding.btnApproval.setOnClickListener {
+            startActivity(Intent(this, ApprovalIzinActivity::class.java))
         }
 
         binding.btnTambahPengajuan.setOnClickListener {
@@ -74,15 +84,14 @@ class DaftarPengajuanBaruActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Navigasi Antar Tab Riwayat
         binding.tabDiajukan.setOnClickListener {
-            val intent = Intent(this, DaftarPengajuanIzinActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, DaftarPengajuanIzinActivity::class.java))
             finish()
         }
 
         binding.tabDitolak.setOnClickListener {
-            val intent = Intent(this, DaftarPengajuanIzinDitolakActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, DaftarPengajuanIzinDitolakActivity::class.java))
             finish()
         }
     }

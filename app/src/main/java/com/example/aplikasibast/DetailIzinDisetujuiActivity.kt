@@ -1,5 +1,6 @@
 package com.example.aplikasibast
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityDetailIzinDisetujuiBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class DetailIzinDisetujuiActivity : AppCompatActivity() {
 
@@ -27,36 +32,43 @@ class DetailIzinDisetujuiActivity : AppCompatActivity() {
             insets
         }
 
-        // Ambil ID yang dikirim dari list
-        val permitId = intent.getIntExtra("PERMIT_ID", -1)
-        if (permitId != -1) {
-            loadPermitDetail(permitId)
+        val pengajuanId = intent.getIntExtra("PENGAJUAN_ID", -1)
+        if (pengajuanId != -1) {
+            loadData(pengajuanId)
         }
 
-        setupUI()
+        binding.btnBack.setOnClickListener { finish() }
     }
 
-    private fun setupUI() {
-        binding.btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-    }
-
-    private fun loadPermitDetail(id: Int) {
+    private fun loadData(id: Int) {
         lifecycleScope.launch {
-            // Ambil data spesifik dari DB berdasarkan ID
-            // Catatan: Pastikan Anda menambahkan fungsi getPengajuanById di MainViewModel/Repository
-            // Untuk sementara kita cari dari list pengajuan
-            viewModel.getPengajuanByStatus("DISETUJUI").collect { list ->
-                val permit = list.find { it.id == id }
-                permit?.let {
-                    binding.tvTanggalPengajuan.text = it.tanggalPengajuan
-                    binding.tvJenisIzin.text = it.jenisIzin
-                    binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
-                    binding.tvAlasan.text = it.alasan
-                    // Anda bisa menambahkan mapping data lainnya di sini
+            val data = viewModel.getPengajuanById(id)
+            data?.let {
+                binding.tvTanggalPengajuan.text = it.tanggalPengajuan
+                binding.tvTanggalDiproses.text = it.tanggalDiproses ?: "-"
+                binding.tvJenisIzin.text = it.jenisIzin
+                binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                binding.tvAlasan.text = it.alasan
+                
+                binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"
+
+                it.lampiranPath?.let { path ->
+                    val file = File(path)
+                    if (file.exists()) {
+                        binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
+                        binding.ivFilePendukung.alpha = 1.0f
+                    }
                 }
             }
         }
+    }
+
+    private fun hitungDurasi(mulai: String, selesai: String): Long {
+        return try {
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val d1 = sdf.parse(mulai)
+            val d2 = sdf.parse(selesai)
+            TimeUnit.MILLISECONDS.toDays(d2!!.time - d1!!.time) + 1
+        } catch (e: Exception) { 1 }
     }
 }
