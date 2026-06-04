@@ -57,21 +57,9 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             if (isMasuk) {
-                // Logika Absen Masuk: Tentukan status (Hadir atau Telat)
-                // Jam masuk reguler: 09:00:00. Lebih dari itu dianggap Telat.
-                val limit = Calendar.getInstance().apply {
-                    set(Calendar.HOUR_OF_DAY, 9)
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MILLISECOND, 0)
-                }
-                
-                // Jika waktu sekarang (calendar) setelah limit (09:00:00), maka Telat
-                val status = if (calendar.after(limit)) {
-                    "Telat"
-                } else {
-                    "Hadir"
-                }
+                // Logika Jam Masuk Dinonaktifkan Sementara (Selalu Hadir)
+                // Sebelumnya: Jika lewat jam 09:00 maka Telat
+                val status = "Hadir"
 
                 val kehadiran = KehadiranEntity(
                     tanggal = tanggal,
@@ -87,7 +75,6 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                 viewModel.insertKehadiran(kehadiran)
                 finishWithSuccess(isMasuk)
             } else {
-                // Logika Absen Keluar: Cari data hari ini dan update
                 val todayKehadiran = viewModel.allKehadiran.first().find { it.tanggal == tanggal }
                 
                 if (todayKehadiran != null) {
@@ -131,7 +118,7 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
             
             if (dateMasuk != null && dateKeluar != null) {
                 var diff = dateKeluar.time - dateMasuk.time
-                if (diff < 0) diff += 24 * 60 * 60 * 1000 // Jika lewat tengah malam
+                if (diff < 0) diff += 24 * 60 * 60 * 1000
 
                 val hours = diff / (1000 * 60 * 60)
                 val minutes = (diff / (1000 * 60)) % 60

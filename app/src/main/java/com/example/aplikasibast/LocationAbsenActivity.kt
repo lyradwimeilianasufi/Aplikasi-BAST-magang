@@ -23,6 +23,7 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polygon
 import java.util.Locale
 
 class LocationAbsenActivity : AppCompatActivity() {
@@ -85,6 +86,7 @@ class LocationAbsenActivity : AppCompatActivity() {
 
     private fun setupViewOnlyMode() {
         binding.btnAbsenMasuk.visibility = View.GONE
+        binding.tvDistanceInfo.visibility = View.GONE
         binding.tvLabelTitle.text = intent.getStringExtra("TITLE_TO_VIEW") ?: "Detail Lokasi"
         
         val time = intent.getStringExtra("TIME_TO_VIEW")
@@ -121,7 +123,24 @@ class LocationAbsenActivity : AppCompatActivity() {
     private fun setupMap() {
         binding.mapView.setTileSource(TileSourceFactory.MAPNIK)
         binding.mapView.setMultiTouchControls(true)
-        binding.mapView.controller.setZoom(18.0)
+        binding.mapView.controller.setZoom(18.5)
+
+        // Tambahkan Marker Kantor sebagai referensi
+        val officePoint = GeoPoint(OFFICE_LAT, OFFICE_LNG)
+        val officeMarker = Marker(binding.mapView)
+        officeMarker.position = officePoint
+        officeMarker.title = "Kantor BAST"
+        officeMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        binding.mapView.overlays.add(officeMarker)
+
+        // Tambahkan Lingkaran Radius (Visualisasi)
+        // PERBAIKAN: Gunakan Polygon.pointsAsCircle untuk membuat titik-titik lingkaran
+        val circle = Polygon(binding.mapView)
+        circle.points = Polygon.pointsAsCircle(officePoint, MAX_RADIUS)
+        circle.fillPaint.color = Color.parseColor("#325D2D91") // Ungu transparan
+        circle.outlinePaint.color = Color.parseColor("#5D2D91")
+        circle.outlinePaint.strokeWidth = 2f
+        binding.mapView.overlays.add(circle)
     }
 
     private fun checkLocationPermissions() {
@@ -141,7 +160,24 @@ class LocationAbsenActivity : AppCompatActivity() {
                 currentLng = location.longitude
                 updateMapPosition(GeoPoint(currentLat, currentLng))
                 getAddressFromLocation(currentLat, currentLng)
+                
+                // Hitung Jarak dan Update UI
+                val results = FloatArray(1)
+                Location.distanceBetween(currentLat, currentLng, OFFICE_LAT, OFFICE_LNG, results)
+                updateDistanceUI(results[0])
             }
+        }
+    }
+
+    private fun updateDistanceUI(distance: Float) {
+        val distanceText = String.format("Jarak ke kantor: %.0f meter", distance)
+        
+        if (distance <= MAX_RADIUS) {
+            binding.tvDistanceInfo.text = "$distanceText (Dalam Radius)"
+            binding.tvDistanceInfo.setTextColor(Color.parseColor("#2E7D32")) // Hijau
+        } else {
+            binding.tvDistanceInfo.text = "$distanceText (Luar Radius)"
+            binding.tvDistanceInfo.setTextColor(Color.parseColor("#D32F2F")) // Merah
         }
     }
 
@@ -152,6 +188,7 @@ class LocationAbsenActivity : AppCompatActivity() {
             binding.mapView.overlays.add(userMarker)
         }
         userMarker?.position = point
+        userMarker?.title = "Lokasi Anda"
         userMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         binding.mapView.invalidate()
     }
@@ -177,13 +214,11 @@ class LocationAbsenActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Hitung jarak antara lokasi pengguna dan kantor
             val results = FloatArray(1)
             Location.distanceBetween(currentLat, currentLng, OFFICE_LAT, OFFICE_LNG, results)
             val distanceInMeters = results[0]
 
             if (distanceInMeters <= MAX_RADIUS) {
-                // Dalam radius 100m, boleh absen
                 val intent = Intent(this, CameraAbsenActivity::class.java)
                 intent.putExtra("IS_MASUK", isMasuk)
                 intent.putExtra("LOKASI", binding.tvAlamatLengkap.text.toString())
@@ -191,9 +226,8 @@ class LocationAbsenActivity : AppCompatActivity() {
                 intent.putExtra("LNG", currentLng)
                 startActivity(intent)
             } else {
-                // Di luar radius, tampilkan peringatan
                 val message = String.format(
-                    "Gagal: Anda berada di luar radius absen (%.0f meter dari lokasi). Maksimal radius adalah 100m.",
+                    "Gagal: Anda berada di luar radius (%.0f m). Maksimal 100m.",
                     distanceInMeters
                 )
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()

@@ -108,12 +108,26 @@
                 android:fontFamily="@font/barlow_semi_condensed" />
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Info Jarak Radius -->
+        <TextView
+            android:id="@+id/tvDistanceInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/barlow_semi_condensed"
+            android:text="Jarak ke kantor: - m"
+            android:textColor="#5D2D91"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/addressCard"
+            app:layout_constraintTop_toBottomOf="@id/addressCard" />
+
         <!-- Tombol Absen -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAbsenMasuk"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:text="ABSEN MASUK"
             android:textColor="@color/white"
             android:textStyle="bold"
@@ -123,7 +137,7 @@
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addressCard" />
+            app:layout_constraintTop_toBottomOf="@id/tvDistanceInfo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
