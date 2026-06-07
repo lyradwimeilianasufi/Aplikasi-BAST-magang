@@ -38,14 +38,9 @@ class KehadiranActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = RiwayatKehadiranAdapter(emptyList()) { item ->
-            val intent = when (item) {
-                is RiwayatItem.KehadiranData -> Intent(this, DetailKehadiranActivity::class.java)
-                is RiwayatItem.IzinData -> Intent(this, DetailKehadiranIzinActivity::class.java)
-                is RiwayatItem.AlpaData -> Intent(this, DetailKehadiranAlpaActivity::class.java)
-                is RiwayatItem.LiburData -> Intent(this, DetailKehadiranLiburActivity::class.java)
-            }
-            
+        // Refactored: ListAdapter tidak memerlukan list di constructor
+        adapter = RiwayatKehadiranAdapter { item ->
+            val intent = Intent(this, DetailKehadiranActivity::class.java)
             val id = when(item) {
                 is RiwayatItem.KehadiranData -> item.id
                 is RiwayatItem.IzinData -> item.id
@@ -68,43 +63,28 @@ class KehadiranActivity : AppCompatActivity() {
                 val items = listKehadiran.map { entity ->
                     when (entity.status) {
                         "Hadir", "Telat" -> RiwayatItem.KehadiranData(
-                            id = entity.id,
-                            tanggal = entity.tanggal,
-                            status = entity.status,
-                            jamMasuk = entity.jamMasuk,
-                            jamKeluar = entity.jamKeluar,
-                            totalJam = entity.totalJam
+                            id = entity.id, tanggal = entity.tanggal, status = entity.status,
+                            jamMasuk = entity.jamMasuk, jamKeluar = entity.jamKeluar, totalJam = entity.totalJam
                         )
                         "Izin" -> RiwayatItem.IzinData(
-                            id = entity.id,
-                            tanggal = entity.tanggal,
-                            jenisIzin = "Izin",
-                            periode = "-",
-                            durasi = "-",
-                            status = "Izin"
+                            id = entity.id, tanggal = entity.tanggal, jenisIzin = "Izin",
+                            periode = "-", durasi = "-", status = "Izin"
                         )
-                        "Alpa" -> RiwayatItem.AlpaData(
-                            id = entity.id,
-                            tanggal = entity.tanggal,
-                            status = "Alpa"
-                        )
-                        else -> RiwayatItem.LiburData(
-                            id = entity.id,
-                            tanggal = entity.tanggal,
-                            status = entity.status
-                        )
+                        "Alpa" -> RiwayatItem.AlpaData(id = entity.id, tanggal = entity.tanggal, status = "Alpa")
+                        else -> RiwayatItem.LiburData(id = entity.id, tanggal = entity.tanggal, status = entity.status)
                     }
                 }
-                adapter.updateData(items)
+                // Profesional: Menggunakan submitList untuk efisiensi DiffUtil
+                adapter.submitList(items)
                 updateSummary(listKehadiran)
             }
         }
     }
 
     private fun updateSummary(list: List<KehadiranEntity>) {
-        val hadirCount = list.count { it.status.equals("Hadir", ignoreCase = true) || it.status.equals("Telat", ignoreCase = true) }
-        val izinCount = list.count { it.status.equals("Izin", ignoreCase = true) }
-        val alpaCount = list.count { it.status.equals("Alpa", ignoreCase = true) }
+        val hadirCount = list.count { it.status.equals("Hadir", true) || it.status.equals("Telat", true) }
+        val izinCount = list.count { it.status.equals("Izin", true) }
+        val alpaCount = list.count { it.status.equals("Alpa", true) }
 
         binding.tvCountHadir.text = "$hadirCount Hari"
         binding.tvCountIzin.text = "$izinCount Hari"
@@ -126,23 +106,7 @@ class KehadiranActivity : AppCompatActivity() {
 
     private fun setupNavigation() {
         binding.bottomNavigationInclude.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_beranda -> {
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_kehadiran -> true
-                R.id.nav_riwayat -> {
-                    val intent = Intent(this, RiwayatKehadiranActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_akun -> true
-                else -> false
-            }
+            NavigationHelper.handleBottomNavigation(this, item.itemId)
         }
     }
 }

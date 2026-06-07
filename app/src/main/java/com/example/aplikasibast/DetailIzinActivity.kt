@@ -5,33 +5,31 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.aplikasibast.databinding.ActivityDetailIzinDiajukanBinding
+import com.example.aplikasibast.databinding.ActivityDetailIzinBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.concurrent.TimeUnit
 
 class DetailIzinActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityDetailIzinDiajukanBinding
+    private lateinit var binding: ActivityDetailIzinBinding
     private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityDetailIzinDiajukanBinding.inflate(layoutInflater)
+        binding = ActivityDetailIzinBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val pengajuanId = intent.getIntExtra("PENGAJUAN_ID", -1)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbarLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(0, systemBars.top, 0, 0)
             insets
         }
 
@@ -46,34 +44,55 @@ class DetailIzinActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val data = viewModel.getPengajuanById(id)
             data?.let {
+                // UI Header
                 binding.tvTanggalPengajuan.text = it.tanggalPengajuan
+                setupStatusBadge(it.status)
+
+                // Processing Info (Visible if not Pending)
+                if (it.status != AppConstants.STATUS_DIAJUKAN) {
+                    binding.cardProcessing.visibility = View.VISIBLE
+                    binding.tvTanggalDiproses.text = it.tanggalDiproses ?: "-"
+                    
+                    if (it.status == AppConstants.STATUS_DITOLAK) {
+                        binding.layoutRejection.visibility = View.VISIBLE
+                        binding.tvAlasanPenolakan.text = it.alasanPenolakan ?: "Tidak ada alasan spesifik"
+                    }
+                }
+
+                // Main Details
                 binding.tvJenisIzin.text = it.jenisIzin
                 binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
                 binding.tvAlasan.text = it.alasan
-                binding.tvStatusBadge.text = it.status
-                
-                // Hitung Jumlah Hari
-                binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"
+                binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
 
-                // Tampilkan Lampiran jika ada
+                // Attachment
                 it.lampiranPath?.let { path ->
                     val file = File(path)
                     if (file.exists()) {
                         binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
                         binding.ivFilePendukung.alpha = 1.0f
+                        binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
                     }
                 }
             }
         }
     }
 
-    private fun hitungDurasi(mulai: String, selesai: String): Long {
-        return try {
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val d1 = sdf.parse(mulai)
-            val d2 = sdf.parse(selesai)
-            val diff = d2!!.time - d1!!.time
-            TimeUnit.MILLISECONDS.toDays(diff) + 1
-        } catch (e: Exception) { 1 }
+    private fun setupStatusBadge(status: String) {
+        binding.tvStatusBadge.text = status
+        when (status) {
+            AppConstants.STATUS_DISETUJUI -> {
+                binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this, R.color.green_badge_bg)
+                binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this, R.color.green_badge_text))
+            }
+            AppConstants.STATUS_DITOLAK -> {
+                binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this, R.color.red_badge_bg)
+                binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this, R.color.red_badge_text))
+            }
+            else -> {
+                binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this, R.color.yellow_badge_bg)
+                binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this, R.color.yellow_badge_text))
+            }
+        }
     }
 }

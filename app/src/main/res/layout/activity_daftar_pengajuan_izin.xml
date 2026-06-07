@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F9FA"
+    android:fontFamily="@font/barlow_semi_condensed">
+
+    <!-- Status Bar Spacer -->
+    <View
+        android:id="@+id/statusBarSpacer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Toolbar -->
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintTop_toBottomOf="@id/statusBarSpacer">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back_white"
+            app:tint="@color/black" />
+
+        <TextView
+            android:id="@+id/tvToolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/btnBack"
+            android:text="Pengajuan Izin"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:id="@+id/btnApproval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_hugeicons_validation_approval" />
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/orange_circle"
+                android:backgroundTint="#E53935" />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/toolbarDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <!-- Tab Layout -->
+    <LinearLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbarDivider">
+
+        <TextView
+            android:id="@+id/tabDiajukan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_tab_unselected"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:text="DIAJUKAN"
+            android:textColor="@color/purple_badge_text"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tabDisetujui"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_tab_unselected"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:text="DISETUJUI"
+            android:textColor="@color/purple_badge_text"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tabDitolak"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_tab_unselected"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:text="DITOLAK"
+            android:textColor="@color/purple_badge_text"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPengajuan"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/btnTambahContainer"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+    <ScrollView
+        android:id="@+id/scrollViewEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/btnTambahContainer"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp">
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="80dp"
+                android:alpha="0.1"
+                android:src="@drawable/ic_dokumen" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Data Tidak Tersedia"
+                android:textColor="#BDBDBD"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/btnTambahContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTambahPengajuan"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:backgroundTint="@color/purple_dark"
+            android:text="TAMBAH PENGAJUAN"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

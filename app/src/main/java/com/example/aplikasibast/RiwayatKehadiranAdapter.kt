@@ -7,6 +7,8 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aplikasibast.databinding.ItemRiwayatAlpaBinding
 import com.example.aplikasibast.databinding.ItemRiwayatHadirBinding
@@ -14,25 +16,32 @@ import com.example.aplikasibast.databinding.ItemRiwayatIzinBinding
 import com.example.aplikasibast.databinding.ItemRiwayatLiburBinding
 
 class RiwayatKehadiranAdapter(
-    private var list: List<RiwayatItem>,
     private val onItemClick: (RiwayatItem) -> Unit
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : ListAdapter<RiwayatItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     companion object {
         private const val TYPE_KEHADIRAN = 0
         private const val TYPE_IZIN = 1
         private const val TYPE_ALPA = 2
         private const val TYPE_LIBUR = 3
-    }
 
-    // Fungsi untuk memperbarui data secara dinamis dari Activity
-    fun updateData(newList: List<RiwayatItem>) {
-        this.list = newList
-        notifyDataSetChanged()
+        private val DiffCallback = object : DiffUtil.ItemCallback<RiwayatItem>() {
+            override fun areItemsTheSame(oldItem: RiwayatItem, newItem: RiwayatItem): Boolean {
+                return when {
+                    oldItem is RiwayatItem.KehadiranData && newItem is RiwayatItem.KehadiranData -> oldItem.id == newItem.id
+                    oldItem is RiwayatItem.IzinData && newItem is RiwayatItem.IzinData -> oldItem.id == newItem.id
+                    oldItem is RiwayatItem.AlpaData && newItem is RiwayatItem.AlpaData -> oldItem.id == newItem.id
+                    oldItem is RiwayatItem.LiburData && newItem is RiwayatItem.LiburData -> oldItem.id == newItem.id
+                    else -> false
+                }
+            }
+
+            override fun areContentsTheSame(oldItem: RiwayatItem, newItem: RiwayatItem): Boolean = oldItem == newItem
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (list[position]) {
+        return when (getItem(position)) {
             is RiwayatItem.KehadiranData -> TYPE_KEHADIRAN
             is RiwayatItem.IzinData -> TYPE_IZIN
             is RiwayatItem.AlpaData -> TYPE_ALPA
@@ -43,28 +52,16 @@ class RiwayatKehadiranAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            TYPE_KEHADIRAN -> {
-                val binding = ItemRiwayatHadirBinding.inflate(inflater, parent, false)
-                KehadiranViewHolder(binding)
-            }
-            TYPE_IZIN -> {
-                val binding = ItemRiwayatIzinBinding.inflate(inflater, parent, false)
-                IzinViewHolder(binding)
-            }
-            TYPE_ALPA -> {
-                val binding = ItemRiwayatAlpaBinding.inflate(inflater, parent, false)
-                AlpaViewHolder(binding)
-            }
-            TYPE_LIBUR -> {
-                val binding = ItemRiwayatLiburBinding.inflate(inflater, parent, false)
-                LiburViewHolder(binding)
-            }
+            TYPE_KEHADIRAN -> KehadiranViewHolder(ItemRiwayatHadirBinding.inflate(inflater, parent, false))
+            TYPE_IZIN -> IzinViewHolder(ItemRiwayatIzinBinding.inflate(inflater, parent, false))
+            TYPE_ALPA -> AlpaViewHolder(ItemRiwayatAlpaBinding.inflate(inflater, parent, false))
+            TYPE_LIBUR -> LiburViewHolder(ItemRiwayatLiburBinding.inflate(inflater, parent, false))
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = list[position]
+        val item = getItem(position)
         when (holder) {
             is KehadiranViewHolder -> holder.bind(item as RiwayatItem.KehadiranData)
             is IzinViewHolder -> holder.bind(item as RiwayatItem.IzinData)
@@ -73,88 +70,48 @@ class RiwayatKehadiranAdapter(
         }
     }
 
-    override fun getItemCount(): Int = list.size
-
-    inner class KehadiranViewHolder(private val binding: ItemRiwayatHadirBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class KehadiranViewHolder(private val binding: ItemRiwayatHadirBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.KehadiranData) {
-            val text = item.tanggal
-            if (text.contains("[Take Over]")) {
-                val spannable = SpannableString(text)
-                val start = text.indexOf("[Take Over]")
-                val end = start + "[Take Over]".length
-                spannable.setSpan(
-                    ForegroundColorSpan(Color.parseColor("#FFB422")),
-                    start,
-                    end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-                binding.tvTanggal.text = spannable
-            } else {
-                binding.tvTanggal.text = text
-            }
-
+            binding.tvTanggal.text = formatTakeOverText(item.tanggal)
             binding.tvStatus.text = item.status
-            
-            // Set warna badge menjadi hijau untuk status Hadir maupun Telat
-            if (item.status.equals("Telat", ignoreCase = true) || item.status.equals("Hadir", ignoreCase = true)) {
-                binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60")) // Green
+            if (item.status.equals("Telat", true) || item.status.equals("Hadir", true)) {
+                binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
             }
-
             binding.tvJamMasuk.text = item.jamMasuk
             binding.tvJamKeluar.text = item.jamKeluar
             binding.tvTotalJam.text = item.totalJam
-            
-            binding.root.setOnClickListener {
-                onItemClick(item)
-            }
+            binding.root.setOnClickListener { onItemClick(item) }
         }
     }
 
-    inner class IzinViewHolder(private val binding: ItemRiwayatIzinBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class IzinViewHolder(private val binding: ItemRiwayatIzinBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.IzinData) {
             binding.tvTanggal.text = item.tanggal
             binding.tvStatus.text = "Izin"
-            
-            binding.tvJamMasuk.text = " - "
-            binding.tvJamKeluar.text = " - "
-            binding.tvTotalJam.text = " - "
-            
-            binding.root.setOnClickListener {
-                onItemClick(item)
-            }
+            binding.root.setOnClickListener { onItemClick(item) }
         }
     }
 
-    inner class AlpaViewHolder(private val binding: ItemRiwayatAlpaBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class AlpaViewHolder(private val binding: ItemRiwayatAlpaBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.AlpaData) {
             binding.tvTanggal.text = item.tanggal
-            
-            binding.tvJamMasuk.text = " - "
-            binding.tvJamKeluar.text = " - "
-            binding.tvTotalJam.text = " - "
-            
-            binding.root.setOnClickListener {
-                onItemClick(item)
-            }
+            binding.root.setOnClickListener { onItemClick(item) }
         }
     }
 
-    inner class LiburViewHolder(private val binding: ItemRiwayatLiburBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class LiburViewHolder(private val binding: ItemRiwayatLiburBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.LiburData) {
             binding.tvTanggal.text = item.tanggal
             binding.tvStatus.text = "Libur"
-
-            binding.tvJamMasuk.text = " - "
-            binding.tvJamKeluar.text = " - "
-            binding.tvTotalJam.text = " - "
-            
-            binding.root.setOnClickListener {
-                onItemClick(item)
-            }
+            binding.root.setOnClickListener { onItemClick(item) }
         }
+    }
+
+    private fun formatTakeOverText(text: String): CharSequence {
+        if (!text.contains("[Take Over]")) return text
+        val spannable = SpannableString(text)
+        val start = text.indexOf("[Take Over]")
+        spannable.setSpan(ForegroundColorSpan(Color.parseColor("#FFB422")), start, start + 11, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return spannable
     }
 }

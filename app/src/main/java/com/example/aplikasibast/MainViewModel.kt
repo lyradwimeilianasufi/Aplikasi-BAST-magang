@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 class MainViewModel(
     private val repository: AppRepository,
@@ -16,30 +14,26 @@ class MainViewModel(
     val userName = sessionManager.getUserName() ?: "User"
     val userRole = sessionManager.getUserRole() ?: "Staff"
     
-    // Format UI untuk tampilan di Dashboard
-    val currentDayUI = SimpleDateFormat(AppConstants.DATE_FORMAT_UI, Locale("id", "ID")).format(Calendar.getInstance().time)
-    
-    // Variabel yang sempat hilang
+    // UI Constants
     val workHours = "Reguler (09:00-17:00)"
+    val currentDayUI: String get() = DateUtils.formatToUi(DateUtils.getTodayDb())
     
-    // Format DB untuk pembandingan data
-    private val todayDb = SimpleDateFormat(AppConstants.DATE_FORMAT_DB, Locale.US).format(Calendar.getInstance().time)
+    private val todayDb: String get() = DateUtils.getTodayDb()
 
     val allKehadiran: Flow<List<KehadiranEntity>> = repository.allKehadiran
 
-    // State utama untuk Dashboard (Menggabungkan data Absensi dan Izin)
     val dashboardState: StateFlow<DashboardData> = combine(
         repository.allKehadiran,
         repository.getPengajuanByStatus(AppConstants.STATUS_DISETUJUI)
     ) { kehadiranList, izinList ->
-        val todayAbsen = kehadiranList.find { it.tanggal == currentDayUI } // Cek absen berdasarkan tanggal UI yang tersimpan
+        val todayAbsen = kehadiranList.find { it.tanggal == todayDb }
         val activeIzin = izinList.find { todayDb >= it.tanggalMulai && todayDb <= it.tanggalSelesai }
         
         val status = when {
-            todayAbsen != null -> "Hadir"
+            todayAbsen != null -> todayAbsen.status
             activeIzin != null -> "Izin"
             isWeekend() -> "Libur"
-            isAfterWorkHours() -> "Alpa"
+            isAfterWorkHours() && todayAbsen == null -> "Alpa"
             else -> userRole
         }
 
@@ -50,7 +44,6 @@ class MainViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DashboardData())
 
-    // --- Helper Functions ---
     private fun isWeekend(): Boolean {
         val day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
         return day == Calendar.SATURDAY || day == Calendar.SUNDAY
@@ -78,7 +71,7 @@ class MainViewModel(
 
     fun updatePengajuan(pengajuan: PengajuanIzinEntity) {
         viewModelScope.launch {
-            repository.insertPengajuan(pengajuan) // Menggunakan insert dengan REPLACE atau buat fungsi update
+            repository.insertPengajuan(pengajuan)
         }
     }
 

@@ -121,12 +121,13 @@ class PengajuanIzinActivity : AppCompatActivity() {
                 tanggalMulai = dbDateFormat.format(calendarMulai!!.time),
                 tanggalSelesai = dbDateFormat.format(calendarSelesai!!.time),
                 alasan = alasan,
-                tanggalPengajuan = SimpleDateFormat(AppConstants.DATE_FORMAT_DB, Locale.getDefault()).format(Calendar.getInstance().time),
+                tanggalPengajuan = DateUtils.getTodayDb(),
                 lampiranPath = lampiranPath
             )
 
             Toast.makeText(this, "Pengajuan berhasil dikirim", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, DaftarPengajuanIzinActivity::class.java))
+            // Refactored: Langsung ke DaftarPengajuanActivity
+            startActivity(Intent(this, DaftarPengajuanActivity::class.java))
             finish()
         }
     }

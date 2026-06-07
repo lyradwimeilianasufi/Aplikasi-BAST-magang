@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -19,15 +20,6 @@ class DetailKehadiranActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailKehadiranHadirBinding
     private val viewModel: MainViewModel by viewModel()
-    
-    private var lokasiMasuk: String? = null
-    private var lokasiKeluar: String? = null
-    private var latMasuk: Double? = null
-    private var lngMasuk: Double? = null
-    private var latKeluar: Double? = null
-    private var lngKeluar: Double? = null
-    private var jamMasuk: String? = null
-    private var jamKeluar: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,90 +27,123 @@ class DetailKehadiranActivity : AppCompatActivity() {
         binding = ActivityDetailKehadiranHadirBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbarLayout) { view, insets ->
+        val kehadiranId = intent.getIntExtra("KEHADIRAN_ID", -1)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(top = systemBars.top)
+            binding.toolbarLayout.updatePadding(top = systemBars.top)
             insets
         }
 
-        val kehadiranId = intent.getIntExtra("KEHADIRAN_ID", -1)
         if (kehadiranId != -1) {
-            loadDetailData(kehadiranId)
+            loadData(kehadiranId)
         }
 
-        setupUI()
+        binding.btnBack.setOnClickListener { finish() }
     }
 
-    private fun setupUI() {
-        binding.btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-
-        binding.btnLihatLokasiMasuk.setOnClickListener {
-            lokasiMasuk?.let { address ->
-                navigateToViewLocation(address, "Lokasi Absen Masuk", jamMasuk, latMasuk, lngMasuk)
-            }
-        }
-
-        binding.btnLihatLokasiKeluar.setOnClickListener {
-            lokasiKeluar?.let { address ->
-                navigateToViewLocation(address, "Lokasi Absen Keluar", jamKeluar, latKeluar, lngKeluar)
-            }
-        }
-    }
-
-    private fun navigateToViewLocation(address: String, title: String, time: String?, lat: Double?, lng: Double?) {
-        val intent = Intent(this, LocationAbsenActivity::class.java)
-        intent.putExtra("IS_VIEW_ONLY", true)
-        intent.putExtra("ADDRESS_TO_VIEW", address)
-        intent.putExtra("TITLE_TO_VIEW", title)
-        intent.putExtra("TIME_TO_VIEW", time)
-        if (lat != null && lng != null) {
-            intent.putExtra("LAT_TO_VIEW", lat)
-            intent.putExtra("LNG_TO_VIEW", lng)
-        }
-        startActivity(intent)
-    }
-
-    private fun loadDetailData(id: Int) {
+    private fun loadData(id: Int) {
         lifecycleScope.launch {
             val data = viewModel.getKehadiranById(id)
-            data?.let { kehadiran ->
-                lokasiMasuk = kehadiran.lokasiMasuk
-                lokasiKeluar = kehadiran.lokasiKeluar
-                latMasuk = kehadiran.latMasuk
-                lngMasuk = kehadiran.lngMasuk
-                latKeluar = kehadiran.latKeluar
-                lngKeluar = kehadiran.lngKeluar
-                jamMasuk = kehadiran.jamMasuk
-                jamKeluar = kehadiran.jamKeluar
-
-                binding.tvTanggalKerja.text = kehadiran.tanggal
-                binding.tvWaktuMasuk.text = kehadiran.jamMasuk
-                binding.tvWaktuKeluar.text = kehadiran.jamKeluar
-                binding.tvTotalJamKerja.text = kehadiran.totalJam
-                binding.tvStatusBadge.text = kehadiran.status
+            data?.let {
+                // 1. Mapping Data Dasar menggunakan Utility Global
+                binding.tvTanggalKerja.text = DateUtils.formatToUi(it.tanggal)
+                binding.tvJamKerja.text = viewModel.workHours
+                binding.tvTotalJamKerja.text = it.totalJam
                 
-                // 1. Tampilkan Foto Absen Masuk
-                kehadiran.fotoMasukPath?.let { path ->
-                    val file = File(path)
-                    if (file.exists()) {
-                        binding.ivFotoMasuk.setImageURI(null)
-                        binding.ivFotoMasuk.setImageURI(Uri.fromFile(file))
-                    }
-                }
+                setupStatusUI(it.status)
 
-                // 2. Tampilkan Foto Absen Keluar
-                if (kehadiran.jamKeluar != "-") {
-                    kehadiran.fotoKeluarPath?.let { path ->
-                        val file = File(path)
-                        if (file.exists()) {
-                            binding.ivFotoKeluar.setImageURI(null)
-                            binding.ivFotoKeluar.setImageURI(Uri.fromFile(file))
-                        }
-                    }
+                // 2. Logika Visibilitas Detail Absensi
+                if (it.status == "Alpa" || it.status == "Libur") {
+                    hideAttendanceSections()
+                } else {
+                    showAttendanceDetails(it)
                 }
             }
+        }
+    }
+
+    private fun setupStatusUI(status: String) {
+        binding.tvStatusBadge.text = status
+        
+        // Perbaikan Unresolved Reference: Menggunakan nama warna yang tepat dari colors.xml
+        val colorRes = when (status) {
+            "Hadir" -> R.color.green_badge_bg
+            "Telat" -> R.color.yellow_badge_bg
+            "Izin" -> R.color.purple_badge 
+            "Alpa" -> R.color.red_badge_bg
+            else -> R.color.gray_light
+        }
+        
+        val textColorRes = when (status) {
+            "Hadir" -> R.color.green_badge_text
+            "Telat" -> R.color.yellow_badge_text
+            "Izin" -> R.color.purple_badge_text
+            "Alpa" -> R.color.red_badge_text
+            else -> R.color.black
+        }
+        
+        binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this, colorRes)
+        binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this, textColorRes))
+    }
+
+    private fun showAttendanceDetails(it: KehadiranEntity) {
+        // Tampilkan detail waktu
+        binding.tvWaktuMasuk.text = it.jamMasuk
+        binding.tvWaktuKeluar.text = it.jamKeluar
+        
+        // Load Foto Masuk dengan skala yang tepat
+        it.fotoMasukPath?.let { path ->
+            val file = File(path)
+            if (file.exists()) {
+                binding.ivFotoMasuk.setImageURI(Uri.fromFile(file))
+                binding.ivFotoMasuk.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+            }
+        }
+
+        // Load Foto Keluar dengan skala yang tepat
+        it.fotoKeluarPath?.let { path ->
+            val file = File(path)
+            if (file.exists()) {
+                binding.ivFotoKeluar.setImageURI(Uri.fromFile(file))
+                binding.ivFotoKeluar.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+            }
+        }
+
+        // Navigasi Lihat Lokasi (Fitur Baru untuk Profesionalisme)
+        binding.btnLihatLokasiMasuk.setOnClickListener { _ ->
+            navigateToMap("Lokasi Masuk", it.jamMasuk, it.latMasuk, it.lngMasuk, it.lokasiMasuk)
+        }
+
+        if (it.jamKeluar != "-") {
+            binding.btnLihatLokasiKeluar.setOnClickListener { _ ->
+                navigateToMap("Lokasi Keluar", it.jamKeluar, it.latKeluar, it.lngKeluar, it.lokasiKeluar)
+            }
+        } else {
+            binding.btnLihatLokasiKeluar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun hideAttendanceSections() {
+        // Menyembunyikan elemen yang tidak diperlukan untuk status Alpa/Libur
+        binding.tvTotalJamKerja.text = "-"
+        binding.layoutFotoMasuk.visibility = View.GONE
+        binding.layoutFotoKeluar.visibility = View.GONE
+        binding.btnLihatLokasiMasuk.visibility = View.GONE
+        binding.btnLihatLokasiKeluar.visibility = View.GONE
+    }
+
+    private fun navigateToMap(title: String, time: String, lat: Double?, lng: Double?, address: String?) {
+        if (lat != null && lng != null) {
+            val intent = Intent(this, LocationAbsenActivity::class.java).apply {
+                putExtra("IS_VIEW_ONLY", true)
+                putExtra("TITLE_TO_VIEW", title)
+                putExtra("TIME_TO_VIEW", time)
+                putExtra("LAT_TO_VIEW", lat)
+                putExtra("LNG_TO_VIEW", lng)
+                putExtra("ADDRESS_TO_VIEW", address)
+            }
+            startActivity(intent)
         }
     }
 }

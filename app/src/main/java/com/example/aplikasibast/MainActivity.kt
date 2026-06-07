@@ -56,23 +56,21 @@ class MainActivity : AppCompatActivity() {
     private fun observeDashboardState() {
         lifecycleScope.launch {
             viewModel.dashboardState.collect { state ->
-                // Update Label Status (Hadir, Izin, Teknisi, dll)
                 binding.tvUserRole.text = state.currentStatus
                 
-                // Update Info Absensi
                 val kehadiran = state.kehadiran
                 if (kehadiran == null) {
                     binding.tvInTime.text = "-"
                     binding.tvOutTime.text = "-"
-                    updateButtonState(true) // Tombol Masuk Aktif
+                    updateButtonState(true)
                 } else {
                     binding.tvInTime.text = kehadiran.jamMasuk
                     binding.tvOutTime.text = kehadiran.jamKeluar
                     
                     if (kehadiran.jamKeluar == "-") {
-                        updateButtonState(false) // Tombol Keluar Aktif
+                        updateButtonState(false)
                     } else {
-                        disableAllButtons() // Sudah lengkap
+                        disableAllButtons()
                     }
                 }
             }
@@ -80,7 +78,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateButtonState(isMasuk: Boolean) {
-        // Development mode: Tombol dibuat selalu aktif agar mudah ditest
         binding.btnAbsenMasukMain.isEnabled = true
         binding.btnAbsenMasukMain.alpha = if (isMasuk) 1.0f else 0.5f
         
@@ -91,7 +88,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun disableAllButtons() {
-        binding.btnAbsenMasukMain.isEnabled = true // Tetap aktif untuk development
+        binding.btnAbsenMasukMain.isEnabled = true
         binding.btnAbsenKeluarMain.isEnabled = true
         binding.btnAbsenMasukMain.alpha = 0.5f
         binding.btnAbsenKeluarMain.alpha = 0.5f
@@ -117,7 +114,8 @@ class MainActivity : AppCompatActivity() {
         binding.btnAbsenKeluarMain.setOnClickListener { navigateToAbsen(false) }
         
         binding.btnMenuIzin.setOnClickListener {
-            startActivity(Intent(this, DaftarPengajuanIzinActivity::class.java))
+            // Refactored: Langsung ke DaftarPengajuanActivity (Default: DIAJUKAN)
+            startActivity(Intent(this, DaftarPengajuanActivity::class.java))
         }
     }
 

@@ -18,9 +18,6 @@ import com.example.aplikasibast.databinding.ActivityDetailPengajuanDiajukanBindi
 import com.example.aplikasibast.databinding.DialogTolakPengajuanBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 class DetailPengajuanIzinActivity : AppCompatActivity() {
 
@@ -56,6 +53,9 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
                     binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
                     binding.tvAlasan.text = it.alasan
                     binding.tvTanggalPengajuan.text = it.tanggalPengajuan
+                    
+                    // Hitung durasi menggunakan utilitas global
+                    binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
                 }
             }
         }
@@ -67,7 +67,7 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
         binding.btnTolak.setOnClickListener { showTolakDialog() }
         
         binding.btnSetujui.setOnClickListener {
-            updateStatus("DISETUJUI", null)
+            updateStatus(AppConstants.STATUS_DISETUJUI, null)
         }
     }
 
@@ -75,25 +75,17 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val data = viewModel.getPengajuanById(pengajuanId)
             data?.let {
-                val today = SimpleDateFormat("dd MMM yyyy", Locale("id", "ID")).format(Calendar.getInstance().time)
-                
-                // Update status, tanggal proses, dan alasan jika ditolak
                 val updatedData = it.copy(
                     status = status,
-                    tanggalDiproses = today,
+                    tanggalDiproses = DateUtils.formatToUi(DateUtils.getTodayDb()),
                     alasanPenolakan = alasanTolak
                 )
                 
                 viewModel.updatePengajuan(updatedData)
                 
-                val nextActivity = if (status == "DISETUJUI") {
-                    ApprovalIzinSelesaiActivity::class.java
-                } else {
-                    ApprovalIzinDitolakActivity::class.java
-                }
-                
                 Toast.makeText(this@DetailPengajuanIzinActivity, "Status berhasil diperbarui", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this@DetailPengajuanIzinActivity, nextActivity))
+                
+                // Kembali ke list. Karena menggunakan Flow, list akan otomatis terupdate.
                 finish()
             }
         }
@@ -112,7 +104,7 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
             val alasan = dialogBinding.etAlasan.text.toString()
             if (alasan.isNotEmpty()) {
                 dialog.dismiss()
-                updateStatus("DITOLAK", alasan)
+                updateStatus(AppConstants.STATUS_DITOLAK, alasan)
             } else {
                 dialogBinding.tilAlasan.error = "Alasan tidak boleh kosong"
             }

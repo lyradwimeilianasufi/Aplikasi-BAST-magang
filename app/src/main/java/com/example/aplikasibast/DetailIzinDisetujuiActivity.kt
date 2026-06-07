@@ -32,6 +32,7 @@ class DetailIzinDisetujuiActivity : AppCompatActivity() {
             insets
         }
 
+        // PERBAIKAN: Gunakan key PENGAJUAN_ID secara konsisten
         val pengajuanId = intent.getIntExtra("PENGAJUAN_ID", -1)
         if (pengajuanId != -1) {
             loadData(pengajuanId)

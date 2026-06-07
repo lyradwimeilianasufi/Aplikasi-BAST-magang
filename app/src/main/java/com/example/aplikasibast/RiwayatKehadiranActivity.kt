@@ -21,18 +21,13 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 1. Aktifkan mode Edge-to-Edge
         enableEdgeToEdge()
         binding = ActivityRiwayatKehadiranBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 2. Tangani insets agar Toolbar tidak tertutup status bar/notch
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { _, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            
-            // Berikan padding atas pada toolbarLayout sesuai tinggi status bar
             binding.toolbarLayout.updatePadding(top = systemBars.top)
-            
             insets
         }
 
@@ -48,41 +43,18 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        binding.btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
+        binding.btnBack.setOnClickListener { finish() }
     }
 
     private fun setupNavigation() {
         binding.bottomNavigation.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_beranda -> {
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_kehadiran -> {
-                    val intent = Intent(this, KehadiranActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_riwayat -> true
-                else -> false
-            }
+            NavigationHelper.handleBottomNavigation(this, item.itemId)
         }
     }
 
     private fun setupRecyclerView() {
-        riwayatAdapter = RiwayatKehadiranAdapter(emptyList()) { item ->
-            val intent = when (item) {
-                is RiwayatItem.KehadiranData -> Intent(this, DetailKehadiranActivity::class.java)
-                is RiwayatItem.IzinData -> Intent(this, DetailKehadiranIzinActivity::class.java)
-                is RiwayatItem.AlpaData -> Intent(this, DetailKehadiranAlpaActivity::class.java)
-                is RiwayatItem.LiburData -> Intent(this, DetailKehadiranLiburActivity::class.java)
-            }
-            
+        riwayatAdapter = RiwayatKehadiranAdapter { item ->
+            val intent = Intent(this, DetailKehadiranActivity::class.java)
             val id = when(item) {
                 is RiwayatItem.KehadiranData -> item.id
                 is RiwayatItem.IzinData -> item.id
@@ -105,34 +77,19 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
                 val items = listKehadiran.map { entity ->
                     when (entity.status) {
                         "Hadir", "Telat" -> RiwayatItem.KehadiranData(
-                            id = entity.id,
-                            tanggal = entity.tanggal,
-                            status = entity.status,
-                            jamMasuk = entity.jamMasuk,
-                            jamKeluar = entity.jamKeluar,
-                            totalJam = entity.totalJam
+                            id = entity.id, tanggal = entity.tanggal, status = entity.status,
+                            jamMasuk = entity.jamMasuk, jamKeluar = entity.jamKeluar, totalJam = entity.totalJam
                         )
                         "Izin" -> RiwayatItem.IzinData(
-                            id = entity.id,
-                            tanggal = entity.tanggal,
-                            jenisIzin = "Izin",
-                            periode = "-",
-                            durasi = "-",
-                            status = "Izin"
+                            id = entity.id, tanggal = entity.tanggal, jenisIzin = "Izin",
+                            periode = "-", durasi = "-", status = "Izin"
                         )
-                        "Alpa" -> RiwayatItem.AlpaData(
-                            id = entity.id,
-                            tanggal = entity.tanggal,
-                            status = "Alpa"
-                        )
-                        else -> RiwayatItem.LiburData(
-                            id = entity.id,
-                            tanggal = entity.tanggal,
-                            status = entity.status
-                        )
+                        "Alpa" -> RiwayatItem.AlpaData(id = entity.id, tanggal = entity.tanggal, status = "Alpa")
+                        else -> RiwayatItem.LiburData(id = entity.id, tanggal = entity.tanggal, status = entity.status)
                     }
                 }
-                riwayatAdapter.updateData(items)
+                // Profesional: Menggunakan submitList bawaan ListAdapter
+                riwayatAdapter.submitList(items)
             }
         }
     }
