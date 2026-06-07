@@ -29,26 +29,22 @@
             </intent-filter>
         </activity>
 
-        <!-- Refactored Unified Activities -->
+        <!-- Activity Hasil Refactor -->
         <activity android:name=".DaftarPengajuanActivity" android:exported="false" />
         <activity android:name=".ApprovalListActivity" android:exported="false" />
+        <activity android:name=".DetailIzinActivity" android:exported="false" />
 
         <activity android:name=".KehadiranActivity" android:exported="false" />
         <activity android:name=".RiwayatKehadiranActivity" android:exported="false" />
         <activity android:name=".DetailKehadiranActivity" android:exported="false" />
-        <activity android:name=".DetailKehadiranIzinActivity" android:exported="false" />
-        <activity android:name=".DetailKehadiranAlpaActivity" android:exported="false" />
-        <activity android:name=".DetailKehadiranLiburActivity" android:exported="false" />
+        <activity android:name=".PengajuanIzinActivity" android:exported="false" />
 
-        <!-- Actionable Details -->
+        <!-- Detail Activities -->
+        <activity android:name=".DetailIzinDisetujuiActivity" android:exported="false" />
+        <activity android:name=".DetailIzinDitolakActivity" android:exported="false" />
         <activity android:name=".DetailPengajuanIzinActivity" android:exported="false" />
         <activity android:name=".DetailPengajuanActivity" android:exported="false" />
         <activity android:name=".DetailPengajuanDitolakActivity" android:exported="false" />
-
-        <!-- Read-Only Details -->
-        <activity android:name=".DetailIzinActivity" android:exported="false" />
-        <activity android:name=".DetailIzinDisetujuiActivity" android:exported="false" />
-        <activity android:name=".DetailIzinDitolakActivity" android:exported="false" />
 
         <activity android:name=".CameraAbsenActivity" android:exported="false" />
         <activity android:name=".LocationAbsenActivity" android:exported="false" />
