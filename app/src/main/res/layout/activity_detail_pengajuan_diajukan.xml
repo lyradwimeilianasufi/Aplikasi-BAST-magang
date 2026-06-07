@@ -2,11 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8F9FA"
     android:fontFamily="@font/barlow_semi_condensed"
-    tools:context=".DetailPengajuanActivity">
+    tools:context=".DetailPengajuanIzinActivity">
 
     <!-- Header / Toolbar -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -90,7 +91,7 @@
                         app:tint="#4527A0" />
 
                     <TextView
-                        android:id="@+id/lblTanggalPengajuan"
+                        android:id="@+id/lblTanggalPengajuanHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
@@ -104,12 +105,12 @@
                         android:id="@+id/tvTanggalPengajuan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Jumat, 03 Jan 2025"
+                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="@id/lblTanggalPengajuan"
-                        app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuan" />
+                        app:layout_constraintStart_toStartOf="@id/lblTanggalPengajuanHeader"
+                        app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuanHeader" />
 
                     <TextView
                         android:id="@+id/tvStatusBadge"
@@ -157,7 +158,7 @@
                         android:id="@+id/tvNamaTeknisi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Trisnualdi"
+                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -180,7 +181,7 @@
                         android:id="@+id/tvJenisIzin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cuti"
+                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -203,7 +204,7 @@
                         android:id="@+id/tvJumlahHari"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2 Hari"
+                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -215,7 +216,9 @@
                         android:layout_marginBottom="12dp"
                         android:background="#EEEEEE" />
 
+                    <!-- Perbaikan ID Ganda: lblPeriodeIzinDetail -->
                     <TextView
+                        android:id="@+id/lblPeriodeIzinDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Periode Izin"
@@ -226,7 +229,7 @@
                         android:id="@+id/tvPeriodeIzin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Senin, 05 Jan 2025 - Selasa, 06 Jan 2025"
+                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -239,6 +242,7 @@
                         android:background="#EEEEEE" />
 
                     <TextView
+                        android:id="@+id/lblAlasanDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Alasan"
@@ -249,7 +253,7 @@
                         android:id="@+id/tvAlasan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Keperluan Keluarga"
+                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -278,12 +282,10 @@
 
                 <ImageView
                     android:id="@+id/ivFilePendukung"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_gallery"
-                    app:tint="#E0E0E0" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_gallery" />
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>

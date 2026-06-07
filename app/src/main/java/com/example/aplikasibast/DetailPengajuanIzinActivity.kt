@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Window
@@ -18,6 +19,10 @@ import com.example.aplikasibast.databinding.ActivityDetailPengajuanDiajukanBindi
 import com.example.aplikasibast.databinding.DialogTolakPengajuanBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class DetailPengajuanIzinActivity : AppCompatActivity() {
 
@@ -56,6 +61,16 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
                     
                     // Hitung durasi menggunakan utilitas global
                     binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
+
+                    // PERBAIKAN: Menampilkan File Pendukung (Lampiran)
+                    it.lampiranPath?.let { path ->
+                        val file = File(path)
+                        if (file.exists()) {
+                            binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
+                            binding.ivFilePendukung.alpha = 1.0f
+                            binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+                        }
+                    }
                 }
             }
         }
@@ -75,17 +90,17 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val data = viewModel.getPengajuanById(pengajuanId)
             data?.let {
+                val today = DateUtils.formatToUi(DateUtils.getTodayDb())
+                
                 val updatedData = it.copy(
                     status = status,
-                    tanggalDiproses = DateUtils.formatToUi(DateUtils.getTodayDb()),
+                    tanggalDiproses = today,
                     alasanPenolakan = alasanTolak
                 )
                 
                 viewModel.updatePengajuan(updatedData)
                 
                 Toast.makeText(this@DetailPengajuanIzinActivity, "Status berhasil diperbarui", Toast.LENGTH_SHORT).show()
-                
-                // Kembali ke list. Karena menggunakan Flow, list akan otomatis terupdate.
                 finish()
             }
         }

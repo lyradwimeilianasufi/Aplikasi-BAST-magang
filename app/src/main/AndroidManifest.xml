@@ -29,10 +29,9 @@
             </intent-filter>
         </activity>
 
-        <!-- Activity Hasil Refactor -->
+        <!-- Unified List Activities -->
         <activity android:name=".DaftarPengajuanActivity" android:exported="false" />
         <activity android:name=".ApprovalListActivity" android:exported="false" />
-        <activity android:name=".DetailIzinActivity" android:exported="false" />
 
         <activity android:name=".KehadiranActivity" android:exported="false" />
         <activity android:name=".RiwayatKehadiranActivity" android:exported="false" />
@@ -40,6 +39,7 @@
         <activity android:name=".PengajuanIzinActivity" android:exported="false" />
 
         <!-- Detail Activities -->
+        <activity android:name=".DetailIzinActivity" android:exported="false" />
         <activity android:name=".DetailIzinDisetujuiActivity" android:exported="false" />
         <activity android:name=".DetailIzinDitolakActivity" android:exported="false" />
         <activity android:name=".DetailPengajuanIzinActivity" android:exported="false" />
