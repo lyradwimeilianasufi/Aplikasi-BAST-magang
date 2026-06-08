@@ -23,9 +23,9 @@ class PengajuanIzinAdapter(private val onClick: (PengajuanIzinEntity) -> Unit) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         with(holder.binding) {
-            tvTanggalPengajuan.text = item.tanggalPengajuan
+            tvTanggalPengajuan.text = DateUtils.formatToUi(item.tanggalPengajuan)
             tvJenisIzin.text = item.jenisIzin
-            tvPeriodeIzin.text = "${item.tanggalMulai} - ${item.tanggalSelesai}"
+            tvPeriodeIzin.text = "${DateUtils.formatToUi(item.tanggalMulai)} - ${DateUtils.formatToUi(item.tanggalSelesai)}"
             tvStatusBadge.text = item.status
             
             // Menggunakan Utilitas Global untuk perhitungan durasi (Profesional & Konsisten)

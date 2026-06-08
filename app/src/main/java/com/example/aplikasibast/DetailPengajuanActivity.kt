@@ -46,9 +46,9 @@ class DetailPengajuanActivity : AppCompatActivity() {
             data?.let {
                 binding.tvNamaTeknisi.text = it.teknisiNama
                 binding.tvJenisIzin.text = it.jenisIzin
-                binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                binding.tvPeriodeIzin.text = "${DateUtils.formatToUi(it.tanggalMulai)} - ${DateUtils.formatToUi(it.tanggalSelesai)}"
                 binding.tvAlasan.text = it.alasan
-                binding.tvTanggalPengajuan.text = it.tanggalPengajuan
+                binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
                 
                 binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"
 

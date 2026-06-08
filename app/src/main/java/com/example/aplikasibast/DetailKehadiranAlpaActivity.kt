@@ -48,7 +48,8 @@ class DetailKehadiranAlpaActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val data = viewModel.getKehadiranById(id)
             data?.let {
-                binding.tvTanggalKerja.text = it.tanggal
+                // PERBAIKAN: Gunakan format UI untuk tanggal
+                binding.tvTanggalKerja.text = DateUtils.formatToUi(it.tanggal)
                 binding.tvStatusBadge.text = it.status
                 binding.tvTotalJamKerja.text = "-"
                 binding.tvWaktuMasuk.text = "-"

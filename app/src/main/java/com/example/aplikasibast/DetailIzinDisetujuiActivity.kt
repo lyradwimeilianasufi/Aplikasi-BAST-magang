@@ -45,10 +45,10 @@ class DetailIzinDisetujuiActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val data = viewModel.getPengajuanById(id)
             data?.let {
-                binding.tvTanggalPengajuan.text = it.tanggalPengajuan
-                binding.tvTanggalDiproses.text = it.tanggalDiproses ?: "-"
+                binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
+                binding.tvTanggalDiproses.text = it.tanggalDiproses?.let { tgl -> DateUtils.formatToUi(tgl) } ?: "-"
                 binding.tvJenisIzin.text = it.jenisIzin
-                binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                binding.tvPeriodeIzin.text = "${DateUtils.formatToUi(it.tanggalMulai)} - ${DateUtils.formatToUi(it.tanggalSelesai)}"
                 binding.tvAlasan.text = it.alasan
                 
                 binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"

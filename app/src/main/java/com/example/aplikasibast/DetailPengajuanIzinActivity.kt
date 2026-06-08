@@ -20,9 +20,6 @@ import com.example.aplikasibast.databinding.DialogTolakPengajuanBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 class DetailPengajuanIzinActivity : AppCompatActivity() {
 
@@ -55,14 +52,17 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
                 data?.let {
                     binding.tvNamaTeknisi.text = it.teknisiNama
                     binding.tvJenisIzin.text = it.jenisIzin
-                    binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
-                    binding.tvAlasan.text = it.alasan
-                    binding.tvTanggalPengajuan.text = it.tanggalPengajuan
                     
-                    // Hitung durasi menggunakan utilitas global
+                    // FORMAT TANGGAL DISINI
+                    val tglMulai = DateUtils.formatToUi(it.tanggalMulai)
+                    val tglSelesai = DateUtils.formatToUi(it.tanggalSelesai)
+                    binding.tvPeriodeIzin.text = "$tglMulai - $tglSelesai"
+                    
+                    binding.tvAlasan.text = it.alasan
+                    binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
+                    
                     binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
 
-                    // PERBAIKAN: Menampilkan File Pendukung (Lampiran)
                     it.lampiranPath?.let { path ->
                         val file = File(path)
                         if (file.exists()) {
@@ -90,11 +90,12 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val data = viewModel.getPengajuanById(pengajuanId)
             data?.let {
-                val today = DateUtils.formatToUi(DateUtils.getTodayDb())
+                // PERBAIKAN: Simpan format DB (yyyy-MM-dd), bukan format UI
+                val todayDb = DateUtils.getTodayDb()
                 
                 val updatedData = it.copy(
                     status = status,
-                    tanggalDiproses = today,
+                    tanggalDiproses = todayDb,
                     alasanPenolakan = alasanTolak
                 )
                 

@@ -47,11 +47,11 @@ class DetailPengajuanDitolakActivity : AppCompatActivity() {
             data?.let {
                 binding.tvNamaTeknisi.text = it.teknisiNama
                 binding.tvJenisIzin.text = it.jenisIzin
-                binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                binding.tvPeriodeIzin.text = "${DateUtils.formatToUi(it.tanggalMulai)} - ${DateUtils.formatToUi(it.tanggalSelesai)}"
                 binding.tvAlasan.text = it.alasan
-                binding.tvTanggalPengajuan.text = it.tanggalPengajuan
+                binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
                 // Catatan: Anda bisa menambahkan kolom tanggalDiproses di Entity nanti jika diperlukan
-                binding.tvTanggalDiproses.text = it.tanggalPengajuan 
+                binding.tvTanggalDiproses.text = DateUtils.formatToUi(it.tanggalPengajuan)
 
                 binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"
 

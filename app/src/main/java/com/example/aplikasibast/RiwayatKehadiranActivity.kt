@@ -75,20 +75,21 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.allKehadiran.collect { listKehadiran ->
                 val items = listKehadiran.map { entity ->
+                    // PERBAIKAN: Memastikan format UI digunakan di sini
+                    val formattedTanggal = DateUtils.formatToUi(entity.tanggal)
                     when (entity.status) {
                         "Hadir", "Telat" -> RiwayatItem.KehadiranData(
-                            id = entity.id, tanggal = entity.tanggal, status = entity.status,
+                            id = entity.id, tanggal = formattedTanggal, status = entity.status,
                             jamMasuk = entity.jamMasuk, jamKeluar = entity.jamKeluar, totalJam = entity.totalJam
                         )
                         "Izin" -> RiwayatItem.IzinData(
-                            id = entity.id, tanggal = entity.tanggal, jenisIzin = "Izin",
+                            id = entity.id, tanggal = formattedTanggal, jenisIzin = "Izin",
                             periode = "-", durasi = "-", status = "Izin"
                         )
-                        "Alpa" -> RiwayatItem.AlpaData(id = entity.id, tanggal = entity.tanggal, status = "Alpa")
-                        else -> RiwayatItem.LiburData(id = entity.id, tanggal = entity.tanggal, status = entity.status)
+                        "Alpa" -> RiwayatItem.AlpaData(id = entity.id, tanggal = formattedTanggal, status = "Alpa")
+                        else -> RiwayatItem.LiburData(id = entity.id, tanggal = formattedTanggal, status = entity.status)
                     }
                 }
-                // Profesional: Menggunakan submitList bawaan ListAdapter
                 riwayatAdapter.submitList(items)
             }
         }

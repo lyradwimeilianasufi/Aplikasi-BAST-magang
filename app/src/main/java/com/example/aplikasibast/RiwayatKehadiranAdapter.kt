@@ -72,7 +72,7 @@ class RiwayatKehadiranAdapter(
 
     inner class KehadiranViewHolder(private val binding: ItemRiwayatHadirBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.KehadiranData) {
-            binding.tvTanggal.text = formatTakeOverText(item.tanggal)
+            binding.tvTanggal.text = formatTakeOverText(DateUtils.formatToUi(item.tanggal))
             binding.tvStatus.text = item.status
             if (item.status.equals("Telat", true) || item.status.equals("Hadir", true)) {
                 binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
@@ -86,7 +86,7 @@ class RiwayatKehadiranAdapter(
 
     inner class IzinViewHolder(private val binding: ItemRiwayatIzinBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.IzinData) {
-            binding.tvTanggal.text = item.tanggal
+            binding.tvTanggal.text = DateUtils.formatToUi(item.tanggal)
             binding.tvStatus.text = "Izin"
             binding.root.setOnClickListener { onItemClick(item) }
         }
@@ -94,14 +94,14 @@ class RiwayatKehadiranAdapter(
 
     inner class AlpaViewHolder(private val binding: ItemRiwayatAlpaBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.AlpaData) {
-            binding.tvTanggal.text = item.tanggal
+            binding.tvTanggal.text = DateUtils.formatToUi(item.tanggal)
             binding.root.setOnClickListener { onItemClick(item) }
         }
     }
 
     inner class LiburViewHolder(private val binding: ItemRiwayatLiburBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.LiburData) {
-            binding.tvTanggal.text = item.tanggal
+            binding.tvTanggal.text = DateUtils.formatToUi(item.tanggal)
             binding.tvStatus.text = "Libur"
             binding.root.setOnClickListener { onItemClick(item) }
         }
