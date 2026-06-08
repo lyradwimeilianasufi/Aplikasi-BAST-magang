@@ -2,6 +2,7 @@ package com.example.aplikasibast
 
 import android.net.Uri
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -50,8 +51,9 @@ class DetailPengajuanDitolakActivity : AppCompatActivity() {
                 binding.tvPeriodeIzin.text = "${DateUtils.formatToUi(it.tanggalMulai)} - ${DateUtils.formatToUi(it.tanggalSelesai)}"
                 binding.tvAlasan.text = it.alasan
                 binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
-                // Catatan: Anda bisa menambahkan kolom tanggalDiproses di Entity nanti jika diperlukan
-                binding.tvTanggalDiproses.text = DateUtils.formatToUi(it.tanggalPengajuan)
+                
+                binding.tvTanggalDiproses.text = it.tanggalDiproses?.let { tgl -> DateUtils.formatToUi(tgl) } ?: DateUtils.formatToUi(it.tanggalPengajuan)
+                binding.tvAlasanPenolakan.text = it.alasanPenolakan ?: "-"
 
                 binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"
 
@@ -60,6 +62,7 @@ class DetailPengajuanDitolakActivity : AppCompatActivity() {
                     if (file.exists()) {
                         binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
                         binding.ivFilePendukung.alpha = 1.0f
+                        binding.ivFilePendukung.scaleType = ImageView.ScaleType.CENTER_CROP
                     }
                 }
             }

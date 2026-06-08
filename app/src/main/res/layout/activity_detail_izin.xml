@@ -310,6 +310,7 @@
                 android:textStyle="bold"
                 android:textSize="14sp" />
 
+            <!-- Area Lampiran - FIXED TO MATCH_PARENT FOR BETTER VISIBILITY -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
@@ -322,9 +323,10 @@
                 app:strokeWidth="1dp">
                 <ImageView
                     android:id="@+id/ivFilePendukung"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
+                    android:scaleType="centerInside"
                     android:alpha="0.2"
                     android:src="@drawable/ic_gallery" />
             </com.google.android.material.card.MaterialCardView>

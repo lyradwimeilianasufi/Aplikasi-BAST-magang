@@ -2,6 +2,7 @@ package com.example.aplikasibast
 
 import android.net.Uri
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -57,6 +58,7 @@ class DetailPengajuanActivity : AppCompatActivity() {
                     if (file.exists()) {
                         binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
                         binding.ivFilePendukung.alpha = 1.0f
+                        binding.ivFilePendukung.scaleType = ImageView.ScaleType.CENTER_CROP
                     }
                 }
             }

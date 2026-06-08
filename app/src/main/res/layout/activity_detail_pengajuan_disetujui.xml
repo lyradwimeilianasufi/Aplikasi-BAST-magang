@@ -18,7 +18,7 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Konten Toolbar Utama (Akan didorong ke bawah oleh padding insets di Activity) -->
+        <!-- Konten Toolbar Utama -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="64dp">
@@ -342,7 +342,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <!-- Lampiran Area -->
+            <!-- Area Lampiran -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
@@ -354,12 +354,11 @@
 
                 <ImageView
                     android:id="@+id/ivFilePendukung"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_gallery"
-                    app:tint="#E0E0E0" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_gallery" />
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
