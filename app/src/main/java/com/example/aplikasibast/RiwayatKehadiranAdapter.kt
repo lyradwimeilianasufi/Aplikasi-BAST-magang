@@ -6,6 +6,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,6 +15,7 @@ import com.example.aplikasibast.databinding.ItemRiwayatAlpaBinding
 import com.example.aplikasibast.databinding.ItemRiwayatHadirBinding
 import com.example.aplikasibast.databinding.ItemRiwayatIzinBinding
 import com.example.aplikasibast.databinding.ItemRiwayatLiburBinding
+import com.example.aplikasibast.databinding.ItemRiwayatSakitBinding
 
 class RiwayatKehadiranAdapter(
     private val onItemClick: (RiwayatItem) -> Unit
@@ -24,16 +26,11 @@ class RiwayatKehadiranAdapter(
         private const val TYPE_IZIN = 1
         private const val TYPE_ALPA = 2
         private const val TYPE_LIBUR = 3
+        private const val TYPE_SAKIT = 4
 
         private val DiffCallback = object : DiffUtil.ItemCallback<RiwayatItem>() {
             override fun areItemsTheSame(oldItem: RiwayatItem, newItem: RiwayatItem): Boolean {
-                return when {
-                    oldItem is RiwayatItem.KehadiranData && newItem is RiwayatItem.KehadiranData -> oldItem.id == newItem.id
-                    oldItem is RiwayatItem.IzinData && newItem is RiwayatItem.IzinData -> oldItem.id == newItem.id
-                    oldItem is RiwayatItem.AlpaData && newItem is RiwayatItem.AlpaData -> oldItem.id == newItem.id
-                    oldItem is RiwayatItem.LiburData && newItem is RiwayatItem.LiburData -> oldItem.id == newItem.id
-                    else -> false
-                }
+                return oldItem.rawDate == newItem.rawDate && oldItem::class == newItem::class
             }
 
             override fun areContentsTheSame(oldItem: RiwayatItem, newItem: RiwayatItem): Boolean = oldItem == newItem
@@ -46,6 +43,7 @@ class RiwayatKehadiranAdapter(
             is RiwayatItem.IzinData -> TYPE_IZIN
             is RiwayatItem.AlpaData -> TYPE_ALPA
             is RiwayatItem.LiburData -> TYPE_LIBUR
+            is RiwayatItem.SakitData -> TYPE_SAKIT
         }
     }
 
@@ -54,6 +52,7 @@ class RiwayatKehadiranAdapter(
         return when (viewType) {
             TYPE_KEHADIRAN -> KehadiranViewHolder(ItemRiwayatHadirBinding.inflate(inflater, parent, false))
             TYPE_IZIN -> IzinViewHolder(ItemRiwayatIzinBinding.inflate(inflater, parent, false))
+            TYPE_SAKIT -> SakitViewHolder(ItemRiwayatSakitBinding.inflate(inflater, parent, false))
             TYPE_ALPA -> AlpaViewHolder(ItemRiwayatAlpaBinding.inflate(inflater, parent, false))
             TYPE_LIBUR -> LiburViewHolder(ItemRiwayatLiburBinding.inflate(inflater, parent, false))
             else -> throw IllegalArgumentException("Invalid view type")
@@ -65,6 +64,7 @@ class RiwayatKehadiranAdapter(
         when (holder) {
             is KehadiranViewHolder -> holder.bind(item as RiwayatItem.KehadiranData)
             is IzinViewHolder -> holder.bind(item as RiwayatItem.IzinData)
+            is SakitViewHolder -> holder.bind(item as RiwayatItem.SakitData)
             is AlpaViewHolder -> holder.bind(item as RiwayatItem.AlpaData)
             is LiburViewHolder -> holder.bind(item as RiwayatItem.LiburData)
         }
@@ -72,11 +72,24 @@ class RiwayatKehadiranAdapter(
 
     inner class KehadiranViewHolder(private val binding: ItemRiwayatHadirBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.KehadiranData) {
-            binding.tvTanggal.text = formatTakeOverText(DateUtils.formatToUi(item.tanggal))
+            binding.tvTanggal.text = formatTakeOverText(item.tanggal)
             binding.tvStatus.text = item.status
-            if (item.status.equals("Telat", true) || item.status.equals("Hadir", true)) {
+            
+            if (item.status.equals("Telat", true)) {
+                // Jika Telat, tampilkan badge Telat (Oranye) dan badge Hadir (Hijau) di bawahnya
+                binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F2994A"))
+                binding.tvStatusHadir.visibility = View.VISIBLE
+                binding.tvStatusHadir.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
+            } else if (item.status.equals("Hadir", true)) {
+                // Jika Hadir, hanya tampilkan badge Hadir (Hijau)
                 binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
+                binding.tvStatusHadir.visibility = View.GONE
+            } else {
+                // Default handling
+                binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F2994A"))
+                binding.tvStatusHadir.visibility = View.GONE
             }
+
             binding.tvJamMasuk.text = item.jamMasuk
             binding.tvJamKeluar.text = item.jamKeluar
             binding.tvTotalJam.text = item.totalJam
@@ -86,22 +99,36 @@ class RiwayatKehadiranAdapter(
 
     inner class IzinViewHolder(private val binding: ItemRiwayatIzinBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.IzinData) {
-            binding.tvTanggal.text = DateUtils.formatToUi(item.tanggal)
+            binding.tvTanggal.text = item.tanggal
             binding.tvStatus.text = "Izin"
+            binding.tvJamMasuk.text = " - "
+            binding.tvJamKeluar.text = " - "
+            binding.tvTotalJam.text = " - "
+            binding.root.setOnClickListener { onItemClick(item) }
+        }
+    }
+
+    inner class SakitViewHolder(private val binding: ItemRiwayatSakitBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: RiwayatItem.SakitData) {
+            binding.tvTanggal.text = item.tanggal
+            binding.tvStatus.text = "Sakit"
+            binding.tvJamMasuk.text = " - "
+            binding.tvJamKeluar.text = " - "
+            binding.tvTotalJam.text = " - "
             binding.root.setOnClickListener { onItemClick(item) }
         }
     }
 
     inner class AlpaViewHolder(private val binding: ItemRiwayatAlpaBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.AlpaData) {
-            binding.tvTanggal.text = DateUtils.formatToUi(item.tanggal)
+            binding.tvTanggal.text = item.tanggal
             binding.root.setOnClickListener { onItemClick(item) }
         }
     }
 
     inner class LiburViewHolder(private val binding: ItemRiwayatLiburBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.LiburData) {
-            binding.tvTanggal.text = DateUtils.formatToUi(item.tanggal)
+            binding.tvTanggal.text = item.tanggal
             binding.tvStatus.text = "Libur"
             binding.root.setOnClickListener { onItemClick(item) }
         }

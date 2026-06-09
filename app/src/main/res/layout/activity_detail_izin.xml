@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8F9FA"
-    android:fontFamily="@font/barlow_semi_condensed">
+    android:fontFamily="@font/barlow_semi_condensed"
+    tools:context=".DetailIzinActivity">
 
     <!-- Header / Toolbar -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="60dp"
         android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -76,7 +77,7 @@
                     android:padding="16dp">
 
                     <ImageView
-                        android:id="@+id/ivCalendar"
+                        android:id="@+id/ivCalendar1"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
                         android:src="@drawable/ic_material_symbols_date_range"
@@ -92,7 +93,7 @@
                         android:orientation="vertical"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/tvStatusBadge"
-                        app:layout_constraintStart_toEndOf="@id/ivCalendar"
+                        app:layout_constraintStart_toEndOf="@id/ivCalendar1"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
@@ -107,7 +108,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="-"
+                            android:text="Jumat, 03 Jan 2025"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:textSize="14sp" />
@@ -120,7 +121,7 @@
                         android:background="@drawable/bg_badge_pill"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="4dp"
-                        android:text="-"
+                        android:text="DIAJUKAN"
                         android:textSize="10sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -129,121 +130,128 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card 2: Tanggal Diproses -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Card Processing (Diproses/Ditolak/Disetujui Info) -->
+            <LinearLayout
                 android:id="@+id/cardProcessing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#EEEEEE"
-                app:strokeWidth="1dp">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <!-- Card Tanggal Diproses -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp">
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#EEEEEE"
+                    app:strokeWidth="1dp">
 
-                    <ImageView
-                        android:id="@+id/ivCalendarProc"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_material_symbols_date_range"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="#4A148C" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:orientation="vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ivCalendarProc"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:padding="16dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <ImageView
+                            android:id="@+id/ivCalendar2"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_material_symbols_date_range"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="#4A148C" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Tanggal Diproses"
-                            android:textColor="#BDBDBD"
-                            android:textSize="11sp" />
+                            android:layout_marginStart="16dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/ivCalendar2"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/tvTanggalDiproses"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="-"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tanggal Diproses"
+                                android:textColor="#BDBDBD"
+                                android:textSize="11sp" />
 
-            <!-- Card 3: Alasan Penolakan -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/layoutRejection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#EEEEEE"
-                app:strokeWidth="1dp">
+                            <TextView
+                                android:id="@+id/tvTanggalDiproses"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Jumat, 04 Jan 2025"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <!-- Card Alasan Penolakan -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/layoutRejection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp">
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#EEEEEE"
+                    app:strokeWidth="1dp">
 
-                    <ImageView
-                        android:id="@+id/ivReasonIcon"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_note_fill"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="#4A148C" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:orientation="vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ivReasonIcon"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:padding="16dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Alasan Penolakan"
-                            android:textColor="#BDBDBD"
-                            android:textSize="11sp" />
+                        <ImageView
+                            android:id="@+id/ivReason"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_note_fill"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="#4A148C" />
 
-                        <TextView
-                            android:id="@+id/tvAlasanPenolakan"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="-"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+                            android:layout_marginStart="16dp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/ivReason"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Alasan Penolakan"
+                                android:textColor="#BDBDBD"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/tvAlasanPenolakan"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Terlalu Mendadak"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -254,7 +262,7 @@
                 android:textStyle="bold"
                 android:textSize="14sp" />
 
-            <!-- Card 4: Detail Informasi Utama -->
+            <!-- Card Detail Informasi -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -272,32 +280,109 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp">
 
-                    <!-- Jenis Izin -->
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingVertical="12dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Jenis Izin" android:textColor="#BDBDBD" android:textSize="11sp" />
-                        <TextView android:id="@+id/tvJenisIzin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="-" android:textColor="@color/black" android:textSize="14sp" android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingVertical="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Jenis Izin"
+                            android:textColor="#BDBDBD"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/tvJenisIzin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Cuti"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" />
 
-                    <!-- Jumlah Hari -->
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingVertical="12dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Jumlah Hari" android:textColor="#BDBDBD" android:textSize="11sp" />
-                        <TextView android:id="@+id/tvJumlahHari" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="-" android:textColor="@color/black" android:textSize="14sp" android:textStyle="bold" />
-                    </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#F5F5F5" />
 
-                    <!-- Periode -->
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingVertical="12dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Periode Izin" android:textColor="#BDBDBD" android:textSize="11sp" />
-                        <TextView android:id="@+id/tvPeriodeIzin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="-" android:textColor="@color/black" android:textSize="14sp" android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingVertical="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Jumlah Hari"
+                            android:textColor="#BDBDBD"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/tvJumlahHari"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="2 Hari"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" />
 
-                    <!-- Alasan -->
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingVertical="12dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Alasan" android:textColor="#BDBDBD" android:textSize="11sp" />
-                        <TextView android:id="@+id/tvAlasan" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="-" android:textColor="@color/black" android:textSize="14sp" android:textStyle="bold" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#F5F5F5" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingVertical="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Periode Izin"
+                            android:textColor="#BDBDBD"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/tvPeriodeIzin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Senin, 05 Jan 2025 - Selasa, 06 Jan 2025"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#F5F5F5" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingVertical="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Alasan"
+                            android:textColor="#BDBDBD"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/tvAlasan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Cuti Tahunan"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -310,10 +395,10 @@
                 android:textStyle="bold"
                 android:textSize="14sp" />
 
-            <!-- Area Lampiran - FIXED TO MATCH_PARENT FOR BETTER VISIBILITY -->
+            <!-- Card File Pendukung (Disesuaikan ukurannya seperti di gambar) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="250dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="@color/white"
@@ -321,16 +406,18 @@
                 app:cardElevation="0dp"
                 app:strokeColor="#EEEEEE"
                 app:strokeWidth="1dp">
+
                 <ImageView
                     android:id="@+id/ivFilePendukung"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:scaleType="centerInside"
+                    android:scaleType="centerCrop"
                     android:alpha="0.2"
                     android:src="@drawable/ic_gallery" />
+
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

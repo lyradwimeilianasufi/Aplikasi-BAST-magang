@@ -32,7 +32,6 @@ class DetailIzinDisetujuiActivity : AppCompatActivity() {
             insets
         }
 
-        // PERBAIKAN: Gunakan key PENGAJUAN_ID secara konsisten
         val pengajuanId = intent.getIntExtra("PENGAJUAN_ID", -1)
         if (pengajuanId != -1) {
             loadData(pengajuanId)
@@ -53,12 +52,22 @@ class DetailIzinDisetujuiActivity : AppCompatActivity() {
                 
                 binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"
 
-                it.lampiranPath?.let { path ->
-                    val file = File(path)
+                if (!it.lampiranPath.isNullOrEmpty()) {
+                    val file = File(it.lampiranPath)
                     if (file.exists()) {
                         binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
                         binding.ivFilePendukung.alpha = 1.0f
+                        // Diubah ke CENTER_CROP agar memenuhi card sesuai contoh gambar
+                        binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+                    } else {
+                        binding.ivFilePendukung.setImageResource(R.drawable.ic_gallery)
+                        binding.ivFilePendukung.alpha = 0.2f
+                        binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER
                     }
+                } else {
+                    binding.ivFilePendukung.setImageResource(R.drawable.ic_gallery)
+                    binding.ivFilePendukung.alpha = 0.2f
+                    binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER
                 }
             }
         }

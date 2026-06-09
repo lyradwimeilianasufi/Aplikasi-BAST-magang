@@ -274,10 +274,10 @@
                 android:textStyle="bold"
                 android:textSize="14sp" />
 
-            <!-- Card Bawah (File Pendukung) dengan Ikon Gallery KECIL (24dp) -->
+            <!-- Card Bawah (File Pendukung) disesuaikan ukurannya -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="250dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="@color/white"
@@ -288,9 +288,9 @@
 
                 <ImageView
                     android:id="@+id/ivFilePendukung"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
                     android:alpha="0.2"
                     android:src="@drawable/ic_gallery" />
 

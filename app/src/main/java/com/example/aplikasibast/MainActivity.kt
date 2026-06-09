@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUI() {
         binding.tvUserName.text = viewModel.userName
+        binding.tvUserRole.text = "Teknisi" // Berdasarkan permintaan: Tampilkan "Teknisi" di bawah nama
         binding.tvCurrentDate.text = viewModel.currentDayUI
         binding.tvWorkHours.text = viewModel.workHours
     }
@@ -56,7 +57,8 @@ class MainActivity : AppCompatActivity() {
     private fun observeDashboardState() {
         lifecycleScope.launch {
             viewModel.dashboardState.collect { state ->
-                binding.tvUserRole.text = state.currentStatus
+                // PERBAIKAN: Hapus baris yang menimpa tvUserRole dengan status (hadir/telat)
+                // binding.tvUserRole.text = state.currentStatus
                 
                 val kehadiran = state.kehadiran
                 if (kehadiran == null) {
@@ -114,7 +116,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnAbsenKeluarMain.setOnClickListener { navigateToAbsen(false) }
         
         binding.btnMenuIzin.setOnClickListener {
-            // Refactored: Langsung ke DaftarPengajuanActivity (Default: DIAJUKAN)
             startActivity(Intent(this, DaftarPengajuanActivity::class.java))
         }
     }

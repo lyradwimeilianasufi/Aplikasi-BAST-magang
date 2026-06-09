@@ -13,6 +13,7 @@
     <color name="gray_text">#9E9E9E</color>
     <color name="gray_light">#F5F5F5</color>
     <color name="blue_icon">#1A237E</color>
+    <color name="blue_primary">#1A237E</color>
     <color name="red_icon">#C62828</color>
     <color name="green_status">#4CAF50</color>
     <color name="purple_badge">#F3E5F5</color>

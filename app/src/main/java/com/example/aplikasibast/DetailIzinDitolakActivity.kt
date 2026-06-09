@@ -2,6 +2,7 @@ package com.example.aplikasibast
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -43,7 +44,7 @@ class DetailIzinDitolakActivity : AppCompatActivity() {
             data?.let {
                 binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
                 binding.tvTanggalDiproses.text = it.tanggalDiproses?.let { tgl -> DateUtils.formatToUi(tgl) } ?: "-"
-                binding.tvAlasanPenolakan.text = it.alasanPenolakan ?: "Terlalu Mendadak"
+                binding.tvAlasanPenolakan.text = it.alasanPenolakan ?: "-"
                 binding.tvJenisIzin.text = it.jenisIzin
                 
                 val tglMulai = DateUtils.formatToUi(it.tanggalMulai)
@@ -53,12 +54,22 @@ class DetailIzinDitolakActivity : AppCompatActivity() {
                 binding.tvAlasan.text = it.alasan
                 binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
 
-                it.lampiranPath?.let { path ->
-                    val file = File(path)
+                if (!it.lampiranPath.isNullOrEmpty()) {
+                    val file = File(it.lampiranPath)
                     if (file.exists()) {
                         binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
                         binding.ivFilePendukung.alpha = 1.0f
+                        // Diubah ke CENTER_CROP agar memenuhi card sesuai contoh gambar
+                        binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+                    } else {
+                        binding.ivFilePendukung.setImageResource(R.drawable.ic_gallery)
+                        binding.ivFilePendukung.alpha = 0.2f
+                        binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER
                     }
+                } else {
+                    binding.ivFilePendukung.setImageResource(R.drawable.ic_gallery)
+                    binding.ivFilePendukung.alpha = 0.2f
+                    binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER
                 }
             }
         }
