@@ -64,6 +64,29 @@
             app:layout_constraintTop_toBottomOf="@id/tvTanggalPengajuan" />
 
         <TextView
+            android:id="@+id/lblNamaTeknisi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Nama Teknisi"
+            android:textColor="#BDBDBD"
+            android:textSize="11sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dividerItem" />
+
+        <TextView
+            android:id="@+id/tvNamaTeknisi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Trisnualdi"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblNamaTeknisi" />
+
+        <TextView
             android:id="@+id/lblJenisIzin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +95,7 @@
             android:textColor="#BDBDBD"
             android:textSize="11sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dividerItem" />
+            app:layout_constraintTop_toBottomOf="@id/tvNamaTeknisi" />
 
         <TextView
             android:id="@+id/tvJenisIzin"

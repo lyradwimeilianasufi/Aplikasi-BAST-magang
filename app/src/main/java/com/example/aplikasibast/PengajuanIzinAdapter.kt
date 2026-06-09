@@ -1,6 +1,7 @@
 package com.example.aplikasibast
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -8,8 +9,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aplikasibast.databinding.ItemRiwayatPengajuanDiajukanBinding
 
-class PengajuanIzinAdapter(private val onClick: (PengajuanIzinEntity) -> Unit) :
-    ListAdapter<PengajuanIzinEntity, PengajuanIzinAdapter.ViewHolder>(DiffCallback) {
+class PengajuanIzinAdapter(
+    private val showNamaTeknisi: Boolean = false,
+    private val onClick: (PengajuanIzinEntity) -> Unit
+) : ListAdapter<PengajuanIzinEntity, PengajuanIzinAdapter.ViewHolder>(DiffCallback) {
 
     class ViewHolder(val binding: ItemRiwayatPengajuanDiajukanBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -28,7 +31,12 @@ class PengajuanIzinAdapter(private val onClick: (PengajuanIzinEntity) -> Unit) :
             tvPeriodeIzin.text = "${DateUtils.formatToUi(item.tanggalMulai)} - ${DateUtils.formatToUi(item.tanggalSelesai)}"
             tvStatusBadge.text = item.status
             
-            // Menggunakan Utilitas Global untuk perhitungan durasi (Profesional & Konsisten)
+            // Tampilkan/Sembunyikan Nama Teknisi berdasarkan parameter
+            lblNamaTeknisi.visibility = if (showNamaTeknisi) View.VISIBLE else View.GONE
+            tvNamaTeknisi.visibility = if (showNamaTeknisi) View.VISIBLE else View.GONE
+            tvNamaTeknisi.text = item.teknisiNama
+            
+            // Menggunakan Utilitas Global untuk perhitungan durasi
             tvDurationValue.text = DateUtils.calculateDays(item.tanggalMulai, item.tanggalSelesai).toString()
 
             // Atur warna badge berdasarkan status

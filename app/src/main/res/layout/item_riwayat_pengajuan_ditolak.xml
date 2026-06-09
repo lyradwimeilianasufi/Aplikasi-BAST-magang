@@ -67,6 +67,31 @@
             app:layout_constraintTop_toBottomOf="@id/tvTanggalPengajuan" />
 
         <TextView
+            android:id="@+id/lblNamaTeknisi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/barlow_semi_condensed"
+            android:text="Nama Teknisi"
+            android:textColor="#BDBDBD"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dividerItem" />
+
+        <TextView
+            android:id="@+id/tvNamaTeknisi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:fontFamily="@font/barlow_semi_condensed"
+            android:text="Trisnualdi"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblNamaTeknisi" />
+
+        <TextView
             android:id="@+id/lblJenisIzin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,7 +101,7 @@
             android:textColor="#BDBDBD"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dividerItem" />
+            app:layout_constraintTop_toBottomOf="@id/tvNamaTeknisi" />
 
         <TextView
             android:id="@+id/tvJenisIzin"
@@ -127,9 +152,10 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/lblJenisIzin">
+            app:layout_constraintTop_toTopOf="@id/lblNamaTeknisi">
 
             <TextView
+                android:id="@+id/tvDurationValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/barlow_semi_condensed"
@@ -139,6 +165,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvDurationUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/barlow_semi_condensed"

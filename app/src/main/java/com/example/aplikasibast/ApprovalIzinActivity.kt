@@ -39,8 +39,8 @@ class ApprovalIzinActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        // Gunakan adapter yang sama, atau buat khusus approval jika layout berbeda
-        adapter = PengajuanIzinAdapter { item ->
+        // Tampilkan Nama Teknisi di halaman Approval
+        adapter = PengajuanIzinAdapter(showNamaTeknisi = true) { item ->
             val intent = Intent(this, DetailPengajuanIzinActivity::class.java)
             intent.putExtra("PENGAJUAN_ID", item.id)
             startActivity(intent)
