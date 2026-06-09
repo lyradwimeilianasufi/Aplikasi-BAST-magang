@@ -27,7 +27,7 @@ class DetailPengajuanActivity : AppCompatActivity() {
         binding = ActivityDetailPengajuanDisetujuiBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -51,7 +51,10 @@ class DetailPengajuanActivity : AppCompatActivity() {
                 binding.tvAlasan.text = it.alasan
                 binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
                 
-                binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"
+                // Menampilkan Tanggal Diproses
+                binding.tvTanggalDiproses.text = it.tanggalDiproses?.let { tgl -> DateUtils.formatToUi(tgl) } ?: "-"
+                
+                binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
 
                 it.lampiranPath?.let { path ->
                     val file = File(path)
@@ -63,14 +66,5 @@ class DetailPengajuanActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun hitungDurasi(mulai: String, selesai: String): Long {
-        return try {
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val d1 = sdf.parse(mulai)
-            val d2 = sdf.parse(selesai)
-            TimeUnit.MILLISECONDS.toDays(d2!!.time - d1!!.time) + 1
-        } catch (e: Exception) { 1 }
     }
 }
