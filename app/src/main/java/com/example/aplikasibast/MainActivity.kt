@@ -47,6 +47,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Memastikan tab Beranda terpilih saat kembali ke activity ini
+        binding.bottomNavigation.selectedItemId = R.id.nav_beranda
+    }
+
     private fun setupUI() {
         binding.tvUserName.text = viewModel.userName
         binding.tvUserRole.text = "Teknisi" // Berdasarkan permintaan: Tampilkan "Teknisi" di bawah nama
@@ -57,9 +63,6 @@ class MainActivity : AppCompatActivity() {
     private fun observeDashboardState() {
         lifecycleScope.launch {
             viewModel.dashboardState.collect { state ->
-                // PERBAIKAN: Hapus baris yang menimpa tvUserRole dengan status (hadir/telat)
-                // binding.tvUserRole.text = state.currentStatus
-                
                 val kehadiran = state.kehadiran
                 if (kehadiran == null) {
                     binding.tvInTime.text = "-"
@@ -98,18 +101,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_beranda -> true
-                R.id.nav_kehadiran -> {
-                    startActivity(Intent(this, KehadiranActivity::class.java))
-                    true
-                }
-                R.id.nav_riwayat -> {
-                    startActivity(Intent(this, RiwayatKehadiranActivity::class.java))
-                    true
-                }
-                else -> false
-            }
+            // Menggunakan helper agar konsisten dengan activity lain
+            NavigationHelper.handleBottomNavigation(this, item.itemId)
         }
 
         binding.btnAbsenMasukMain.setOnClickListener { navigateToAbsen(true) }
