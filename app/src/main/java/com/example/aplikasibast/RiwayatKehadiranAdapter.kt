@@ -6,7 +6,6 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -30,9 +29,15 @@ class RiwayatKehadiranAdapter(
 
         private val DiffCallback = object : DiffUtil.ItemCallback<RiwayatItem>() {
             override fun areItemsTheSame(oldItem: RiwayatItem, newItem: RiwayatItem): Boolean {
-                return oldItem.rawDate == newItem.rawDate && oldItem::class == newItem::class
+                return when {
+                    oldItem is RiwayatItem.KehadiranData && newItem is RiwayatItem.KehadiranData -> oldItem.id == newItem.id
+                    oldItem is RiwayatItem.IzinData && newItem is RiwayatItem.IzinData -> oldItem.id == newItem.id
+                    oldItem is RiwayatItem.SakitData && newItem is RiwayatItem.SakitData -> oldItem.id == newItem.id
+                    oldItem is RiwayatItem.AlpaData && newItem is RiwayatItem.AlpaData -> oldItem.id == newItem.id
+                    oldItem is RiwayatItem.LiburData && newItem is RiwayatItem.LiburData -> oldItem.id == newItem.id
+                    else -> false
+                }
             }
-
             override fun areContentsTheSame(oldItem: RiwayatItem, newItem: RiwayatItem): Boolean = oldItem == newItem
         }
     }
@@ -74,22 +79,9 @@ class RiwayatKehadiranAdapter(
         fun bind(item: RiwayatItem.KehadiranData) {
             binding.tvTanggal.text = formatTakeOverText(item.tanggal)
             binding.tvStatus.text = item.status
-            
-            if (item.status.equals("Telat", true)) {
-                // Jika Telat, tampilkan badge Telat (Oranye) dan badge Hadir (Hijau) di bawahnya
-                binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F2994A"))
-                binding.tvStatusHadir.visibility = View.VISIBLE
-                binding.tvStatusHadir.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
-            } else if (item.status.equals("Hadir", true)) {
-                // Jika Hadir, hanya tampilkan badge Hadir (Hijau)
+            if (item.status.equals("Telat", true) || item.status.equals("Hadir", true)) {
                 binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
-                binding.tvStatusHadir.visibility = View.GONE
-            } else {
-                // Default handling
-                binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F2994A"))
-                binding.tvStatusHadir.visibility = View.GONE
             }
-
             binding.tvJamMasuk.text = item.jamMasuk
             binding.tvJamKeluar.text = item.jamKeluar
             binding.tvTotalJam.text = item.totalJam
@@ -101,9 +93,6 @@ class RiwayatKehadiranAdapter(
         fun bind(item: RiwayatItem.IzinData) {
             binding.tvTanggal.text = item.tanggal
             binding.tvStatus.text = "Izin"
-            binding.tvJamMasuk.text = " - "
-            binding.tvJamKeluar.text = " - "
-            binding.tvTotalJam.text = " - "
             binding.root.setOnClickListener { onItemClick(item) }
         }
     }
@@ -112,9 +101,6 @@ class RiwayatKehadiranAdapter(
         fun bind(item: RiwayatItem.SakitData) {
             binding.tvTanggal.text = item.tanggal
             binding.tvStatus.text = "Sakit"
-            binding.tvJamMasuk.text = " - "
-            binding.tvJamKeluar.text = " - "
-            binding.tvTotalJam.text = " - "
             binding.root.setOnClickListener { onItemClick(item) }
         }
     }

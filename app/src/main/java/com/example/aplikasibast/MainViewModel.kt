@@ -2,6 +2,9 @@ package com.example.aplikasibast
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aplikasibast.domain.model.Kehadiran
+import com.example.aplikasibast.domain.model.PengajuanIzin
+import com.example.aplikasibast.domain.usecase.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -9,7 +12,14 @@ import java.util.Calendar
 import java.util.Locale
 
 class MainViewModel(
-    private val repository: AppRepository,
+    private val getPengajuanByStatusUseCase: GetPengajuanByStatusUseCase,
+    private val getPengajuanByIdUseCase: GetPengajuanByIdUseCase,
+    private val submitPengajuanUseCase: SubmitPengajuanUseCase,
+    private val updatePengajuanUseCase: UpdatePengajuanUseCase,
+    private val getAllKehadiranUseCase: GetAllKehadiranUseCase,
+    private val getKehadiranByIdUseCase: GetKehadiranByIdUseCase,
+    private val insertKehadiranUseCase: InsertKehadiranUseCase,
+    private val updateKehadiranUseCase: UpdateKehadiranUseCase,
     private val sessionManager: SessionManager
 ) : ViewModel() {
     
@@ -18,18 +28,18 @@ class MainViewModel(
     
     val workHours = "Reguler (09:00-17:00)"
     val currentDayUI: String get() = DateUtils.formatToUi(DateUtils.getTodayDb())
-    
     private val todayDb: String get() = DateUtils.getTodayDb()
 
-    val allKehadiran: Flow<List<KehadiranEntity>> = repository.allKehadiran
+    val allKehadiran: Flow<List<Kehadiran>> = getAllKehadiranUseCase()
 
+    // Logika Menggabungkan Riwayat (Professional & Reactive)
     val combinedRiwayat: Flow<List<RiwayatItem>> = combine(
-        repository.allKehadiran,
-        repository.getPengajuanByStatus(AppConstants.STATUS_DISETUJUI)
+        getAllKehadiranUseCase(),
+        getPengajuanByStatusUseCase(AppConstants.STATUS_DISETUJUI)
     ) { kehadiranList, izinList ->
         val items = mutableListOf<RiwayatItem>()
 
-        // 1. Tambahkan data kehadiran dari database
+        // 1. Tambahkan Absensi
         kehadiranList.forEach { entity ->
             val formattedTanggal = DateUtils.formatToUi(entity.tanggal)
             when (entity.status) {
@@ -42,7 +52,8 @@ class MainViewModel(
                     periode = "-", durasi = "-", status = "Izin"
                 ))
                 "Sakit" -> items.add(RiwayatItem.SakitData(
-                    id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, status = "Sakit"
+                    id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, 
+                    periode = "-", durasi = "-", status = "Sakit"
                 ))
                 "Alpa" -> items.add(RiwayatItem.AlpaData(
                     id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, status = "Alpa"
@@ -53,57 +64,36 @@ class MainViewModel(
             }
         }
 
-        // 2. Tambahkan pengajuan izin/sakit yang DISETUJUI (jika belum ada di tabel kehadiran)
+        // 2. Tambahkan Izin/Sakit yang disetujui (Jika belum diabsen)
         izinList.forEach { izin ->
-            val days = generateDatesInRange(izin.tanggalMulai, izin.tanggalSelesai)
-            days.forEach { date ->
+            val dates = generateDatesInRange(izin.tanggalMulai, izin.tanggalSelesai)
+            dates.forEach { date ->
                 if (kehadiranList.none { it.tanggal == date }) {
                     val formattedTanggal = DateUtils.formatToUi(date)
+                    val periodeStr = "${DateUtils.formatToUi(izin.tanggalMulai)} - ${DateUtils.formatToUi(izin.tanggalSelesai)}"
+                    val durasiStr = "${DateUtils.calculateDays(izin.tanggalMulai, izin.tanggalSelesai)} Hari"
+                    
                     if (izin.jenisIzin.equals("Sakit", true)) {
                         items.add(RiwayatItem.SakitData(
                             id = izin.id, rawDate = date, tanggal = formattedTanggal, 
-                            periode = "${DateUtils.formatToUi(izin.tanggalMulai)} - ${DateUtils.formatToUi(izin.tanggalSelesai)}",
-                            durasi = "${DateUtils.calculateDays(izin.tanggalMulai, izin.tanggalSelesai)} Hari",
-                            status = "Sakit"
+                            periode = periodeStr, durasi = durasiStr
                         ))
                     } else {
                         items.add(RiwayatItem.IzinData(
                             id = izin.id, rawDate = date, tanggal = formattedTanggal, 
-                            jenisIzin = izin.jenisIzin,
-                            periode = "${DateUtils.formatToUi(izin.tanggalMulai)} - ${DateUtils.formatToUi(izin.tanggalSelesai)}",
-                            durasi = "${DateUtils.calculateDays(izin.tanggalMulai, izin.tanggalSelesai)} Hari",
-                            status = "Izin"
+                            jenisIzin = izin.jenisIzin, periode = periodeStr, durasi = durasiStr, status = "Izin"
                         ))
                     }
                 }
             }
         }
 
-        // 3. Urutkan berdasarkan tanggal terbaru
         items.distinctBy { it.rawDate }.sortedByDescending { it.rawDate }
     }
 
-    private fun generateDatesInRange(start: String, end: String): List<String> {
-        val dates = mutableListOf<String>()
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        try {
-            val startDate = sdf.parse(start)
-            val endDate = sdf.parse(end)
-            if (startDate != null && endDate != null) {
-                val calendar = Calendar.getInstance()
-                calendar.time = startDate
-                while (!calendar.time.after(endDate)) {
-                    dates.add(sdf.format(calendar.time))
-                    calendar.add(Calendar.DATE, 1)
-                }
-            }
-        } catch (e: Exception) {}
-        return dates
-    }
-
     val dashboardState: StateFlow<DashboardData> = combine(
-        repository.allKehadiran,
-        repository.getPengajuanByStatus(AppConstants.STATUS_DISETUJUI)
+        getAllKehadiranUseCase(),
+        getPengajuanByStatusUseCase(AppConstants.STATUS_DISETUJUI)
     ) { kehadiranList, izinList ->
         val todayAbsen = kehadiranList.find { it.tanggal == todayDb }
         val activeIzin = izinList.find { todayDb >= it.tanggalMulai && todayDb <= it.tanggalSelesai }
@@ -116,11 +106,7 @@ class MainViewModel(
             else -> userRole
         }
 
-        DashboardData(
-            kehadiran = todayAbsen,
-            currentStatus = status,
-            isIzinActive = activeIzin != null
-        )
+        DashboardData(kehadiran = todayAbsen, currentStatus = status, isIzinActive = activeIzin != null)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DashboardData())
 
     private fun isWeekend(): Boolean {
@@ -132,47 +118,47 @@ class MainViewModel(
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 17
     }
 
-    suspend fun getKehadiranById(id: Int) = repository.getKehadiranById(id)
-
-    fun insertKehadiran(kehadiran: KehadiranEntity) {
-        viewModelScope.launch { repository.insertKehadiran(kehadiran) }
+    private fun generateDatesInRange(start: String, end: String): List<String> {
+        val dates = mutableListOf<String>()
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        try {
+            val startDate = sdf.parse(start)
+            val endDate = sdf.parse(end)
+            if (startDate != null && endDate != null) {
+                val cal = Calendar.getInstance()
+                cal.time = startDate
+                while (!cal.time.after(endDate)) {
+                    dates.add(sdf.format(cal.time))
+                    cal.add(Calendar.DATE, 1)
+                }
+            }
+        } catch (e: Exception) {}
+        return dates
     }
 
-    fun updateKehadiran(kehadiran: KehadiranEntity) {
-        viewModelScope.launch { repository.updateKehadiran(kehadiran) }
-    }
+    // --- Actions ---
+    fun insertKehadiran(kehadiran: Kehadiran) = viewModelScope.launch { insertKehadiranUseCase(kehadiran) }
+    fun updateKehadiran(kehadiran: Kehadiran) = viewModelScope.launch { updateKehadiranUseCase(kehadiran) }
+    fun getPengajuanByStatus(status: String) = getPengajuanByStatusUseCase(status)
+    suspend fun getPengajuanById(id: Int) = getPengajuanByIdUseCase(id)
+    fun updatePengajuan(pengajuan: PengajuanIzin) = viewModelScope.launch { updatePengajuanUseCase(pengajuan) }
+    suspend fun getKehadiranById(id: Int) = getKehadiranByIdUseCase(id)
 
-    fun getPengajuanByStatus(status: String) = repository.getPengajuanByStatus(status)
-
-    suspend fun getPengajuanById(id: Int) = repository.getPengajuanById(id)
-
-    fun updatePengajuan(pengajuan: PengajuanIzinEntity) {
+    fun submitPengajuanIzin(jenisIzin: String, tanggalMulai: String, tanggalSelesai: String, alasan: String, tanggalPengajuan: String, lampiranPath: String? = null) {
         viewModelScope.launch {
-            repository.insertPengajuan(pengajuan)
-        }
-    }
-
-    fun submitPengajuanIzin(
-        jenisIzin: String, tanggalMulai: String, tanggalSelesai: String,
-        alasan: String, tanggalPengajuan: String, lampiranPath: String? = null
-    ) {
-        viewModelScope.launch {
-            val entity = PengajuanIzinEntity(
-                tanggalPengajuan = tanggalPengajuan,
-                jenisIzin = jenisIzin,
-                tanggalMulai = tanggalMulai,
-                tanggalSelesai = tanggalSelesai,
-                alasan = alasan,
-                lampiranPath = lampiranPath,
-                teknisiNama = userName
+            val model = PengajuanIzin(
+                id = 0, tanggalPengajuan = tanggalPengajuan, jenisIzin = jenisIzin,
+                tanggalMulai = tanggalMulai, tanggalSelesai = tanggalSelesai, alasan = alasan,
+                status = AppConstants.STATUS_DIAJUKAN, lampiranPath = lampiranPath,
+                teknisiNama = userName, alasanPenolakan = null, tanggalDiproses = null
             )
-            repository.insertPengajuan(entity)
+            submitPengajuanUseCase(model)
         }
     }
 }
 
 data class DashboardData(
-    val kehadiran: KehadiranEntity? = null,
+    val kehadiran: Kehadiran? = null,
     val currentStatus: String = "",
     val isIzinActive: Boolean = false
 )
