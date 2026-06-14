@@ -38,12 +38,12 @@ class KehadiranActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        // Refactored: ListAdapter tidak memerlukan list di constructor
         adapter = RiwayatKehadiranAdapter { item ->
             val intent = Intent(this, DetailKehadiranActivity::class.java)
             val id = when(item) {
                 is RiwayatItem.KehadiranData -> item.id
                 is RiwayatItem.IzinData -> item.id
+                is RiwayatItem.SakitData -> item.id
                 is RiwayatItem.AlpaData -> item.id
                 is RiwayatItem.LiburData -> item.id
             }
@@ -59,32 +59,20 @@ class KehadiranActivity : AppCompatActivity() {
 
     private fun observeData() {
         lifecycleScope.launch {
-            viewModel.allKehadiran.collect { listKehadiran ->
-                val items = listKehadiran.map { entity ->
-                    when (entity.status) {
-                        "Hadir", "Telat" -> RiwayatItem.KehadiranData(
-                            id = entity.id, tanggal = entity.tanggal, status = entity.status,
-                            jamMasuk = entity.jamMasuk, jamKeluar = entity.jamKeluar, totalJam = entity.totalJam
-                        )
-                        "Izin" -> RiwayatItem.IzinData(
-                            id = entity.id, tanggal = entity.tanggal, jenisIzin = "Izin",
-                            periode = "-", durasi = "-", status = "Izin"
-                        )
-                        "Alpa" -> RiwayatItem.AlpaData(id = entity.id, tanggal = entity.tanggal, status = "Alpa")
-                        else -> RiwayatItem.LiburData(id = entity.id, tanggal = entity.tanggal, status = entity.status)
-                    }
-                }
-                // Profesional: Menggunakan submitList untuk efisiensi DiffUtil
-                adapter.submitList(items)
-                updateSummary(listKehadiran)
+            // Menggunakan combinedRiwayat agar pengajuan izin/sakit yang disetujui juga muncul di preview
+            viewModel.combinedRiwayat.collect { items ->
+                adapter.submitList(items.take(5)) // Tampilkan 5 terbaru saja di halaman utama
+                updateSummary(items)
             }
         }
     }
 
-    private fun updateSummary(list: List<KehadiranEntity>) {
-        val hadirCount = list.count { it.status.equals("Hadir", true) || it.status.equals("Telat", true) }
-        val izinCount = list.count { it.status.equals("Izin", true) }
-        val alpaCount = list.count { it.status.equals("Alpa", true) }
+    private fun updateSummary(items: List<RiwayatItem>) {
+        val hadirCount = items.count { 
+            it is RiwayatItem.KehadiranData && (it.status.equals("Hadir", true) || it.status.equals("Telat", true)) 
+        }
+        val izinCount = items.count { it is RiwayatItem.IzinData || it is RiwayatItem.SakitData }
+        val alpaCount = items.count { it is RiwayatItem.AlpaData }
 
         binding.tvCountHadir.text = "$hadirCount Hari"
         binding.tvCountIzin.text = "$izinCount Hari"

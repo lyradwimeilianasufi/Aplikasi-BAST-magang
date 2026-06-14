@@ -1,6 +1,7 @@
 package com.example.aplikasibast
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -9,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.aplikasibast.databinding.ItemRiwayatPengajuanDiajukanBinding
 import com.example.aplikasibast.domain.model.PengajuanIzin
 
-class PengajuanIzinAdapter(private val onClick: (PengajuanIzin) -> Unit) :
-    ListAdapter<PengajuanIzin, PengajuanIzinAdapter.ViewHolder>(DiffCallback) {
+class PengajuanIzinAdapter(
+    private val showNamaTeknisi: Boolean = false,
+    private val onClick: (PengajuanIzin) -> Unit
+) : ListAdapter<PengajuanIzin, PengajuanIzinAdapter.ViewHolder>(DiffCallback) {
 
     class ViewHolder(val binding: ItemRiwayatPengajuanDiajukanBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -29,10 +32,20 @@ class PengajuanIzinAdapter(private val onClick: (PengajuanIzin) -> Unit) :
             tvPeriodeIzin.text = "${item.tanggalMulai} - ${item.tanggalSelesai}"
             tvStatusBadge.text = item.status
             
-            // Menggunakan Utilitas Global untuk perhitungan durasi (Profesional & Konsisten)
+            // Logika menampilkan nama teknisi (untuk sisi Admin/Approval)
+            if (showNamaTeknisi) {
+                tvNamaTeknisi.text = item.teknisiNama
+                tvNamaTeknisi.visibility = View.VISIBLE
+                lblNamaTeknisi.visibility = View.VISIBLE
+            } else {
+                tvNamaTeknisi.visibility = View.GONE
+                lblNamaTeknisi.visibility = View.GONE
+            }
+
+            // Durasi otomatis dari DateUtils
             tvDurationValue.text = DateUtils.calculateDays(item.tanggalMulai, item.tanggalSelesai).toString()
 
-            // Atur warna badge berdasarkan status
+            // Atur warna badge
             when (item.status) {
                 AppConstants.STATUS_DIAJUKAN -> {
                     tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(root.context, R.color.yellow_badge_bg)

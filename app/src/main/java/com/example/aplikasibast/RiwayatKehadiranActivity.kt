@@ -58,10 +58,13 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
             val id = when(item) {
                 is RiwayatItem.KehadiranData -> item.id
                 is RiwayatItem.IzinData -> item.id
+                is RiwayatItem.SakitData -> item.id
                 is RiwayatItem.AlpaData -> item.id
                 is RiwayatItem.LiburData -> item.id
             }
             intent.putExtra("KEHADIRAN_ID", id)
+            // Note: If item is from approved izin table, DetailKehadiranActivity might need adjustments
+            // but for now we pass the ID.
             startActivity(intent)
         }
 
@@ -73,22 +76,8 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
 
     private fun observeData() {
         lifecycleScope.launch {
-            viewModel.allKehadiran.collect { listKehadiran ->
-                val items = listKehadiran.map { entity ->
-                    when (entity.status) {
-                        "Hadir", "Telat" -> RiwayatItem.KehadiranData(
-                            id = entity.id, tanggal = entity.tanggal, status = entity.status,
-                            jamMasuk = entity.jamMasuk, jamKeluar = entity.jamKeluar, totalJam = entity.totalJam
-                        )
-                        "Izin" -> RiwayatItem.IzinData(
-                            id = entity.id, tanggal = entity.tanggal, jenisIzin = "Izin",
-                            periode = "-", durasi = "-", status = "Izin"
-                        )
-                        "Alpa" -> RiwayatItem.AlpaData(id = entity.id, tanggal = entity.tanggal, status = "Alpa")
-                        else -> RiwayatItem.LiburData(id = entity.id, tanggal = entity.tanggal, status = entity.status)
-                    }
-                }
-                // Profesional: Menggunakan submitList bawaan ListAdapter
+            // Updated to observe combinedRiwayat which includes approved leaves
+            viewModel.combinedRiwayat.collect { items ->
                 riwayatAdapter.submitList(items)
             }
         }

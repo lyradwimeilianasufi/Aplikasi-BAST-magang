@@ -31,7 +31,8 @@ class PengajuanIzinActivity : AppCompatActivity() {
 
     // Formatters
     private val dbDateFormat = SimpleDateFormat(AppConstants.DATE_FORMAT_DB, Locale.US)
-    private val uiDateFormat = SimpleDateFormat("dd MMM yyyy", Locale("id", "ID"))
+    // PERBAIKAN: Menggunakan format Senin, 08 Jun 2026
+    private val uiDateFormat = SimpleDateFormat("EEEE, dd MMM yyyy", Locale("id", "ID"))
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { handleSelectedImage(it) }
@@ -67,7 +68,6 @@ class PengajuanIzinActivity : AppCompatActivity() {
                 calendarMulai = calendar
                 binding.etTanggalMulai.setText(uiDateFormat.format(calendar.time))
                 
-                // Reset tanggal selesai jika tidak valid terhadap tanggal mulai baru
                 calendarSelesai?.let { selesai ->
                     if (calendar.after(selesai)) {
                         calendarSelesai = null
@@ -115,7 +115,6 @@ class PengajuanIzinActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Simpan ke Database menggunakan format standar DB (yyyy-MM-dd)
             viewModel.submitPengajuanIzin(
                 jenisIzin = jenisIzin,
                 tanggalMulai = dbDateFormat.format(calendarMulai!!.time),
@@ -126,7 +125,6 @@ class PengajuanIzinActivity : AppCompatActivity() {
             )
 
             Toast.makeText(this, "Pengajuan berhasil dikirim", Toast.LENGTH_SHORT).show()
-            // Refactored: Langsung ke DaftarPengajuanActivity
             startActivity(Intent(this, DaftarPengajuanActivity::class.java))
             finish()
         }

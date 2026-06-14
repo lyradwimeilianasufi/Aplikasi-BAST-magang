@@ -37,9 +37,9 @@ class LocationAbsenActivity : AppCompatActivity() {
     private var currentLat: Double = 0.0
     private var currentLng: Double = 0.0
 
-    // Koordinat Kantor: Jl. Krekot Bunder Raya No.26
-    private val OFFICE_LAT = -6.162164
-    private val OFFICE_LNG = 106.830588
+    // Koordinat Kantor Baru
+    private val OFFICE_LAT = -6.1597
+    private val OFFICE_LNG = 106.8319
     private val MAX_RADIUS = 100.0 // Radius maksimal dalam meter
 
     private val requestPermissionLauncher = registerForActivityResult(

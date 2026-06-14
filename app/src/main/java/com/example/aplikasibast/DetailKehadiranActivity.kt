@@ -1,6 +1,8 @@
 package com.example.aplikasibast
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -44,93 +46,154 @@ class DetailKehadiranActivity : AppCompatActivity() {
 
     private fun loadData(id: Int) {
         lifecycleScope.launch {
-            val data = viewModel.getKehadiranById(id)
-            data?.let {
-                // 1. Mapping Data Dasar menggunakan Utility Global
-                binding.tvTanggalKerja.text = DateUtils.formatToUi(it.tanggal)
-                binding.tvJamKerja.text = viewModel.workHours
-                binding.tvTotalJamKerja.text = it.totalJam
-                
-                setupStatusUI(it.status)
-
-                // 2. Logika Visibilitas Detail Absensi
-                if (it.status == "Alpa" || it.status == "Libur") {
-                    hideAttendanceSections()
-                } else {
-                    showAttendanceDetails(it)
+            // Coba ambil dari tabel kehadiran (absensi fisik)
+            val presence = viewModel.getKehadiranById(id)
+            
+            if (presence != null) {
+                displayPresenceData(presence)
+            } else {
+                // Jika tidak ada, coba ambil dari tabel pengajuan (Izin/Sakit/Cuti)
+                val leave = viewModel.getPengajuanById(id)
+                leave?.let {
+                    displayLeaveData(it)
                 }
             }
         }
     }
 
-    private fun setupStatusUI(status: String) {
-        binding.tvStatusBadge.text = status
+    private fun displayPresenceData(it: KehadiranEntity) {
+        binding.tvTanggalKerja.text = DateUtils.formatToUi(it.tanggal)
+        binding.tvJamKerja.text = viewModel.workHours
+        binding.tvTotalJamKerja.text = it.totalJam
         
-        // Perbaikan Unresolved Reference: Menggunakan nama warna yang tepat dari colors.xml
-        val colorRes = when (status) {
-            "Hadir" -> R.color.green_badge_bg
-            "Telat" -> R.color.yellow_badge_bg
-            "Izin" -> R.color.purple_badge 
-            "Alpa" -> R.color.red_badge_bg
-            else -> R.color.gray_light
-        }
-        
-        val textColorRes = when (status) {
-            "Hadir" -> R.color.green_badge_text
-            "Telat" -> R.color.yellow_badge_text
-            "Izin" -> R.color.purple_badge_text
-            "Alpa" -> R.color.red_badge_text
-            else -> R.color.black
-        }
-        
-        binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this, colorRes)
-        binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this, textColorRes))
+        setupStatusUI(it.status)
+
+        // Sembunyikan tombol detail izin, tampilkan detail absen
+        binding.btnLihatDetailIzin.visibility = View.GONE
+        binding.layoutDetailAbsen.visibility = View.VISIBLE
+
+        showAttendanceDetails(it.jamMasuk, it.jamKeluar, it.lokasiMasuk, it.lokasiKeluar, it.fotoMasukPath, it.fotoKeluarPath, it.latMasuk, it.lngMasuk, it.latKeluar, it.lngKeluar)
     }
 
-    private fun showAttendanceDetails(it: KehadiranEntity) {
-        // Tampilkan detail waktu
-        binding.tvWaktuMasuk.text = it.jamMasuk
-        binding.tvWaktuKeluar.text = it.jamKeluar
+    private fun displayLeaveData(it: PengajuanIzinEntity) {
+        binding.tvTanggalKerja.text = DateUtils.formatToUi(it.tanggalMulai) 
+        binding.tvJamKerja.text = viewModel.workHours
+        binding.tvTotalJamKerja.text = " - "
         
-        // Load Foto Masuk dengan skala yang tepat
-        it.fotoMasukPath?.let { path ->
-            val file = File(path)
+        setupStatusUI(it.jenisIzin)
+
+        // TAMPILAN KHUSUS IZIN: Tampilkan tombol "Lihat Detail Izin" dan sembunyikan detail absen
+        binding.btnLihatDetailIzin.visibility = View.VISIBLE
+        binding.layoutDetailAbsen.visibility = View.GONE
+
+        // Teks tombol statis sesuai permintaan
+        binding.btnLihatDetailIzin.text = "Lihat Detail Izin >"
+
+        binding.btnLihatDetailIzin.setOnClickListener { _ ->
+            // Cek status untuk menentukan Activity tujuan
+            val targetActivity = when (it.status.uppercase()) {
+                "DISETUJUI" -> DetailIzinDisetujuiActivity::class.java
+                "DITOLAK" -> DetailIzinDitolakActivity::class.java
+                else -> DetailIzinDitolakActivity::class.java // Default
+            }
+
+            val intent = Intent(this, targetActivity).apply {
+                putExtra("PENGAJUAN_ID", it.id)
+            }
+            startActivity(intent)
+        }
+    }
+
+    private fun setupStatusUI(status: String) {
+        // Cek apakah jenisnya pengajuan (Izin, Cuti, Sakit)
+        val isLeaveType = status.equals("Izin", true) || 
+                         status.equals("Cuti", true) || 
+                         status.equals("Sakit", true)
+
+        // Tampilkan teks "Izin" di badge jika termasuk jenis pengajuan, sesuai gambar
+        binding.tvStatusBadge.text = if (isLeaveType) "Izin" else status
+        
+        // Samakan warna dengan Riwayat Kehadiran (Solid Colors)
+        val colorHex = when {
+            status.equals("Hadir", true) -> "#27AE60"
+            status.equals("Telat", true) -> "#F2994A"
+            isLeaveType -> "#F2994A"
+            status.equals("Alpa", true) -> "#EB5757"
+            else -> "#9E9E9E"
+        }
+        
+        binding.tvStatusBadge.backgroundTintList = ColorStateList.valueOf(Color.parseColor(colorHex))
+        binding.tvStatusBadge.setTextColor(Color.WHITE)
+
+        // Logika khusus untuk "Telat" -> Tampilkan badge "Hadir" di bawahnya
+        if (status.equals("Telat", true)) {
+            binding.tvStatusBadgeHadir.visibility = View.VISIBLE
+            binding.tvStatusBadgeHadir.text = "Hadir"
+            binding.tvStatusBadgeHadir.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
+            binding.tvStatusBadgeHadir.setTextColor(Color.WHITE)
+        } else {
+            binding.tvStatusBadgeHadir.visibility = View.GONE
+        }
+    }
+
+    private fun showAttendanceDetails(
+        jamMasuk: String, jamKeluar: String, 
+        lokasiMasuk: String?, lokasiKeluar: String?, 
+        fotoMasuk: String?, fotoKeluar: String?,
+        latM: Double?, lngM: Double?, latK: Double?, lngK: Double?
+    ) {
+        binding.tvWaktuMasuk.text = jamMasuk
+        binding.tvWaktuKeluar.text = jamKeluar
+        
+        // Lokasi Masuk
+        if (lokasiMasuk == null || lokasiMasuk == "-" || latM == null) {
+            binding.btnLihatLokasiMasuk.text = "-"
+            binding.btnLihatLokasiMasuk.setTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.btnLihatLokasiMasuk.setOnClickListener(null)
+        } else {
+            binding.btnLihatLokasiMasuk.text = "Lihat Lokasi"
+            binding.btnLihatLokasiMasuk.setTextColor(ContextCompat.getColor(this, R.color.blue_primary))
+            binding.btnLihatLokasiMasuk.setOnClickListener {
+                navigateToMap("Lokasi Masuk", jamMasuk, latM, lngM, lokasiMasuk)
+            }
+        }
+
+        // Lokasi Keluar
+        if (lokasiKeluar == null || lokasiKeluar == "-" || latK == null) {
+            binding.btnLihatLokasiKeluar.text = "-"
+            binding.btnLihatLokasiKeluar.setTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.btnLihatLokasiKeluar.setOnClickListener(null)
+        } else {
+            binding.btnLihatLokasiKeluar.text = "Lihat Lokasi"
+            binding.btnLihatLokasiKeluar.setTextColor(ContextCompat.getColor(this, R.color.blue_primary))
+            binding.btnLihatLokasiKeluar.setOnClickListener {
+                navigateToMap("Lokasi Keluar", jamKeluar, latK, lngK, lokasiKeluar)
+            }
+        }
+        
+        // Foto Masuk
+        if (fotoMasuk != null) {
+            val file = File(fotoMasuk)
             if (file.exists()) {
                 binding.ivFotoMasuk.setImageURI(Uri.fromFile(file))
-                binding.ivFotoMasuk.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
-            }
-        }
-
-        // Load Foto Keluar dengan skala yang tepat
-        it.fotoKeluarPath?.let { path ->
-            val file = File(path)
-            if (file.exists()) {
-                binding.ivFotoKeluar.setImageURI(Uri.fromFile(file))
-                binding.ivFotoKeluar.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
-            }
-        }
-
-        // Navigasi Lihat Lokasi (Fitur Baru untuk Profesionalisme)
-        binding.btnLihatLokasiMasuk.setOnClickListener { _ ->
-            navigateToMap("Lokasi Masuk", it.jamMasuk, it.latMasuk, it.lngMasuk, it.lokasiMasuk)
-        }
-
-        if (it.jamKeluar != "-") {
-            binding.btnLihatLokasiKeluar.setOnClickListener { _ ->
-                navigateToMap("Lokasi Keluar", it.jamKeluar, it.latKeluar, it.lngKeluar, it.lokasiKeluar)
+            } else {
+                binding.ivFotoMasuk.setImageResource(R.drawable.ic_user)
             }
         } else {
-            binding.btnLihatLokasiKeluar.visibility = View.INVISIBLE
+            binding.ivFotoMasuk.setImageResource(R.drawable.ic_user)
         }
-    }
 
-    private fun hideAttendanceSections() {
-        // Menyembunyikan elemen yang tidak diperlukan untuk status Alpa/Libur
-        binding.tvTotalJamKerja.text = "-"
-        binding.layoutFotoMasuk.visibility = View.GONE
-        binding.layoutFotoKeluar.visibility = View.GONE
-        binding.btnLihatLokasiMasuk.visibility = View.GONE
-        binding.btnLihatLokasiKeluar.visibility = View.GONE
+        // Foto Keluar
+        if (fotoKeluar != null) {
+            val file = File(fotoKeluar)
+            if (file.exists()) {
+                binding.ivFotoKeluar.setImageURI(Uri.fromFile(file))
+            } else {
+                binding.ivFotoKeluar.setImageResource(R.drawable.ic_user)
+            }
+        } else {
+            binding.ivFotoKeluar.setImageResource(R.drawable.ic_user)
+        }
     }
 
     private fun navigateToMap(title: String, time: String, lat: Double?, lng: Double?, address: String?) {

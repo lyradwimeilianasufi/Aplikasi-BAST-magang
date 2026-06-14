@@ -2,6 +2,7 @@ package com.example.aplikasibast
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,9 +12,6 @@ import com.example.aplikasibast.databinding.ActivityDetailIzinDitolakBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.concurrent.TimeUnit
 
 class DetailIzinDitolakActivity : AppCompatActivity() {
 
@@ -44,32 +42,36 @@ class DetailIzinDitolakActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val data = viewModel.getPengajuanById(id)
             data?.let {
-                binding.tvTanggalPengajuan.text = it.tanggalPengajuan
-                binding.tvTanggalDiproses.text = it.tanggalDiproses ?: "-"
-                binding.tvAlasanPenolakan.text = it.alasanPenolakan ?: "Tidak ada alasan spesifik"
+                binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
+                binding.tvTanggalDiproses.text = it.tanggalDiproses?.let { tgl -> DateUtils.formatToUi(tgl) } ?: "-"
+                binding.tvAlasanPenolakan.text = it.alasanPenolakan ?: "-"
                 binding.tvJenisIzin.text = it.jenisIzin
-                binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
-                binding.tvAlasan.text = it.alasan
                 
-                binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"
+                val tglMulai = DateUtils.formatToUi(it.tanggalMulai)
+                val tglSelesai = DateUtils.formatToUi(it.tanggalSelesai)
+                binding.tvPeriodeIzin.text = "$tglMulai - $tglSelesai"
+                
+                binding.tvAlasan.text = it.alasan
+                binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
 
-                it.lampiranPath?.let { path ->
-                    val file = File(path)
+                if (!it.lampiranPath.isNullOrEmpty()) {
+                    val file = File(it.lampiranPath)
                     if (file.exists()) {
                         binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
                         binding.ivFilePendukung.alpha = 1.0f
+                        // Diubah ke CENTER_CROP agar memenuhi card sesuai contoh gambar
+                        binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+                    } else {
+                        binding.ivFilePendukung.setImageResource(R.drawable.ic_gallery)
+                        binding.ivFilePendukung.alpha = 0.2f
+                        binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER
                     }
+                } else {
+                    binding.ivFilePendukung.setImageResource(R.drawable.ic_gallery)
+                    binding.ivFilePendukung.alpha = 0.2f
+                    binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER
                 }
             }
         }
-    }
-
-    private fun hitungDurasi(mulai: String, selesai: String): Long {
-        return try {
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val d1 = sdf.parse(mulai)
-            val d2 = sdf.parse(selesai)
-            TimeUnit.MILLISECONDS.toDays(d2!!.time - d1!!.time) + 1
-        } catch (e: Exception) { 1 }
     }
 }

@@ -9,7 +9,7 @@
     android:fontFamily="@font/barlow_semi_condensed"
     tools:context=".DetailKehadiranActivity">
 
-    <!-- Header / Toolbar Wrapper -->
+    <!-- Header / Toolbar -->
     <LinearLayout
         android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
@@ -18,11 +18,9 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Konten Toolbar Utama -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp">
-
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="48dp"
@@ -32,20 +30,16 @@
                 android:padding="12dp"
                 android:src="@drawable/ic_back_white"
                 app:tint="@color/black" />
-
             <TextView
-                android:id="@+id/tvToolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="4dp"
                 android:layout_toEndOf="@id/btnBack"
-                android:fontFamily="@font/barlow_semi_condensed"
                 android:text="Detail Kehadiran"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -103,7 +97,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:fontFamily="@font/barlow_semi_condensed"
                         android:text="Tanggal Kerja"
                         android:textColor="#BDBDBD"
                         android:textSize="11sp"
@@ -115,7 +108,6 @@
                         android:id="@+id/tvTanggalKerja"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
                         android:text="Jumat, 03 Jan 2025"
                         android:textColor="@color/black"
                         android:textStyle="bold"
@@ -139,7 +131,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:fontFamily="@font/barlow_semi_condensed"
                         android:text="Jam Kerja"
                         android:textColor="#BDBDBD"
                         android:textSize="11sp"
@@ -151,7 +142,6 @@
                         android:id="@+id/tvJamKerja"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
                         android:text="Reguler (09:00 - 17:00)"
                         android:textColor="@color/black"
                         android:textStyle="bold"
@@ -159,7 +149,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@id/labelJam"
                         app:layout_constraintTop_toTopOf="@id/tvTanggalKerja" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -172,7 +161,6 @@
                     android:id="@+id/labelTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/barlow_semi_condensed"
                     android:text="Total Jam Kerja : "
                     android:textColor="#424242"
                     android:textSize="14sp"
@@ -184,7 +172,6 @@
                     android:id="@+id/tvTotalJamKerja"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/barlow_semi_condensed"
                     android:text="9 Jam 45 Menit"
                     android:textColor="@color/black"
                     android:textStyle="bold"
@@ -193,253 +180,194 @@
                     app:layout_constraintStart_toEndOf="@id/labelTotal"
                     app:layout_constraintTop_toTopOf="@id/labelTotal" />
 
-                <TextView
-                    android:id="@+id/tvStatusBadge"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_badge_pill"
-                    android:backgroundTint="#27AE60"
-                    android:fontFamily="@font/barlow_semi_condensed"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="6dp"
-                    android:text="Hadir"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
+                    android:gravity="end"
+                    android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvStatusBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badge_pill"
+                        android:backgroundTint="#27AE60"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="6dp"
+                        android:text="Hadir"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvStatusBadgeHadir"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_badge_pill"
+                        android:backgroundTint="#27AE60"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="6dp"
+                        android:text="Hadir"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:background="#E0E0E0" />
 
+            <TextView
+                android:id="@+id/btnLihatDetailIzin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="16dp"
+                android:text="Lihat Detail Izin >"
+                android:textColor="@color/orange_accent"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <!-- Attendance Details -->
             <LinearLayout
+                android:id="@+id/layoutDetailAbsen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/bg_circle_blue"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_arrow_down_left"
-                    app:tint="@color/white" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:fontFamily="@font/barlow_semi_condensed"
-                    android:text="DETAIL ABSEN MASUK"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/layoutFotoMasuk"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/bg_circle_blue"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_arrow_down_left"
+                        app:tint="@color/white" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
-                        android:text="Foto Absen"
-                        android:textColor="#BDBDBD"
-                        android:textSize="12sp" />
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="110dp"
-                        android:layout_height="140dp"
-                        android:layout_marginTop="8dp"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="0dp"
-                        app:strokeColor="#E0E0E0"
-                        app:strokeWidth="1dp">
-
-                        <ImageView
-                            android:id="@+id/ivFotoMasuk"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/ic_user" />
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/layoutFotoMasuk"
-                    app:layout_constraintTop_toTopOf="@id/layoutFotoMasuk">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
-                        android:text="Absen Masuk"
-                        android:textColor="#BDBDBD"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/tvWaktuMasuk"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
-                        android:text="08:45 WIB"
+                        android:layout_marginStart="12dp"
+                        android:text="DETAIL ABSEN MASUK"
                         android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:fontFamily="@font/barlow_semi_condensed"
-                        android:text="Lokasi Absen"
-                        android:textColor="#BDBDBD"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/btnLihatLokasiMasuk"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
-                        android:text="Lihat Lokasi"
-                        android:textColor="#2196F3"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/bg_circle_red"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_arrow_up_right"
-                    app:tint="@color/white" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:fontFamily="@font/barlow_semi_condensed"
-                    android:text="DETAIL ABSEN KELUAR"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                    android:layout_marginTop="16dp">
+                    <LinearLayout
+                        android:id="@+id/layoutFotoMasuk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Foto Absen" android:textColor="#BDBDBD" android:textSize="12sp" />
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="110dp"
+                            android:layout_height="140dp"
+                            android:layout_marginTop="8dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#E0E0E0"
+                            app:strokeWidth="1dp">
+                            <ImageView android:id="@+id/ivFotoMasuk" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_user" />
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/layoutFotoMasuk"
+                        app:layout_constraintTop_toTopOf="@id/layoutFotoMasuk">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Absen Masuk" android:textColor="#BDBDBD" android:textSize="12sp" />
+                        <TextView android:id="@+id/tvWaktuMasuk" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/black" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Lokasi Absen" android:textColor="#BDBDBD" android:textSize="12sp" />
+                        <TextView android:id="@+id/btnLihatLokasiMasuk" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#2196F3" android:textStyle="bold" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
-                    android:id="@+id/layoutFotoKeluar"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
+                    android:layout_marginTop="32dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/bg_circle_red"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_arrow_up_right"
+                        app:tint="@color/white" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
-                        android:text="Foto Absen"
-                        android:textColor="#BDBDBD"
-                        android:textSize="12sp" />
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="110dp"
-                        android:layout_height="140dp"
-                        android:layout_marginTop="8dp"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="0dp"
-                        app:strokeColor="#E0E0E0"
-                        app:strokeWidth="1dp">
-
-                        <ImageView
-                            android:id="@+id/ivFotoKeluar"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/ic_user" />
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/layoutFotoKeluar"
-                    app:layout_constraintTop_toTopOf="@id/layoutFotoKeluar">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
-                        android:text="Absen Keluar"
-                        android:textColor="#BDBDBD"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/tvWaktuKeluar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
-                        android:text="17:45 WIB"
+                        android:layout_marginStart="12dp"
+                        android:text="DETAIL ABSEN KELUAR"
                         android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:fontFamily="@font/barlow_semi_condensed"
-                        android:text="Lokasi Absen"
-                        android:textColor="#BDBDBD"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/btnLihatLokasiKeluar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/barlow_semi_condensed"
-                        android:text="Lihat Lokasi"
-                        android:textColor="#2196F3"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+                    <LinearLayout
+                        android:id="@+id/layoutFotoKeluar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Foto Absen" android:textColor="#BDBDBD" android:textSize="12sp" />
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="110dp"
+                            android:layout_height="140dp"
+                            android:layout_marginTop="8dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#E0E0E0"
+                            app:strokeWidth="1dp">
+                            <ImageView android:id="@+id/ivFotoKeluar" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:src="@drawable/ic_user" />
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/layoutFotoKeluar"
+                        app:layout_constraintTop_toTopOf="@id/layoutFotoKeluar">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Absen Keluar" android:textColor="#BDBDBD" android:textSize="12sp" />
+                        <TextView android:id="@+id/tvWaktuKeluar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/black" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Lokasi Absen" android:textColor="#BDBDBD" android:textSize="12sp" />
+                        <TextView android:id="@+id/btnLihatLokasiKeluar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#2196F3" android:textStyle="bold" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

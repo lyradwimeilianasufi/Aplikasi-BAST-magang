@@ -2,6 +2,7 @@ package com.example.aplikasibast
 
 import android.net.Uri
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -26,7 +27,7 @@ class DetailPengajuanActivity : AppCompatActivity() {
         binding = ActivityDetailPengajuanDisetujuiBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -46,29 +47,24 @@ class DetailPengajuanActivity : AppCompatActivity() {
             data?.let {
                 binding.tvNamaTeknisi.text = it.teknisiNama
                 binding.tvJenisIzin.text = it.jenisIzin
-                binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                binding.tvPeriodeIzin.text = "${DateUtils.formatToUi(it.tanggalMulai)} - ${DateUtils.formatToUi(it.tanggalSelesai)}"
                 binding.tvAlasan.text = it.alasan
-                binding.tvTanggalPengajuan.text = it.tanggalPengajuan
+                binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
                 
-                binding.tvJumlahHari.text = "${hitungDurasi(it.tanggalMulai, it.tanggalSelesai)} Hari"
+                // Menampilkan Tanggal Diproses
+                binding.tvTanggalDiproses.text = it.tanggalDiproses?.let { tgl -> DateUtils.formatToUi(tgl) } ?: "-"
+                
+                binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
 
                 it.lampiranPath?.let { path ->
                     val file = File(path)
                     if (file.exists()) {
                         binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
                         binding.ivFilePendukung.alpha = 1.0f
+                        binding.ivFilePendukung.scaleType = ImageView.ScaleType.CENTER_CROP
                     }
                 }
             }
         }
-    }
-
-    private fun hitungDurasi(mulai: String, selesai: String): Long {
-        return try {
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val d1 = sdf.parse(mulai)
-            val d2 = sdf.parse(selesai)
-            TimeUnit.MILLISECONDS.toDays(d2!!.time - d1!!.time) + 1
-        } catch (e: Exception) { 1 }
     }
 }

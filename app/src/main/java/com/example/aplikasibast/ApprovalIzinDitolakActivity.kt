@@ -39,7 +39,8 @@ class ApprovalIzinDitolakActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = PengajuanIzinAdapter { item ->
+        // Tampilkan Nama Teknisi di halaman Approval
+        adapter = PengajuanIzinAdapter(showNamaTeknisi = true) { item ->
             // Menuju detail pengajuan yang sudah ditolak
             val intent = Intent(this, DetailIzinDitolakActivity::class.java)
             intent.putExtra("PENGAJUAN_ID", item.id)
