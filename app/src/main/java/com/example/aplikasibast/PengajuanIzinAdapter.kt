@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aplikasibast.databinding.ItemRiwayatPengajuanDiajukanBinding
+import com.example.aplikasibast.domain.model.PengajuanIzin
 
-class PengajuanIzinAdapter(private val onClick: (PengajuanIzinEntity) -> Unit) :
-    ListAdapter<PengajuanIzinEntity, PengajuanIzinAdapter.ViewHolder>(DiffCallback) {
+class PengajuanIzinAdapter(private val onClick: (PengajuanIzin) -> Unit) :
+    ListAdapter<PengajuanIzin, PengajuanIzinAdapter.ViewHolder>(DiffCallback) {
 
     class ViewHolder(val binding: ItemRiwayatPengajuanDiajukanBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -51,8 +52,8 @@ class PengajuanIzinAdapter(private val onClick: (PengajuanIzinEntity) -> Unit) :
         }
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<PengajuanIzinEntity>() {
-        override fun areItemsTheSame(oldItem: PengajuanIzinEntity, newItem: PengajuanIzinEntity) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: PengajuanIzinEntity, newItem: PengajuanIzinEntity) = oldItem == newItem
+    companion object DiffCallback : DiffUtil.ItemCallback<PengajuanIzin>() {
+        override fun areItemsTheSame(oldItem: PengajuanIzin, newItem: PengajuanIzin) = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: PengajuanIzin, newItem: PengajuanIzin) = oldItem == newItem
     }
 }

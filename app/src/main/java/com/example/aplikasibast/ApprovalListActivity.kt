@@ -51,7 +51,7 @@ class ApprovalListActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = PengajuanIzinAdapter { item ->
-            // Navigasi ke detail berdasarkan status untuk aksi admin
+            // Menuju detail approval berdasarkan status
             val detailClass = when (item.status) {
                 AppConstants.STATUS_DISETUJUI -> DetailPengajuanActivity::class.java
                 AppConstants.STATUS_DITOLAK -> DetailPengajuanDitolakActivity::class.java
@@ -70,6 +70,7 @@ class ApprovalListActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 selectedStatus.collectLatest { status ->
                     updateTabUI(status)
+                    // Mengambil Flow<List<PengajuanIzin>> dari Use Case melalui ViewModel
                     viewModel.getPengajuanByStatus(status).collect { list ->
                         adapter.submitList(list)
                         binding.rvApproval.visibility = if (list.isEmpty()) View.GONE else View.VISIBLE

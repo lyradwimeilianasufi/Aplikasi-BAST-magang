@@ -2,29 +2,38 @@ package com.example.aplikasibast
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aplikasibast.domain.model.Kehadiran
+import com.example.aplikasibast.domain.model.PengajuanIzin
+import com.example.aplikasibast.domain.usecase.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class MainViewModel(
-    private val repository: AppRepository,
+    private val getPengajuanByStatusUseCase: GetPengajuanByStatusUseCase,
+    private val getPengajuanByIdUseCase: GetPengajuanByIdUseCase,
+    private val submitPengajuanUseCase: SubmitPengajuanUseCase,
+    private val updatePengajuanUseCase: UpdatePengajuanUseCase,
+    private val getAllKehadiranUseCase: GetAllKehadiranUseCase,
+    private val getKehadiranByIdUseCase: GetKehadiranByIdUseCase,
+    private val insertKehadiranUseCase: InsertKehadiranUseCase,
+    private val updateKehadiranUseCase: UpdateKehadiranUseCase,
     private val sessionManager: SessionManager
 ) : ViewModel() {
     
     val userName = sessionManager.getUserName() ?: "User"
     val userRole = sessionManager.getUserRole() ?: "Staff"
     
-    // UI Constants
     val workHours = "Reguler (09:00-17:00)"
     val currentDayUI: String get() = DateUtils.formatToUi(DateUtils.getTodayDb())
-    
     private val todayDb: String get() = DateUtils.getTodayDb()
 
-    val allKehadiran: Flow<List<KehadiranEntity>> = repository.allKehadiran
+    // Menggunakan Domain Model (Kehadiran) bukan Entity
+    val allKehadiran: Flow<List<Kehadiran>> = getAllKehadiranUseCase()
 
     val dashboardState: StateFlow<DashboardData> = combine(
-        repository.allKehadiran,
-        repository.getPengajuanByStatus(AppConstants.STATUS_DISETUJUI)
+        getAllKehadiranUseCase(),
+        getPengajuanByStatusUseCase(AppConstants.STATUS_DISETUJUI)
     ) { kehadiranList, izinList ->
         val todayAbsen = kehadiranList.find { it.tanggal == todayDb }
         val activeIzin = izinList.find { todayDb >= it.tanggalMulai && todayDb <= it.tanggalSelesai }
@@ -53,26 +62,24 @@ class MainViewModel(
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 17
     }
 
-    // Kehadiran
-    suspend fun getKehadiranById(id: Int) = repository.getKehadiranById(id)
+    // --- Logic Kehadiran ---
+    suspend fun getKehadiranById(id: Int) = getKehadiranByIdUseCase(id)
 
-    fun insertKehadiran(kehadiran: KehadiranEntity) {
-        viewModelScope.launch { repository.insertKehadiran(kehadiran) }
+    fun insertKehadiran(kehadiran: Kehadiran) {
+        viewModelScope.launch { insertKehadiranUseCase(kehadiran) }
     }
 
-    fun updateKehadiran(kehadiran: KehadiranEntity) {
-        viewModelScope.launch { repository.updateKehadiran(kehadiran) }
+    fun updateKehadiran(kehadiran: Kehadiran) {
+        viewModelScope.launch { updateKehadiranUseCase(kehadiran) }
     }
 
-    // Pengajuan Izin
-    fun getPengajuanByStatus(status: String) = repository.getPengajuanByStatus(status)
+    // --- Logic Pengajuan Izin ---
+    fun getPengajuanByStatus(status: String) = getPengajuanByStatusUseCase(status)
 
-    suspend fun getPengajuanById(id: Int) = repository.getPengajuanById(id)
+    suspend fun getPengajuanById(id: Int) = getPengajuanByIdUseCase(id)
 
-    fun updatePengajuan(pengajuan: PengajuanIzinEntity) {
-        viewModelScope.launch {
-            repository.insertPengajuan(pengajuan)
-        }
+    fun updatePengajuan(pengajuan: PengajuanIzin) {
+        viewModelScope.launch { updatePengajuanUseCase(pengajuan) }
     }
 
     fun submitPengajuanIzin(
@@ -80,22 +87,26 @@ class MainViewModel(
         alasan: String, tanggalPengajuan: String, lampiranPath: String? = null
     ) {
         viewModelScope.launch {
-            val entity = PengajuanIzinEntity(
+            val model = PengajuanIzin(
+                id = 0, // Auto-generate
                 tanggalPengajuan = tanggalPengajuan,
                 jenisIzin = jenisIzin,
                 tanggalMulai = tanggalMulai,
                 tanggalSelesai = tanggalSelesai,
                 alasan = alasan,
+                status = AppConstants.STATUS_DIAJUKAN,
                 lampiranPath = lampiranPath,
-                teknisiNama = userName
+                teknisiNama = userName,
+                alasanPenolakan = null,
+                tanggalDiproses = null
             )
-            repository.insertPengajuan(entity)
+            submitPengajuanUseCase(model)
         }
     }
 }
 
 data class DashboardData(
-    val kehadiran: KehadiranEntity? = null,
+    val kehadiran: Kehadiran? = null, // Menggunakan Domain Model
     val currentStatus: String = "",
     val isIzinActive: Boolean = false
 )
