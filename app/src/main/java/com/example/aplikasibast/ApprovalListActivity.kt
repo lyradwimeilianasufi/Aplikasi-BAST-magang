@@ -50,9 +50,8 @@ class ApprovalListActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        // Tampilkan Nama Teknisi di halaman Approval List
+        // Tampilkan Nama Teknisi di halaman Approval List (Resolving Conflict)
         adapter = PengajuanIzinAdapter(showNamaTeknisi = true) { item ->
-            // Navigasi ke detail berdasarkan status untuk aksi admin
             val detailClass = when (item.status) {
                 AppConstants.STATUS_DISETUJUI -> DetailPengajuanActivity::class.java
                 AppConstants.STATUS_DITOLAK -> DetailPengajuanDitolakActivity::class.java

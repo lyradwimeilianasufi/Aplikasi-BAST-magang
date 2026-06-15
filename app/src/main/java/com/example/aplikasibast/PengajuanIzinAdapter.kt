@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aplikasibast.databinding.ItemRiwayatPengajuanDiajukanBinding
+import com.example.aplikasibast.domain.model.PengajuanIzin
 
 class PengajuanIzinAdapter(
     private val showNamaTeknisi: Boolean = false,
-    private val onClick: (PengajuanIzinEntity) -> Unit
-) : ListAdapter<PengajuanIzinEntity, PengajuanIzinAdapter.ViewHolder>(DiffCallback) {
+    private val onClick: (PengajuanIzin) -> Unit
+) : ListAdapter<PengajuanIzin, PengajuanIzinAdapter.ViewHolder>(DiffCallback) {
 
     class ViewHolder(val binding: ItemRiwayatPengajuanDiajukanBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -26,20 +27,25 @@ class PengajuanIzinAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         with(holder.binding) {
-            tvTanggalPengajuan.text = DateUtils.formatToUi(item.tanggalPengajuan)
+            tvTanggalPengajuan.text = item.tanggalPengajuan
             tvJenisIzin.text = item.jenisIzin
-            tvPeriodeIzin.text = "${DateUtils.formatToUi(item.tanggalMulai)} - ${DateUtils.formatToUi(item.tanggalSelesai)}"
+            tvPeriodeIzin.text = "${item.tanggalMulai} - ${item.tanggalSelesai}"
             tvStatusBadge.text = item.status
             
-            // Tampilkan/Sembunyikan Nama Teknisi berdasarkan parameter
-            lblNamaTeknisi.visibility = if (showNamaTeknisi) View.VISIBLE else View.GONE
-            tvNamaTeknisi.visibility = if (showNamaTeknisi) View.VISIBLE else View.GONE
-            tvNamaTeknisi.text = item.teknisiNama
-            
-            // Menggunakan Utilitas Global untuk perhitungan durasi
+            // Logika menampilkan nama teknisi (untuk sisi Admin/Approval)
+            if (showNamaTeknisi) {
+                tvNamaTeknisi.text = item.teknisiNama
+                tvNamaTeknisi.visibility = View.VISIBLE
+                lblNamaTeknisi.visibility = View.VISIBLE
+            } else {
+                tvNamaTeknisi.visibility = View.GONE
+                lblNamaTeknisi.visibility = View.GONE
+            }
+
+            // Durasi otomatis dari DateUtils
             tvDurationValue.text = DateUtils.calculateDays(item.tanggalMulai, item.tanggalSelesai).toString()
 
-            // Atur warna badge berdasarkan status
+            // Atur warna badge
             when (item.status) {
                 AppConstants.STATUS_DIAJUKAN -> {
                     tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(root.context, R.color.yellow_badge_bg)
@@ -59,8 +65,8 @@ class PengajuanIzinAdapter(
         }
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<PengajuanIzinEntity>() {
-        override fun areItemsTheSame(oldItem: PengajuanIzinEntity, newItem: PengajuanIzinEntity) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: PengajuanIzinEntity, newItem: PengajuanIzinEntity) = oldItem == newItem
+    companion object DiffCallback : DiffUtil.ItemCallback<PengajuanIzin>() {
+        override fun areItemsTheSame(oldItem: PengajuanIzin, newItem: PengajuanIzin) = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: PengajuanIzin, newItem: PengajuanIzin) = oldItem == newItem
     }
 }

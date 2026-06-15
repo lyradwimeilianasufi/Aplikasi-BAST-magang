@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.aplikasibast.databinding.ActivityPreviewFotoAbsenBinding
+import com.example.aplikasibast.domain.model.Kehadiran
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -44,12 +45,10 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
         val lng = intent.getDoubleExtra("LNG", 0.0)
         
         val calendar = Calendar.getInstance()
-        // Gunakan format ISO untuk database agar konsisten (yyyy-MM-dd)
-        val tanggalDb = SimpleDateFormat(AppConstants.DATE_FORMAT_DB, Locale.US).format(calendar.time)
+        val tanggalDb = DateUtils.getTodayDb()
         val jamSekarang = SimpleDateFormat("HH:mm 'WIB'", Locale("id", "ID")).format(calendar.time)
 
         lifecycleScope.launch {
-            // Ambil data absen hari ini jika sudah ada
             val allData = viewModel.allKehadiran.first()
             val existingKehadiran = allData.find { it.tanggal == tanggalDb }
 
@@ -68,7 +67,8 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                 }
                 val status = if (calendar.after(limit)) "Telat" else "Hadir"
 
-                val kehadiran = KehadiranEntity(
+                // Menggunakan Domain Model Kehadiran
+                val kehadiran = Kehadiran(
                     tanggal = tanggalDb,
                     status = status,
                     jamMasuk = jamSekarang,
@@ -82,7 +82,6 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                 viewModel.insertKehadiran(kehadiran)
                 finishWithSuccess(isMasuk)
             } else {
-                // Logika Absen Keluar
                 if (existingKehadiran != null) {
                     val updatedKehadiran = existingKehadiran.copy(
                         jamKeluar = jamSekarang,
