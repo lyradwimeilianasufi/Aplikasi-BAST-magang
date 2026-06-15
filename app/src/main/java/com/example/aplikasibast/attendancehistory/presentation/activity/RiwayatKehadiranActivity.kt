@@ -1,4 +1,4 @@
-package com.example.aplikasibast
+package com.example.aplikasibast.attendancehistory.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.aplikasibast.DetailKehadiranActivity
+import com.example.aplikasibast.MainViewModel
+import com.example.aplikasibast.NavigationHelper
+import com.example.aplikasibast.R
+import com.example.aplikasibast.RiwayatItem
+import com.example.aplikasibast.attendancehistory.presentation.adapter.RiwayatKehadiranAdapter
 import com.example.aplikasibast.databinding.ActivityRiwayatKehadiranBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -55,7 +61,7 @@ class RiwayatKehadiranActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         riwayatAdapter = RiwayatKehadiranAdapter { item ->
             val intent = Intent(this, DetailKehadiranActivity::class.java)
-            val id = when(item) {
+            val id = when (item) {
                 is RiwayatItem.KehadiranData -> item.id
                 is RiwayatItem.IzinData -> item.id
                 is RiwayatItem.SakitData -> item.id

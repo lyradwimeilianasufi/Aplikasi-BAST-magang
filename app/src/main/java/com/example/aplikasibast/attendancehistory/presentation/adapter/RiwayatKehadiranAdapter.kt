@@ -1,4 +1,4 @@
-package com.example.aplikasibast
+package com.example.aplikasibast.attendancehistory.presentation.adapter
 
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.aplikasibast.RiwayatItem
 import com.example.aplikasibast.databinding.ItemRiwayatAlpaBinding
 import com.example.aplikasibast.databinding.ItemRiwayatHadirBinding
 import com.example.aplikasibast.databinding.ItemRiwayatIzinBinding
@@ -74,7 +75,7 @@ class RiwayatKehadiranAdapter(
         fun bind(item: RiwayatItem.KehadiranData) {
             binding.tvTanggal.text = formatTakeOverText(item.tanggal)
             binding.tvStatus.text = item.status
-            
+
             if (item.status.equals("Telat", true)) {
                 // Jika Telat, tampilkan badge Telat (Oranye) dan badge Hadir (Hijau) di bawahnya
                 binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F2994A"))

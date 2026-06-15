@@ -34,7 +34,7 @@
         <activity android:name=".ApprovalListActivity" android:exported="false" />
 
         <activity android:name=".KehadiranActivity" android:exported="false" />
-        <activity android:name=".RiwayatKehadiranActivity" android:exported="false" />
+        <activity android:name=".attendancehistory.presentation.activity.RiwayatKehadiranActivity" android:exported="false" />
         <activity android:name=".DetailKehadiranActivity" android:exported="false" />
         <activity android:name=".PengajuanIzinActivity" android:exported="false" />
 

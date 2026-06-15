@@ -8,6 +8,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.aplikasibast.attendancehistory.presentation.activity.RiwayatKehadiranActivity
+import com.example.aplikasibast.attendancehistory.presentation.adapter.RiwayatKehadiranAdapter
 import com.example.aplikasibast.databinding.ActivityKehadiranBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,7 +42,7 @@ class KehadiranActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = RiwayatKehadiranAdapter { item ->
             val intent = Intent(this, DetailKehadiranActivity::class.java)
-            val id = when(item) {
+            val id = when (item) {
                 is RiwayatItem.KehadiranData -> item.id
                 is RiwayatItem.IzinData -> item.id
                 is RiwayatItem.SakitData -> item.id

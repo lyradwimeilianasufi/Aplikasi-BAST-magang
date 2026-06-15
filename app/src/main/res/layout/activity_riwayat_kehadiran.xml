@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#F8F9FA"
     android:fontFamily="@font/barlow_semi_condensed"
-    tools:context=".RiwayatKehadiranActivity">
+    tools:context=".attendancehistory.presentation.activity.RiwayatKehadiranActivity">
 
     <!-- Header / Toolbar Wrapper -->
     <LinearLayout
