@@ -20,8 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AplikasiBAST">
 
+        <!-- Main Home -->
         <activity
-            android:name=".MainActivity"
+            android:name=".features.home.presentation.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,31 +30,27 @@
             </intent-filter>
         </activity>
 
-        <!-- Unified List Activities -->
-        <activity android:name=".DaftarPengajuanActivity" android:exported="false" />
-        <activity android:name=".ApprovalListActivity" android:exported="false" />
+        <!-- Attendance Feature -->
+        <activity android:name=".features.attendance.presentation.activity.KehadiranActivity" android:exported="false" />
+        <activity android:name=".features.attendance.presentation.activity.RiwayatKehadiranActivity" android:exported="false" />
+        <activity android:name=".features.attendance.presentation.activity.DetailKehadiranActivity" android:exported="false" />
+        <activity android:name=".features.attendance.presentation.activity.LocationAbsenActivity" android:exported="false" />
+        <activity android:name=".features.attendance.presentation.activity.CameraAbsenActivity" android:exported="false" />
+        <activity android:name=".features.attendance.presentation.activity.PreviewFotoAbsenActivity" android:exported="false" />
+        <activity android:name=".features.attendance.presentation.activity.SuccessAbsenActivity" android:exported="false" android:theme="@style/Theme.App.Transparent" />
 
-        <activity android:name=".KehadiranActivity" android:exported="false" />
-        <activity android:name=".attendancehistory.presentation.activity.RiwayatKehadiranActivity" android:exported="false" />
-        <activity android:name=".DetailKehadiranActivity" android:exported="false" />
-        <activity android:name=".PengajuanIzinActivity" android:exported="false" />
+        <!-- Permission Feature -->
+        <activity android:name=".features.permission.presentation.activity.DaftarPengajuanActivity" android:exported="false" />
+        <activity android:name=".features.permission.presentation.activity.PengajuanIzinActivity" android:exported="false" />
+        <activity android:name=".features.permission.presentation.activity.DetailIzinActivity" android:exported="false" />
+        <activity android:name=".features.permission.presentation.activity.DetailIzinDisetujuiActivity" android:exported="false" />
+        <activity android:name=".features.permission.presentation.activity.DetailIzinDitolakActivity" android:exported="false" />
 
-        <!-- Detail Activities -->
-        <activity android:name=".DetailIzinActivity" android:exported="false" />
-        <activity android:name=".DetailIzinDisetujuiActivity" android:exported="false" />
-        <activity android:name=".DetailIzinDitolakActivity" android:exported="false" />
-        <activity android:name=".DetailPengajuanIzinActivity" android:exported="false" />
-        <activity android:name=".DetailPengajuanActivity" android:exported="false" />
-        <activity android:name=".DetailPengajuanDitolakActivity" android:exported="false" />
-
-        <activity android:name=".CameraAbsenActivity" android:exported="false" />
-        <activity android:name=".LocationAbsenActivity" android:exported="false" />
-        <activity android:name=".PreviewFotoAbsenActivity" android:exported="false" />
-
-        <activity
-            android:name=".SuccessAbsenActivity"
-            android:exported="false"
-            android:theme="@style/Theme.App.Transparent" />
+        <!-- Approval Feature -->
+        <activity android:name=".features.approval.presentation.activity.ApprovalListActivity" android:exported="false" />
+        <activity android:name=".features.approval.presentation.activity.DetailPengajuanIzinActivity" android:exported="false" />
+        <activity android:name=".features.approval.presentation.activity.DetailPengajuanActivity" android:exported="false" />
+        <activity android:name=".features.approval.presentation.activity.DetailPengajuanDitolakActivity" android:exported="false" />
 
     </application>
 </manifest>
