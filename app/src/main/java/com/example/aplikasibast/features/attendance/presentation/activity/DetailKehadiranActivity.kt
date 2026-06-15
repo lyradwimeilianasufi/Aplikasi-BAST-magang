@@ -1,4 +1,4 @@
-package com.example.aplikasibast.features.attendance.presentation.activity
+ package com.example.aplikasibast.features.attendance.presentation.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -11,11 +11,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
-import com.example.aplikasibast.MainViewModel
 import com.example.aplikasibast.R
 import com.example.aplikasibast.core.utils.DateUtils
 import com.example.aplikasibast.databinding.ActivityDetailKehadiranHadirBinding
 import com.example.aplikasibast.features.attendance.domain.model.Kehadiran
+import com.example.aplikasibast.features.attendance.presentation.viewmodel.AttendanceViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -23,7 +23,7 @@ import java.io.File
 class DetailKehadiranActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailKehadiranHadirBinding
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: AttendanceViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +108,7 @@ class DetailKehadiranActivity : AppCompatActivity() {
         }
 
         binding.btnLihatLokasiMasuk.setOnClickListener {
-            navigateToMap("Lokasi Masuk", it.jamMasuk, it.latMasuk, it.lngMasuk, it.lokasiMasuk)
+            navigateToMap("Lokasi Masuk", it. jamMasuk, it.latMasuk, it.lngMasuk, it.lokasiMasuk)
         }
 
         if (it.jamKeluar != "-") {

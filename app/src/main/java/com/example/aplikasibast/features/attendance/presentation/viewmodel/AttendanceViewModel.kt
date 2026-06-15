@@ -23,15 +23,15 @@ class AttendanceViewModel(
 ) : ViewModel() {
 
     val workHours = "Reguler (09:00-17:00)"
+    
+    val allKehadiran: Flow<List<Kehadiran>> = getAllKehadiranUseCase()
 
-    // Menggabungkan data Kehadiran dan Izin yang Disetujui
     val combinedRiwayat: Flow<List<RiwayatItem>> = combine(
         getAllKehadiranUseCase(),
         getPengajuanByStatusUseCase(AppConstants.STATUS_DISETUJUI)
     ) { kehadiranList, izinList ->
         val items = mutableListOf<RiwayatItem>()
 
-        // 1. Map data kehadiran dari DB
         kehadiranList.forEach { entity ->
             val formattedTanggal = DateUtils.formatToUi(entity.tanggal)
             when (entity.status) {
@@ -55,7 +55,6 @@ class AttendanceViewModel(
             }
         }
 
-        // 2. Tambahkan Izin yang disetujui jika belum diabsen
         izinList.forEach { izin ->
             val dates = generateDatesInRange(izin.tanggalMulai, izin.tanggalSelesai)
             dates.forEach { date ->
@@ -73,6 +72,7 @@ class AttendanceViewModel(
             }
         }
 
+        // Memperbaiki pemanggilan rawDate pada RiwayatItem
         items.distinctBy { it.rawDate }.sortedByDescending { it.rawDate }
     }
 

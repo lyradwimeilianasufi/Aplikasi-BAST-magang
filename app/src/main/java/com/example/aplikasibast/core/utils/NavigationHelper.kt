@@ -5,6 +5,7 @@ import android.content.Intent
 import com.example.aplikasibast.R
 import com.example.aplikasibast.features.attendance.presentation.activity.KehadiranActivity
 import com.example.aplikasibast.features.attendance.presentation.activity.RiwayatKehadiranActivity
+import com.example.aplikasibast.features.home.presentation.activity.MainActivity
 
 object NavigationHelper {
     fun handleBottomNavigation(activity: Activity, itemId: Int): Boolean {

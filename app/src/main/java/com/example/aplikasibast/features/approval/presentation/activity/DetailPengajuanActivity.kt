@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.aplikasibast.MainViewModel
 import com.example.aplikasibast.core.utils.DateUtils
 import com.example.aplikasibast.databinding.ActivityDetailPengajuanDisetujuiBinding
+import com.example.aplikasibast.features.approval.presentation.viewmodel.ApprovalViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -17,7 +17,7 @@ import java.io.File
 class DetailPengajuanActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailPengajuanDisetujuiBinding
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: ApprovalViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

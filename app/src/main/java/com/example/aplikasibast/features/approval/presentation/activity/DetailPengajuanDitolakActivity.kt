@@ -8,9 +8,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
-import com.example.aplikasibast.MainViewModel
 import com.example.aplikasibast.core.utils.DateUtils
 import com.example.aplikasibast.databinding.ActivityDetailPengajuanDitolakBinding
+import com.example.aplikasibast.features.approval.presentation.viewmodel.ApprovalViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -18,7 +18,7 @@ import java.io.File
 class DetailPengajuanDitolakActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailPengajuanDitolakBinding
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: ApprovalViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,7 @@ class DetailPengajuanDitolakActivity : AppCompatActivity() {
         binding = ActivityDetailPengajuanDitolakBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { _, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
             binding.toolbarLayout.updatePadding(top = systemBars.top)
             insets
@@ -58,6 +58,7 @@ class DetailPengajuanDitolakActivity : AppCompatActivity() {
                     if (file.exists()) {
                         binding.ivFilePendukung.setImageURI(Uri.fromFile(file))
                         binding.ivFilePendukung.alpha = 1.0f
+                        binding.ivFilePendukung.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
                     }
                 }
             }

@@ -1,9 +1,11 @@
 package com.example.aplikasibast.features.attendance.domain.model
 
 sealed class RiwayatItem {
+    abstract val rawDate: String
+
     data class KehadiranData(
         val id: Int = 0,
-        val rawDate: String,
+        override val rawDate: String,
         val tanggal: String,
         val status: String,
         val jamMasuk: String,
@@ -13,7 +15,7 @@ sealed class RiwayatItem {
 
     data class IzinData(
         val id: Int = 0,
-        val rawDate: String,
+        override val rawDate: String,
         val tanggal: String,
         val jenisIzin: String,
         val periode: String,
@@ -23,7 +25,7 @@ sealed class RiwayatItem {
 
     data class SakitData(
         val id: Int = 0,
-        val rawDate: String,
+        override val rawDate: String,
         val tanggal: String,
         val periode: String,
         val durasi: String,
@@ -32,14 +34,14 @@ sealed class RiwayatItem {
 
     data class AlpaData(
         val id: Int = 0,
-        val rawDate: String,
+        override val rawDate: String,
         val tanggal: String,
         val status: String
     ) : RiwayatItem()
 
     data class LiburData(
         val id: Int = 0,
-        val rawDate: String,
+        override val rawDate: String,
         val tanggal: String,
         val status: String
     ) : RiwayatItem()
