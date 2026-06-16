@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#F8F9FA"
     android:fontFamily="@font/barlow_semi_condensed"
-    tools:context=".DetailPengajuanDitolakActivity">
+    tools:context=".features.approval.presentation.activity.DetailPengajuanDitolakActivity">
 
     <!-- Header / Toolbar Wrapper -->
     <LinearLayout
@@ -112,12 +112,12 @@
                         android:id="@+id/tvTanggalPengajuan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="@id/lblTanggalPengajuan"
-                        app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuan" />
+                        app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuan"
+                        tools:text="01 Jan 2024" />
 
                     <TextView
                         android:id="@+id/tvStatusBadge"
@@ -178,12 +178,12 @@
                         android:id="@+id/tvTanggalDiproses"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="@id/lblTanggalDiproses"
-                        app:layout_constraintTop_toBottomOf="@id/lblTanggalDiproses" />
+                        app:layout_constraintTop_toBottomOf="@id/lblTanggalDiproses"
+                        tools:text="02 Jan 2024" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -228,13 +228,13 @@
                         android:id="@+id/tvAlasanPenolakan"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@id/lblAlasanPenolakan"
-                        app:layout_constraintTop_toBottomOf="@id/lblAlasanPenolakan" />
+                        app:layout_constraintTop_toBottomOf="@id/lblAlasanPenolakan"
+                        tools:text="Alasan penolakan di sini" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -275,10 +275,10 @@
                         android:id="@+id/tvNamaTeknisi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="Nama Teknisi" />
 
                     <View
                         android:layout_width="match_parent"
@@ -298,10 +298,10 @@
                         android:id="@+id/tvJenisIzin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="Sakit" />
 
                     <View
                         android:layout_width="match_parent"
@@ -321,10 +321,10 @@
                         android:id="@+id/tvJumlahHari"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="1 Hari" />
 
                     <View
                         android:layout_width="match_parent"
@@ -344,10 +344,10 @@
                         android:id="@+id/tvPeriodeIzin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="01 Jan 2024 - 02 Jan 2024" />
 
                     <View
                         android:layout_width="match_parent"
@@ -367,10 +367,10 @@
                         android:id="@+id/tvAlasan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="Alasan Izin" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -384,7 +384,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <!-- Area Lampiran - UPDATED TO FILL CONTAINER -->
+            <!-- Area Lampiran -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="220dp"

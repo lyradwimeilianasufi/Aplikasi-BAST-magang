@@ -104,28 +104,28 @@
                         android:id="@+id/tvTanggalPengajuan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="@id/lblTanggalPengajuanHeader"
-                        app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuanHeader" />
+                        app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuanHeader"
+                        tools:text="01 Jan 2024" />
 
                     <TextView
                         android:id="@+id/tvStatusBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_badge_pill"
-                        android:backgroundTint="#FFF8E1"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="6dp"
-                        android:text="DIAJUKAN"
-                        android:textColor="#FBC02D"
                         android:textSize="10sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:backgroundTint="#FFF8E1"
+                        tools:text="DIAJUKAN"
+                        tools:textColor="#FBC02D" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -157,10 +157,10 @@
                         android:id="@+id/tvNamaTeknisi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="Nama Teknisi" />
 
                     <View
                         android:layout_width="match_parent"
@@ -180,10 +180,10 @@
                         android:id="@+id/tvJenisIzin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="Sakit" />
 
                     <View
                         android:layout_width="match_parent"
@@ -203,10 +203,10 @@
                         android:id="@+id/tvJumlahHari"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="1 Hari" />
 
                     <View
                         android:layout_width="match_parent"
@@ -215,7 +215,6 @@
                         android:layout_marginBottom="12dp"
                         android:background="#EEEEEE" />
 
-                    <!-- Perbaikan ID Ganda: lblPeriodeIzinDetail -->
                     <TextView
                         android:id="@+id/lblPeriodeIzinDetail"
                         android:layout_width="wrap_content"
@@ -228,10 +227,10 @@
                         android:id="@+id/tvPeriodeIzin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="Senin, 01 Jan - Selasa, 02 Jan" />
 
                     <View
                         android:layout_width="match_parent"
@@ -252,10 +251,10 @@
                         android:id="@+id/tvAlasan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="-"
                         android:textColor="@color/black"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="Alasan Izin" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -292,11 +291,14 @@
 
     <!-- Bottom Buttons -->
     <LinearLayout
+        android:id="@+id/layoutButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="horizontal"
         android:padding="16dp"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton

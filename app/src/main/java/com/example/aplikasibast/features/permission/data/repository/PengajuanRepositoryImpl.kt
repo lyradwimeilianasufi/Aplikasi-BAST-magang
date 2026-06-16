@@ -19,6 +19,10 @@ class PengajuanRepositoryImpl(private val dao: PengajuanIzinDao) : IPengajuanRep
         return dao.getPengajuanById(id)?.let { PengajuanMapper.toDomain(it) }
     }
 
+    override suspend fun checkOverlappingPengajuan(start: String, end: String): PengajuanIzin? {
+        return dao.checkOverlappingPengajuan(start, end)?.let { PengajuanMapper.toDomain(it) }
+    }
+
     override suspend fun insertPengajuan(pengajuan: PengajuanIzin) {
         dao.insertPengajuan(PengajuanMapper.toEntity(pengajuan))
     }

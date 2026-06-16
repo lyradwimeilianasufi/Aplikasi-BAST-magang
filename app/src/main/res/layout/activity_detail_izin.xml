@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F8F9FA"
     android:fontFamily="@font/barlow_semi_condensed"
-    tools:context=".DetailIzinActivity">
+    tools:context=".features.permission.presentation.activity.DetailIzinActivity">
 
     <!-- Header / Toolbar -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -108,10 +108,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Jumat, 03 Jan 2025"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            tools:text="Jumat, 03 Jan 2025" />
                     </LinearLayout>
 
                     <TextView
@@ -121,11 +121,13 @@
                         android:background="@drawable/bg_badge_pill"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="4dp"
-                        android:text="DIAJUKAN"
                         android:textSize="10sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="DIAJUKAN"
+                        tools:backgroundTint="#FFF8E1"
+                        tools:textColor="#FBC02D" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -136,7 +138,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <!-- Card Tanggal Diproses -->
                 <com.google.android.material.card.MaterialCardView
@@ -186,10 +189,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="Jumat, 04 Jan 2025"
                                 android:textColor="@color/black"
                                 android:textStyle="bold"
-                                android:textSize="14sp" />
+                                android:textSize="14sp"
+                                tools:text="Jumat, 04 Jan 2025" />
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -205,7 +208,8 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
                     app:strokeColor="#EEEEEE"
-                    app:strokeWidth="1dp">
+                    app:strokeWidth="1dp"
+                    tools:visibility="visible">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -244,10 +248,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="Terlalu Mendadak"
                                 android:textColor="@color/black"
                                 android:textStyle="bold"
-                                android:textSize="14sp" />
+                                android:textSize="14sp"
+                                tools:text="Terlalu Mendadak" />
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -296,10 +300,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Cuti"
                             android:textColor="@color/black"
                             android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="Cuti" />
                     </LinearLayout>
 
                     <View
@@ -323,10 +327,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="2 Hari"
                             android:textColor="@color/black"
                             android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="2 Hari" />
                     </LinearLayout>
 
                     <View
@@ -350,10 +354,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Senin, 05 Jan 2025 - Selasa, 06 Jan 2025"
                             android:textColor="@color/black"
                             android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="Senin, 05 Jan 2025 - Selasa, 06 Jan 2025" />
                     </LinearLayout>
 
                     <View
@@ -377,10 +381,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Cuti Tahunan"
                             android:textColor="@color/black"
                             android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="Cuti Tahunan" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -395,7 +399,7 @@
                 android:textStyle="bold"
                 android:textSize="14sp" />
 
-            <!-- Card File Pendukung (Disesuaikan ukurannya seperti di gambar) -->
+            <!-- Card File Pendukung -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="250dp"

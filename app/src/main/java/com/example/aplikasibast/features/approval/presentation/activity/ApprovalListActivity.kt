@@ -56,7 +56,12 @@ class ApprovalListActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         // Tampilkan nama teknisi karena ini sisi Admin
         adapter = PengajuanIzinAdapter(showNamaTeknisi = true) { item ->
-            val intent = Intent(this, DetailPengajuanIzinActivity::class.java)
+            val destination = when (item.status) {
+                AppConstants.STATUS_DISETUJUI -> DetailPengajuanActivity::class.java
+                AppConstants.STATUS_DITOLAK -> DetailPengajuanDitolakActivity::class.java
+                else -> DetailPengajuanIzinActivity::class.java
+            }
+            val intent = Intent(this, destination)
             intent.putExtra("PENGAJUAN_ID", item.id)
             startActivity(intent)
         }

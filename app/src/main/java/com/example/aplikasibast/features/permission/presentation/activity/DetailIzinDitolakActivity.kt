@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.aplikasibast.MainViewModel
 import com.example.aplikasibast.core.utils.DateUtils
 import com.example.aplikasibast.databinding.ActivityDetailIzinDitolakBinding
+import com.example.aplikasibast.features.permission.presentation.viewmodel.PermissionViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -17,7 +17,7 @@ import java.io.File
 class DetailIzinDitolakActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailIzinDitolakBinding
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: PermissionViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +43,11 @@ class DetailIzinDitolakActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val data = viewModel.getPengajuanById(id)
             data?.let {
-                binding.tvTanggalPengajuan.text = it.tanggalPengajuan
-                binding.tvTanggalDiproses.text = it.tanggalDiproses ?: "-"
+                binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
+                binding.tvTanggalDiproses.text = it.tanggalDiproses?.let { tgl -> DateUtils.formatToUi(tgl) } ?: "-"
                 binding.tvAlasanPenolakan.text = it.alasanPenolakan ?: "Tidak ada alasan spesifik"
                 binding.tvJenisIzin.text = it.jenisIzin
-                binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                binding.tvPeriodeIzin.text = "${DateUtils.formatToUi(it.tanggalMulai)} - ${DateUtils.formatToUi(it.tanggalSelesai)}"
                 binding.tvAlasan.text = it.alasan
                 
                 binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"

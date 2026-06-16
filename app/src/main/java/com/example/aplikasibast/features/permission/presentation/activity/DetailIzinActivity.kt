@@ -49,12 +49,12 @@ class DetailIzinActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val data = viewModel.getPengajuanById(id)
             data?.let {
-                binding.tvTanggalPengajuan.text = it.tanggalPengajuan
+                binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
                 setupStatusBadge(it.status)
 
                 if (it.status != AppConstants.STATUS_DIAJUKAN) {
                     binding.cardProcessing.visibility = View.VISIBLE
-                    binding.tvTanggalDiproses.text = it.tanggalDiproses ?: "-"
+                    binding.tvTanggalDiproses.text = it.tanggalDiproses?.let { tgl -> DateUtils.formatToUi(tgl) } ?: "-"
                     
                     if (it.status == AppConstants.STATUS_DITOLAK) {
                         binding.layoutRejection.visibility = View.VISIBLE
@@ -63,7 +63,7 @@ class DetailIzinActivity : AppCompatActivity() {
                 }
 
                 binding.tvJenisIzin.text = it.jenisIzin
-                binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                binding.tvPeriodeIzin.text = "${DateUtils.formatToUi(it.tanggalMulai)} - ${DateUtils.formatToUi(it.tanggalSelesai)}"
                 binding.tvAlasan.text = it.alasan
                 binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
 

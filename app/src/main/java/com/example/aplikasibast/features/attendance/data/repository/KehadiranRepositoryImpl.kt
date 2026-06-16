@@ -18,6 +18,10 @@ class KehadiranRepositoryImpl(private val dao: KehadiranDao) : IKehadiranReposit
         return dao.getKehadiranById(id)?.let { KehadiranMapper.toDomain(it) }
     }
 
+    override suspend fun getKehadiranByTanggal(tanggal: String): Kehadiran? {
+        return dao.getKehadiranByTanggal(tanggal)?.let { KehadiranMapper.toDomain(it) }
+    }
+
     override suspend fun insertKehadiran(kehadiran: Kehadiran) {
         dao.insertKehadiran(KehadiranMapper.toEntity(kehadiran))
     }

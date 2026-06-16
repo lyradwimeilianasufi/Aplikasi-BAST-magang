@@ -1,6 +1,8 @@
- package com.example.aplikasibast.features.attendance.presentation.activity
+package com.example.aplikasibast.features.attendance.presentation.activity
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -49,17 +51,17 @@ class DetailKehadiranActivity : AppCompatActivity() {
     private fun loadData(id: Int) {
         lifecycleScope.launch {
             val data = viewModel.getKehadiranById(id)
-            data?.let {
-                binding.tvTanggalKerja.text = DateUtils.formatToUi(it.tanggal)
+            data?.let { kehadiran ->
+                binding.tvTanggalKerja.text = DateUtils.formatToUi(kehadiran.tanggal)
                 binding.tvJamKerja.text = viewModel.workHours
-                binding.tvTotalJamKerja.text = it.totalJam
+                binding.tvTotalJamKerja.text = kehadiran.totalJam
                 
-                setupStatusUI(it.status)
+                setupStatusUI(kehadiran.status)
 
-                if (it.status == "Alpa" || it.status == "Libur") {
+                if (kehadiran.status == "Alpa" || kehadiran.status == "Libur") {
                     hideAttendanceSections()
                 } else {
-                    showAttendanceDetails(it)
+                    showAttendanceDetails(kehadiran)
                 }
             }
         }
@@ -67,31 +69,39 @@ class DetailKehadiranActivity : AppCompatActivity() {
 
     private fun setupStatusUI(status: String) {
         binding.tvStatusBadge.text = status
-        val colorRes = when (status) {
-            "Hadir" -> R.color.green_badge_bg
-            "Telat" -> R.color.yellow_badge_bg
-            "Izin" -> R.color.purple_badge 
-            "Alpa" -> R.color.red_badge_bg
-            else -> R.color.gray_light
-        }
         
-        val textColorRes = when (status) {
-            "Hadir" -> R.color.green_badge_text
-            "Telat" -> R.color.yellow_badge_text
-            "Izin" -> R.color.purple_badge_text
-            "Alpa" -> R.color.red_badge_text
-            else -> R.color.black
+        if (status == "Telat") {
+            binding.tvStatusBadgeHadir.visibility = View.VISIBLE
+            binding.tvStatusBadge.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F39C12"))
+            binding.tvStatusBadge.setTextColor(Color.WHITE)
+        } else if (status == "Hadir") {
+            binding.tvStatusBadgeHadir.visibility = View.GONE
+            binding.tvStatusBadge.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
+            binding.tvStatusBadge.setTextColor(Color.WHITE)
+        } else {
+            binding.tvStatusBadgeHadir.visibility = View.GONE
+            val colorRes = when (status) {
+                "Izin" -> R.color.purple_badge 
+                "Alpa" -> R.color.red_badge_bg
+                else -> R.color.gray_light
+            }
+            
+            val textColorRes = when (status) {
+                "Izin" -> R.color.purple_badge_text
+                "Alpa" -> R.color.red_badge_text
+                else -> R.color.black
+            }
+            
+            binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this, colorRes)
+            binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this, textColorRes))
         }
-        
-        binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this, colorRes)
-        binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this, textColorRes))
     }
 
-    private fun showAttendanceDetails(it: Kehadiran) {
-        binding.tvWaktuMasuk.text = it.jamMasuk
-        binding.tvWaktuKeluar.text = it.jamKeluar
+    private fun showAttendanceDetails(kehadiran: Kehadiran) {
+        binding.tvWaktuMasuk.text = kehadiran.jamMasuk
+        binding.tvWaktuKeluar.text = kehadiran.jamKeluar
         
-        it.fotoMasukPath?.let { path ->
+        kehadiran.fotoMasukPath?.let { path ->
             val file = File(path)
             if (file.exists()) {
                 binding.ivFotoMasuk.setImageURI(Uri.fromFile(file))
@@ -99,7 +109,7 @@ class DetailKehadiranActivity : AppCompatActivity() {
             }
         }
 
-        it.fotoKeluarPath?.let { path ->
+        kehadiran.fotoKeluarPath?.let { path ->
             val file = File(path)
             if (file.exists()) {
                 binding.ivFotoKeluar.setImageURI(Uri.fromFile(file))
@@ -108,12 +118,12 @@ class DetailKehadiranActivity : AppCompatActivity() {
         }
 
         binding.btnLihatLokasiMasuk.setOnClickListener {
-            navigateToMap("Lokasi Masuk", it. jamMasuk, it.latMasuk, it.lngMasuk, it.lokasiMasuk)
+            navigateToMap("Lokasi Masuk", kehadiran.jamMasuk, kehadiran.latMasuk, kehadiran.lngMasuk, kehadiran.lokasiMasuk)
         }
 
-        if (it.jamKeluar != "-") {
+        if (kehadiran.jamKeluar != "-") {
             binding.btnLihatLokasiKeluar.setOnClickListener {
-                navigateToMap("Lokasi Keluar", it.jamKeluar, it.latKeluar, it.lngKeluar, it.lokasiKeluar)
+                navigateToMap("Lokasi Keluar", kehadiran.jamKeluar, kehadiran.latKeluar, kehadiran.lngKeluar, kehadiran.lokasiKeluar)
             }
         } else {
             binding.btnLihatLokasiKeluar.visibility = View.INVISIBLE

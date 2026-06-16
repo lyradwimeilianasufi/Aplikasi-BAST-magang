@@ -2,12 +2,15 @@ package com.example.aplikasibast.features.approval.presentation.activity
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
+import com.example.aplikasibast.R
 import com.example.aplikasibast.core.utils.DateUtils
 import com.example.aplikasibast.databinding.ActivityDetailPengajuanDitolakBinding
 import com.example.aplikasibast.features.approval.presentation.viewmodel.ApprovalViewModel
@@ -46,12 +49,18 @@ class DetailPengajuanDitolakActivity : AppCompatActivity() {
             data?.let {
                 binding.tvNamaTeknisi.text = it.teknisiNama
                 binding.tvJenisIzin.text = it.jenisIzin
-                binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                binding.tvPeriodeIzin.text = "${DateUtils.formatToUi(it.tanggalMulai)} - ${DateUtils.formatToUi(it.tanggalSelesai)}"
                 binding.tvAlasan.text = it.alasan
-                binding.tvTanggalPengajuan.text = it.tanggalPengajuan
-                binding.tvTanggalDiproses.text = it.tanggalDiproses ?: "-"
+                binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
+                binding.tvTanggalDiproses.text = DateUtils.formatToUi(it.tanggalDiproses)
                 binding.tvAlasanPenolakan.text = it.alasanPenolakan ?: "Tidak ada alasan spesifik"
                 binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
+
+                // Atur warna dan tampilkan badge di sini untuk mencegah flicker warna hijau default
+                binding.tvStatusBadge.text = it.status
+                binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this@DetailPengajuanDitolakActivity, R.color.red_badge_bg)
+                binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this@DetailPengajuanDitolakActivity, R.color.red_badge_text))
+                binding.tvStatusBadge.visibility = View.VISIBLE
 
                 it.lampiranPath?.let { path ->
                     val file = File(path)

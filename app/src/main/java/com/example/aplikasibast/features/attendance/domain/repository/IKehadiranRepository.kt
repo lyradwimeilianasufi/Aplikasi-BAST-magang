@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface IKehadiranRepository {
     fun getAllKehadiran(): Flow<List<Kehadiran>>
     suspend fun getKehadiranById(id: Int): Kehadiran?
+    suspend fun getKehadiranByTanggal(tanggal: String): Kehadiran?
     suspend fun insertKehadiran(kehadiran: Kehadiran)
     suspend fun updateKehadiran(kehadiran: Kehadiran)
 }

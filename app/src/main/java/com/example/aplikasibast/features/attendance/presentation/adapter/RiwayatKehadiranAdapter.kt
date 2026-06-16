@@ -6,6 +6,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -80,9 +81,17 @@ class RiwayatKehadiranAdapter(
         fun bind(item: RiwayatItem.KehadiranData) {
             binding.tvTanggal.text = formatTakeOverText(item.tanggal)
             binding.tvStatus.text = item.status
-            if (item.status.equals("Telat", true) || item.status.equals("Hadir", true)) {
+            
+            if (item.status.equals("Telat", true)) {
+                binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F39C12"))
+                binding.tvStatusHadir.visibility = View.VISIBLE
+            } else if (item.status.equals("Hadir", true)) {
                 binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
+                binding.tvStatusHadir.visibility = View.GONE
+            } else {
+                binding.tvStatusHadir.visibility = View.GONE
             }
+
             binding.tvJamMasuk.text = item.jamMasuk
             binding.tvJamKeluar.text = item.jamKeluar
             binding.tvTotalJam.text = item.totalJam

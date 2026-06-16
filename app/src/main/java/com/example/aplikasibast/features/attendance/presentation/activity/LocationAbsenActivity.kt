@@ -90,22 +90,19 @@ class LocationAbsenActivity : AppCompatActivity() {
         )
         
         binding.btnAbsenMasuk.setOnClickListener {
-            if (currentLat == 0.0) return@setOnClickListener
-            
-            val results = FloatArray(1)
-            Location.distanceBetween(currentLat, currentLng, OFFICE_LAT, OFFICE_LNG, results)
-            
-            if (results[0] <= MAX_RADIUS) {
-                val intent = Intent(this, CameraAbsenActivity::class.java).apply {
-                    putExtra("IS_MASUK", isMasuk)
-                    putExtra("LOKASI", binding.tvAlamatLengkap.text.toString())
-                    putExtra("LAT", currentLat)
-                    putExtra("LNG", currentLng)
-                }
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "Di luar radius: ${results[0].toInt()}m", Toast.LENGTH_SHORT).show()
+            if (currentLat == 0.0) {
+                Toast.makeText(this, "Mendapatkan lokasi...", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+            
+            // Rules radius dinonaktifkan: user bisa absen dari mana saja
+            val intent = Intent(this, CameraAbsenActivity::class.java).apply {
+                putExtra("IS_MASUK", isMasuk)
+                putExtra("LOKASI", binding.tvAlamatLengkap.text.toString())
+                putExtra("LAT", currentLat)
+                putExtra("LNG", currentLng)
+            }
+            startActivity(intent)
         }
     }
 
@@ -149,7 +146,8 @@ class LocationAbsenActivity : AppCompatActivity() {
         Location.distanceBetween(loc.latitude, loc.longitude, OFFICE_LAT, OFFICE_LNG, results)
         val distance = results[0]
         binding.tvDistanceInfo.text = "Jarak ke kantor: ${distance.toInt()} meter"
-        binding.tvDistanceInfo.setTextColor(if (distance <= MAX_RADIUS) Color.GREEN else Color.RED)
+        // Warna teks selalu hijau karena radius tidak lagi membatasi
+        binding.tvDistanceInfo.setTextColor(Color.GREEN)
     }
 
     private fun updateMapPosition(point: GeoPoint) {

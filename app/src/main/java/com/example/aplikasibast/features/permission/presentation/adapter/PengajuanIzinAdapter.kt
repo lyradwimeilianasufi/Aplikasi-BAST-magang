@@ -30,9 +30,16 @@ class PengajuanIzinAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         with(holder.binding) {
-            tvTanggalPengajuan.text = item.tanggalPengajuan
+            // Memformat Tanggal Pengajuan
+            tvTanggalPengajuan.text = DateUtils.formatToUi(item.tanggalPengajuan)
+            
             tvJenisIzin.text = item.jenisIzin
-            tvPeriodeIzin.text = "${item.tanggalMulai} - ${item.tanggalSelesai}"
+            
+            // Memformat Periode Izin (Mulai - Selesai)
+            val tglMulai = DateUtils.formatToUi(item.tanggalMulai)
+            val tglSelesai = DateUtils.formatToUi(item.tanggalSelesai)
+            tvPeriodeIzin.text = "$tglMulai - $tglSelesai"
+
             tvStatusBadge.text = item.status
             
             if (showNamaTeknisi) {

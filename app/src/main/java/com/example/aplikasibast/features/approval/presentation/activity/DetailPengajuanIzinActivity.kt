@@ -5,15 +5,17 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.aplikasibast.R
 import com.example.aplikasibast.features.approval.presentation.viewmodel.ApprovalViewModel
 import com.example.aplikasibast.core.constants.AppConstants
 import com.example.aplikasibast.core.utils.DateUtils
@@ -54,10 +56,17 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
                 data?.let {
                     binding.tvNamaTeknisi.text = it.teknisiNama
                     binding.tvJenisIzin.text = it.jenisIzin
-                    binding.tvPeriodeIzin.text = "${it.tanggalMulai} - ${it.tanggalSelesai}"
+                    binding.tvPeriodeIzin.text = "${DateUtils.formatToUi(it.tanggalMulai)} - ${DateUtils.formatToUi(it.tanggalSelesai)}"
                     binding.tvAlasan.text = it.alasan
-                    binding.tvTanggalPengajuan.text = it.tanggalPengajuan
+                    binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
                     binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
+                    
+                    setupStatusBadge(it.status)
+
+                    // Jika status sudah diproses, sembunyikan tombol aksi
+                    if (it.status != AppConstants.STATUS_DIAJUKAN) {
+                        binding.layoutButtons.visibility = View.GONE
+                    }
 
                     it.lampiranPath?.let { path ->
                         val file = File(path)
@@ -72,6 +81,24 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupStatusBadge(status: String) {
+        binding.tvStatusBadge.text = status
+        when (status) {
+            AppConstants.STATUS_DISETUJUI -> {
+                binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this, R.color.green_badge_bg)
+                binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this, R.color.green_badge_text))
+            }
+            AppConstants.STATUS_DITOLAK -> {
+                binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this, R.color.red_badge_bg)
+                binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this, R.color.red_badge_text))
+            }
+            else -> {
+                binding.tvStatusBadge.backgroundTintList = ContextCompat.getColorStateList(this, R.color.yellow_badge_bg)
+                binding.tvStatusBadge.setTextColor(ContextCompat.getColor(this, R.color.yellow_badge_text))
+            }
+        }
+    }
+
     private fun setupUI() {
         binding.btnBack.setOnClickListener { finish() }
         binding.btnTolak.setOnClickListener { showTolakDialog() }
@@ -82,7 +109,7 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val data = viewModel.getPengajuanById(pengajuanId)
             data?.let {
-                val today = DateUtils.formatToUi(DateUtils.getTodayDb())
+                val today = DateUtils.getTodayDb()
                 val updatedData = it.copy(
                     status = status,
                     tanggalDiproses = today,
@@ -100,13 +127,25 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val dialogBinding = DialogTolakPengajuanBinding.inflate(layoutInflater)
         dialog.setContentView(dialogBinding.root)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        
+        dialog.window?.let { window ->
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            window.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        dialogBinding.btnClose.setOnClickListener { dialog.dismiss() }
+        dialogBinding.btnBatal.setOnClickListener { dialog.dismiss() }
 
         dialogBinding.btnSimpan.setOnClickListener {
-            val alasan = dialogBinding.etAlasan.text.toString()
+            val alasan = dialogBinding.etAlasan.text.toString().trim()
             if (alasan.isNotEmpty()) {
                 dialog.dismiss()
                 updateStatus(AppConstants.STATUS_DITOLAK, alasan)
+            } else {
+                dialogBinding.etAlasan.error = "Alasan harus diisi"
             }
         }
         dialog.show()

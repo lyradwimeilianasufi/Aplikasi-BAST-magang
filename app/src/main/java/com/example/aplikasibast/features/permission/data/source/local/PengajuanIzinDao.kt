@@ -14,6 +14,9 @@ interface PengajuanIzinDao {
     @Query("SELECT * FROM pengajuan_izin WHERE id = :id LIMIT 1")
     suspend fun getPengajuanById(id: Int): PengajuanIzinEntity?
 
+    @Query("SELECT * FROM pengajuan_izin WHERE NOT (tanggalSelesai < :start OR tanggalMulai > :end) AND status != 'DITOLAK' LIMIT 1")
+    suspend fun checkOverlappingPengajuan(start: String, end: String): PengajuanIzinEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPengajuan(pengajuan: PengajuanIzinEntity)
 

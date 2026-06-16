@@ -6,10 +6,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.aplikasibast.MainViewModel
 import com.example.aplikasibast.core.utils.DateUtils
 import com.example.aplikasibast.databinding.ActivityPreviewFotoAbsenBinding
 import com.example.aplikasibast.features.attendance.domain.model.Kehadiran
+import com.example.aplikasibast.features.attendance.presentation.viewmodel.AttendanceViewModel
+import com.example.aplikasibast.features.home.presentation.activity.MainActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -21,7 +22,7 @@ import java.util.Locale
 class PreviewFotoAbsenActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPreviewFotoAbsenBinding
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: AttendanceViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

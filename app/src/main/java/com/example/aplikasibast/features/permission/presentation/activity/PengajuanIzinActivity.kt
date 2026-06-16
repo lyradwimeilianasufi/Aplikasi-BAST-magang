@@ -12,11 +12,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.aplikasibast.MainViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.aplikasibast.R
-import com.example.aplikasibast.core.constants.AppConstants
 import com.example.aplikasibast.core.utils.DateUtils
 import com.example.aplikasibast.databinding.ActivityPengajuanIzinBinding
+import com.example.aplikasibast.features.permission.presentation.viewmodel.PermissionViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -27,7 +30,7 @@ import java.util.Locale
 class PengajuanIzinActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPengajuanIzinBinding
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: PermissionViewModel by viewModel()
     
     private var calendarMulai: Calendar? = null
     private var calendarSelesai: Calendar? = null
@@ -35,7 +38,7 @@ class PengajuanIzinActivity : AppCompatActivity() {
 
     // Formatters
     private val dbDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-    private val uiDateFormat = SimpleDateFormat("dd MMM yyyy", Locale("id", "ID"))
+    private val uiDateFormat = SimpleDateFormat("EEEE, d MMM yyyy", Locale("id", "ID"))
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { handleSelectedImage(it) }
@@ -56,6 +59,7 @@ class PengajuanIzinActivity : AppCompatActivity() {
         setupDropdown()
         setupDatePickers()
         setupListeners()
+        observeViewModel()
     }
 
     private fun setupDropdown() {
@@ -67,7 +71,7 @@ class PengajuanIzinActivity : AppCompatActivity() {
 
     private fun setupDatePickers() {
         binding.etTanggalMulai.setOnClickListener {
-            showDatePicker { calendar ->
+            showDatePicker(minDate = System.currentTimeMillis()) { calendar ->
                 calendarMulai = calendar
                 binding.etTanggalMulai.setText(uiDateFormat.format(calendar.time))
                 
@@ -105,7 +109,7 @@ class PengajuanIzinActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        binding.btnBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        binding.btnBack.setOnClickListener { finish() }
 
         binding.btnUpload.setOnClickListener { pickImageLauncher.launch("image/*") }
 
@@ -118,6 +122,14 @@ class PengajuanIzinActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Validasi Lampiran khusus untuk Sakit
+            if (jenisIzin.equals("Sakit", true) && lampiranPath == null) {
+                Toast.makeText(this, "Harap unggah surat keterangan dokter untuk pengajuan Sakit", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            binding.btnSubmit.isEnabled = false
+            
             viewModel.submitPengajuanIzin(
                 jenisIzin = jenisIzin,
                 tanggalMulai = dbDateFormat.format(calendarMulai!!.time),
@@ -126,10 +138,22 @@ class PengajuanIzinActivity : AppCompatActivity() {
                 tanggalPengajuan = DateUtils.getTodayDb(),
                 lampiranPath = lampiranPath
             )
+        }
+    }
 
-            Toast.makeText(this, "Pengajuan berhasil dikirim", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, DaftarPengajuanActivity::class.java))
-            finish()
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.submitResult.collect { result ->
+                    binding.btnSubmit.isEnabled = true
+                    result.onSuccess { message ->
+                        Toast.makeText(this@PengajuanIzinActivity, message, Toast.LENGTH_SHORT).show()
+                        finish()
+                    }.onFailure { exception ->
+                        Toast.makeText(this@PengajuanIzinActivity, exception.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
         }
     }
 
