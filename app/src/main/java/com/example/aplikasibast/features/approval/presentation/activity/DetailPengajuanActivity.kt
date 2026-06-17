@@ -48,6 +48,7 @@ class DetailPengajuanActivity : AppCompatActivity() {
                 binding.tvPeriodeIzin.text = "${DateUtils.formatToUi(it.tanggalMulai)} - ${DateUtils.formatToUi(it.tanggalSelesai)}"
                 binding.tvAlasan.text = it.alasan
                 binding.tvTanggalPengajuan.text = DateUtils.formatToUi(it.tanggalPengajuan)
+                binding.tvTanggalDiproses.text = it.tanggalDiproses?.let { tgl -> DateUtils.formatToUi(tgl) } ?: "-"
                 binding.tvJumlahHari.text = "${DateUtils.calculateDays(it.tanggalMulai, it.tanggalSelesai)} Hari"
 
                 it.lampiranPath?.let { path ->
