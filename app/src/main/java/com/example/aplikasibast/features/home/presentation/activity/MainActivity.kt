@@ -47,8 +47,21 @@ class MainActivity : AppCompatActivity() {
         setupListeners()
         observeDashboardState()
 
+        checkSuccessIntent()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        checkSuccessIntent()
+    }
+
+    private fun checkSuccessIntent() {
         if (intent.getBooleanExtra("SHOW_SUCCESS_DIALOG", false)) {
-            showSuccessDialog(intent.getStringExtra("SUCCESS_MESSAGE") ?: "Berhasil")
+            val message = intent.getStringExtra("SUCCESS_MESSAGE") ?: "Berhasil"
+            showSuccessDialog(message)
+            // Hapus extra agar tidak muncul lagi saat rotasi layar
+            intent.removeExtra("SHOW_SUCCESS_DIALOG")
         }
     }
 
