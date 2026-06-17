@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUI() {
         binding.tvUserName.text = viewModel.userName
-        binding.tvUserRole.text = "Teknisi"
+        binding.tvUserRole.text = viewModel.userRole
         binding.tvCurrentDate.text = viewModel.currentDayUI
         binding.tvWorkHours.text = viewModel.workHours
     }
@@ -80,8 +80,6 @@ class MainActivity : AppCompatActivity() {
     private fun observeDashboardState() {
         lifecycleScope.launch {
             viewModel.dashboardState.collect { state ->
-                binding.tvUserRole.text = state.currentStatus
-
                 val kehadiran = state.kehadiran
                 if (kehadiran == null) {
                     binding.tvInTime.text = "-"

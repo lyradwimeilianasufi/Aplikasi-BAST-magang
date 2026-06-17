@@ -18,6 +18,7 @@ class HomeViewModel(
 ) : ViewModel() {
 
     val userName = sessionManager.getUserName() ?: "User"
+    val userRole = sessionManager.getUserRole() ?: "Teknisi"
     val workHours = "Reguler (09:00-17:00)"
     val currentDayUI: String get() = DateUtils.formatToUi(DateUtils.getTodayDb())
     private val todayDb: String get() = DateUtils.getTodayDb()
