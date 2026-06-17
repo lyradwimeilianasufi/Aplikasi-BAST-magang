@@ -63,8 +63,10 @@ class DetailPengajuanIzinActivity : AppCompatActivity() {
                     
                     setupStatusBadge(it.status)
 
-                    // Jika status sudah diproses, sembunyikan tombol aksi
-                    if (it.status != AppConstants.STATUS_DIAJUKAN) {
+                    // Jika status masih diajukan, tampilkan tombol aksi, jika sudah diproses sembunyikan
+                    if (it.status == AppConstants.STATUS_DIAJUKAN) {
+                        binding.layoutButtons.visibility = View.VISIBLE
+                    } else {
                         binding.layoutButtons.visibility = View.GONE
                     }
 

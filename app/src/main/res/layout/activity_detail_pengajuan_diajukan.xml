@@ -50,12 +50,12 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingBottom="100dp"
         android:scrollbars="none"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layoutButtons"
         app:layout_constraintTop_toBottomOf="@id/toolbarLayout">
 
         <LinearLayout
@@ -109,7 +109,7 @@
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="@id/lblTanggalPengajuanHeader"
                         app:layout_constraintTop_toBottomOf="@id/lblTanggalPengajuanHeader"
-                        tools:text="01 Jan 2024" />
+                        tools:text="Jumat, 03 Jan 2025" />
 
                     <TextView
                         android:id="@+id/tvStatusBadge"
@@ -160,7 +160,7 @@
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        tools:text="Nama Teknisi" />
+                        tools:text="Trisnualdi" />
 
                     <View
                         android:layout_width="match_parent"
@@ -183,7 +183,7 @@
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        tools:text="Sakit" />
+                        tools:text="Cuti" />
 
                     <View
                         android:layout_width="match_parent"
@@ -206,7 +206,7 @@
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        tools:text="1 Hari" />
+                        tools:text="2 Hari" />
 
                     <View
                         android:layout_width="match_parent"
@@ -230,7 +230,7 @@
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        tools:text="Senin, 01 Jan - Selasa, 02 Jan" />
+                        tools:text="Senin, 05 Jan 2025 - Selasa, 06 Jan 2025" />
 
                     <View
                         android:layout_width="match_parent"
@@ -254,7 +254,7 @@
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        tools:text="Alasan Izin" />
+                        tools:text="Keperluan Keluarga" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -272,6 +272,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp"
@@ -282,19 +283,22 @@
                     android:id="@+id/ivFilePendukung"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
+                    android:scaleType="centerInside"
+                    android:padding="40dp"
+                    android:alpha="0.3"
                     android:src="@drawable/ic_gallery" />
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Buttons -->
+    <!-- Bottom Buttons Container -->
     <LinearLayout
         android:id="@+id/layoutButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:elevation="8dp"
         android:orientation="horizontal"
         android:padding="16dp"
         android:visibility="gone"
@@ -311,6 +315,7 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:fontFamily="@font/barlow_semi_condensed"
             app:backgroundTint="#D32F2F"
             app:cornerRadius="8dp" />
 
@@ -324,6 +329,7 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:fontFamily="@font/barlow_semi_condensed"
             app:backgroundTint="#1A1363"
             app:cornerRadius="8dp" />
     </LinearLayout>
