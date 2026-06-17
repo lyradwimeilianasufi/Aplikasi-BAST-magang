@@ -19,6 +19,9 @@ import androidx.core.content.ContextCompat
 import com.example.aplikasibast.R
 import com.example.aplikasibast.databinding.ActivityCameraAbsenBinding
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -73,7 +76,6 @@ class CameraAbsenActivity : AppCompatActivity() {
     private fun setupZoomControls() {
         binding.btnZoomHalf.setOnClickListener {
             camera?.cameraControl?.setLinearZoom(0f)
-            binding.ivZoomLevel.setImageResource(R.drawable.ic_zoom_level) // Assuming default state
         }
         binding.btnZoomOne.setOnClickListener {
             camera?.cameraControl?.setLinearZoom(0.5f)
@@ -115,7 +117,10 @@ class CameraAbsenActivity : AppCompatActivity() {
 
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
-        val photoFile = File(externalCacheDir, "temp_absen.jpg")
+        
+        // Perbaikan: Gunakan nama file unik agar tidak menimpa foto sebelumnya
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val photoFile = File(getExternalFilesDir(null), "IMG_ABSEN_$timestamp.jpg")
 
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 

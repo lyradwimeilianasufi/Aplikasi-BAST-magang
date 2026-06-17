@@ -118,12 +118,12 @@ class DetailKehadiranActivity : AppCompatActivity() {
         }
 
         binding.btnLihatLokasiMasuk.setOnClickListener {
-            navigateToMap("Lokasi Masuk", kehadiran.jamMasuk, kehadiran.latMasuk, kehadiran.lngMasuk, kehadiran.lokasiMasuk)
+            navigateToMap("Lokasi Absen Anda", kehadiran.jamMasuk, kehadiran.latMasuk, kehadiran.lngMasuk, kehadiran.lokasiMasuk)
         }
 
         if (kehadiran.jamKeluar != "-") {
             binding.btnLihatLokasiKeluar.setOnClickListener {
-                navigateToMap("Lokasi Keluar", kehadiran.jamKeluar, kehadiran.latKeluar, kehadiran.lngKeluar, kehadiran.lokasiKeluar)
+                navigateToMap("Lokasi Absen Anda", kehadiran.jamKeluar, kehadiran.latKeluar, kehadiran.lngKeluar, kehadiran.lokasiKeluar)
             }
         } else {
             binding.btnLihatLokasiKeluar.visibility = View.INVISIBLE

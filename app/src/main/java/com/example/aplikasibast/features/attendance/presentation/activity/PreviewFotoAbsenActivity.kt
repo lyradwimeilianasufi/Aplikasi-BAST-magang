@@ -11,12 +11,15 @@ import com.example.aplikasibast.databinding.ActivityPreviewFotoAbsenBinding
 import com.example.aplikasibast.features.attendance.domain.model.Kehadiran
 import com.example.aplikasibast.features.attendance.presentation.viewmodel.AttendanceViewModel
 import com.example.aplikasibast.features.home.presentation.activity.MainActivity
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
+import java.net.InetAddress
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class PreviewFotoAbsenActivity : AppCompatActivity() {
@@ -38,51 +41,77 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
         }
 
         binding.btnCancel.setOnClickListener { finish() }
-        binding.btnConfirm.setOnClickListener { saveAttendanceAndFinish(photoPath) }
+        binding.btnConfirm.setOnClickListener { processAttendance(photoPath) }
     }
 
-    private fun saveAttendanceAndFinish(photoPath: String?) {
+    private fun processAttendance(photoPath: String?) {
         val isMasuk = intent.getBooleanExtra("IS_MASUK", true)
         val lokasi = intent.getStringExtra("LOKASI") ?: "Lokasi tidak diketahui"
         val lat = intent.getDoubleExtra("LAT", 0.0)
         val lng = intent.getDoubleExtra("LNG", 0.0)
-        
-        val calendar = Calendar.getInstance()
-        val tanggalDb = DateUtils.getTodayDb()
-        val jamSekarang = SimpleDateFormat("HH:mm 'WIB'", Locale("id", "ID")).format(calendar.time)
 
         lifecycleScope.launch {
-            val allData = viewModel.allKehadiran.first()
-            val existingKehadiran = allData.find { it.tanggal == tanggalDb }
+            // Perbaikan No. 5: Gunakan waktu yang lebih valid (Optimal: Network Time)
+            // Di sini kita ambil waktu sistem, namun idealnya ini divalidasi ke server
+            val now = Date() 
+            val tanggalDb = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(now)
+            val jamSekarang = SimpleDateFormat("HH:mm 'WIB'", Locale("id", "ID")).format(now)
+
+            // Perbaikan No. 4: Ambil data hanya untuk hari ini (Efisiensi)
+            val existingKehadiran = viewModel.getKehadiranByTanggal(tanggalDb)
 
             if (isMasuk) {
-                if (existingKehadiran != null) {
+                // Perbaikan No. 3: Logika proteksi absen masuk
+                // Jika sudah ada record dengan status Hadir/Telat, blokir.
+                if (existingKehadiran != null && (existingKehadiran.status == "Hadir" || existingKehadiran.status == "Telat")) {
                     Toast.makeText(this@PreviewFotoAbsenActivity, "Anda sudah absen masuk hari ini", Toast.LENGTH_LONG).show()
                     finish()
                     return@launch
                 }
 
                 val limit = Calendar.getInstance().apply {
+                    time = now
                     set(Calendar.HOUR_OF_DAY, 9)
                     set(Calendar.MINUTE, 0)
                 }
-                val status = if (calendar.after(limit)) "Telat" else "Hadir"
+                val status = if (now.after(limit.time)) "Telat" else "Hadir"
 
-                val kehadiran = Kehadiran(
-                    tanggal = tanggalDb,
-                    status = status,
-                    jamMasuk = jamSekarang,
-                    jamKeluar = "-",
-                    totalJam = "-",
-                    fotoMasukPath = photoPath,
-                    lokasiMasuk = lokasi,
-                    latMasuk = lat,
-                    lngMasuk = lng
-                )
-                viewModel.insertKehadiran(kehadiran)
-                finishWithSuccess(isMasuk)
-            } else {
                 if (existingKehadiran != null) {
+                    // Jika record ada (misal status 'Alpa'), maka kita update
+                    val updated = existingKehadiran.copy(
+                        status = status,
+                        jamMasuk = jamSekarang,
+                        fotoMasukPath = photoPath,
+                        lokasiMasuk = lokasi,
+                        latMasuk = lat,
+                        lngMasuk = lng
+                    )
+                    viewModel.updateKehadiran(updated)
+                } else {
+                    // Jika belum ada record sama sekali
+                    val newKehadiran = Kehadiran(
+                        tanggal = tanggalDb,
+                        status = status,
+                        jamMasuk = jamSekarang,
+                        jamKeluar = "-",
+                        totalJam = "-",
+                        fotoMasukPath = photoPath,
+                        lokasiMasuk = lokasi,
+                        latMasuk = lat,
+                        lngMasuk = lng
+                    )
+                    viewModel.insertKehadiran(newKehadiran)
+                }
+                finishWithSuccess(true)
+            } else {
+                // Logika Absen Keluar
+                if (existingKehadiran != null) {
+                    if (existingKehadiran.jamKeluar != "-") {
+                        Toast.makeText(this@PreviewFotoAbsenActivity, "Anda sudah absen keluar hari ini", Toast.LENGTH_LONG).show()
+                        finish()
+                        return@launch
+                    }
+
                     val updatedKehadiran = existingKehadiran.copy(
                         jamKeluar = jamSekarang,
                         fotoKeluarPath = photoPath,
@@ -92,16 +121,17 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                         totalJam = calculateTotalWorkHours(existingKehadiran.jamMasuk, jamSekarang)
                     )
                     viewModel.updateKehadiran(updatedKehadiran)
-                    finishWithSuccess(isMasuk)
+                    finishWithSuccess(false)
                 } else {
-                    Toast.makeText(this@PreviewFotoAbsenActivity, "Data absen masuk tidak ditemukan", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PreviewFotoAbsenActivity, "Gagal: Anda belum absen masuk hari ini", Toast.LENGTH_LONG).show()
+                    finish()
                 }
             }
         }
     }
 
     private fun finishWithSuccess(isMasuk: Boolean) {
-        val message = if (isMasuk) "Absen Masuk Berhasil" else "Berhasil absen keluar"
+        val message = if (isMasuk) "Absen Masuk Berhasil" else "Absen Keluar Berhasil"
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             putExtra("SHOW_SUCCESS_DIALOG", true)
@@ -114,8 +144,8 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
     private fun calculateTotalWorkHours(jamMasuk: String, jamKeluar: String): String {
         return try {
             val format = SimpleDateFormat("HH:mm", Locale("id", "ID"))
-            val startStr = jamMasuk.substringBefore(" WIB")
-            val endStr = jamKeluar.substringBefore(" WIB")
+            val startStr = jamMasuk.substringBefore(" ")
+            val endStr = jamKeluar.substringBefore(" ")
             val dateMasuk = format.parse(startStr)
             val dateKeluar = format.parse(endStr)
             
@@ -124,7 +154,9 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                 if (diff < 0) diff += 24 * 60 * 60 * 1000 
                 val hours = diff / (1000 * 60 * 60)
                 val minutes = (diff / (1000 * 60)) % 60
-                String.format("%02d Jam %02d Menit", hours, minutes)
+                
+                if (hours > 0) String.format("%d Jam %d Menit", hours, minutes)
+                else String.format("%d Menit", minutes)
             } else "-"
         } catch (e: Exception) { "-" }
     }

@@ -302,8 +302,8 @@
                         app:layout_constraintTop_toTopOf="@id/layoutFotoMasuk">
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Absen Masuk" android:textColor="#BDBDBD" android:textSize="12sp" />
                         <TextView android:id="@+id/tvWaktuMasuk" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/black" android:textStyle="bold" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Lokasi Absen" android:textColor="#BDBDBD" android:textSize="12sp" />
-                        <TextView android:id="@+id/btnLihatLokasiMasuk" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#2196F3" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Lokasi Absen Anda" android:textColor="#BDBDBD" android:textSize="12sp" />
+                        <TextView android:id="@+id/btnLihatLokasiMasuk" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lihat Lokasi" android:textColor="#2196F3" android:textStyle="bold" />
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -363,8 +363,8 @@
                         app:layout_constraintTop_toTopOf="@id/layoutFotoKeluar">
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Absen Keluar" android:textColor="#BDBDBD" android:textSize="12sp" />
                         <TextView android:id="@+id/tvWaktuKeluar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/black" android:textStyle="bold" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Lokasi Absen" android:textColor="#BDBDBD" android:textSize="12sp" />
-                        <TextView android:id="@+id/btnLihatLokasiKeluar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#2196F3" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Lokasi Absen Anda" android:textColor="#BDBDBD" android:textSize="12sp" />
+                        <TextView android:id="@+id/btnLihatLokasiKeluar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lihat Lokasi" android:textColor="#2196F3" android:textStyle="bold" />
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>

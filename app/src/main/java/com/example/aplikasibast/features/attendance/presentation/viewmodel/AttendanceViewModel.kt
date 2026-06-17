@@ -17,6 +17,7 @@ import java.util.Locale
 class AttendanceViewModel(
     private val getAllKehadiranUseCase: GetAllKehadiranUseCase,
     private val getKehadiranByIdUseCase: GetKehadiranByIdUseCase,
+    private val getKehadiranByTanggalUseCase: GetKehadiranByTanggalUseCase,
     private val insertKehadiranUseCase: InsertKehadiranUseCase,
     private val updateKehadiranUseCase: UpdateKehadiranUseCase,
     private val getPengajuanByStatusUseCase: GetPengajuanByStatusUseCase
@@ -72,7 +73,6 @@ class AttendanceViewModel(
             }
         }
 
-        // Memperbaiki pemanggilan rawDate pada RiwayatItem
         items.distinctBy { it.rawDate }.sortedByDescending { it.rawDate }
     }
 
@@ -102,4 +102,6 @@ class AttendanceViewModel(
     }
 
     suspend fun getKehadiranById(id: Int) = getKehadiranByIdUseCase(id)
+    
+    suspend fun getKehadiranByTanggal(tanggal: String) = getKehadiranByTanggalUseCase(tanggal)
 }

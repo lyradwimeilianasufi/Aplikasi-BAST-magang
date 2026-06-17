@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.view.View
@@ -19,12 +20,13 @@ import com.example.aplikasibast.databinding.ActivityLocationAbsenBinding
 import com.example.aplikasibast.features.attendance.presentation.viewmodel.AttendanceViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.Polygon
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.Locale
 
 class LocationAbsenActivity : AppCompatActivity() {
 
@@ -40,7 +42,6 @@ class LocationAbsenActivity : AppCompatActivity() {
 
     private val OFFICE_LAT = -6.162164
     private val OFFICE_LNG = 106.830588
-    private val MAX_RADIUS = 100.0
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -80,7 +81,11 @@ class LocationAbsenActivity : AppCompatActivity() {
         val lng = intent.getDoubleExtra("LNG_TO_VIEW", 0.0)
         binding.tvAlamatLengkap.text = intent.getStringExtra("ADDRESS_TO_VIEW") ?: "Alamat tidak tersedia"
         
-        if (lat != 0.0 && lng != 0.0) updateMapPosition(GeoPoint(lat, lng))
+        if (lat != 0.0 && lng != 0.0) {
+            currentLat = lat
+            currentLng = lng
+            updateMapPosition(GeoPoint(lat, lng))
+        }
     }
 
     private fun setupUI() {
@@ -89,13 +94,14 @@ class LocationAbsenActivity : AppCompatActivity() {
             Color.parseColor(if (isMasuk) "#290F65" else "#D32F2F")
         )
         
+        binding.tvDistanceInfo.visibility = View.GONE
+        
         binding.btnAbsenMasuk.setOnClickListener {
             if (currentLat == 0.0) {
                 Toast.makeText(this, "Mendapatkan lokasi...", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             
-            // Rules radius dinonaktifkan: user bisa absen dari mana saja
             val intent = Intent(this, CameraAbsenActivity::class.java).apply {
                 putExtra("IS_MASUK", isMasuk)
                 putExtra("LOKASI", binding.tvAlamatLengkap.text.toString())
@@ -116,11 +122,6 @@ class LocationAbsenActivity : AppCompatActivity() {
         officeMarker.position = officePoint
         officeMarker.title = "Kantor BAST"
         binding.mapView.overlays.add(officeMarker)
-
-        val circle = Polygon(binding.mapView)
-        circle.points = Polygon.pointsAsCircle(officePoint, MAX_RADIUS)
-        circle.fillPaint.color = Color.parseColor("#325D2D91")
-        binding.mapView.overlays.add(circle)
     }
 
     private fun checkLocationPermissions() {
@@ -131,28 +132,53 @@ class LocationAbsenActivity : AppCompatActivity() {
 
     private fun getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            location?.let {
-                currentLat = it.latitude
-                currentLng = it.longitude
-                updateMapPosition(GeoPoint(it.latitude, it.longitude))
-                updateDistanceUI(it)
+        
+        // Menggunakan getCurrentLocation (fresh) alih-alih lastLocation (sering null)
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+            .addOnSuccessListener { location ->
+                location?.let {
+                    currentLat = it.latitude
+                    currentLng = it.longitude
+                    updateMapPosition(GeoPoint(it.latitude, it.longitude))
+                    getAddressFromLocation(it.latitude, it.longitude)
+                } ?: run {
+                    // Jika getCurrentLocation null, coba lastLocation sebagai cadangan
+                    fusedLocationClient.lastLocation.addOnSuccessListener { lastLoc ->
+                        lastLoc?.let {
+                            currentLat = it.latitude
+                            currentLng = it.longitude
+                            updateMapPosition(GeoPoint(it.latitude, it.longitude))
+                            getAddressFromLocation(it.latitude, it.longitude)
+                        } ?: run {
+                            Toast.makeText(this, "Gagal mendapatkan lokasi. Pastikan GPS aktif.", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
             }
-        }
     }
 
-    private fun updateDistanceUI(loc: Location) {
-        val results = FloatArray(1)
-        Location.distanceBetween(loc.latitude, loc.longitude, OFFICE_LAT, OFFICE_LNG, results)
-        val distance = results[0]
-        binding.tvDistanceInfo.text = "Jarak ke kantor: ${distance.toInt()} meter"
-        // Warna teks selalu hijau karena radius tidak lagi membatasi
-        binding.tvDistanceInfo.setTextColor(Color.GREEN)
+    private fun getAddressFromLocation(lat: Double, lng: Double) {
+        try {
+            val geocoder = Geocoder(this, Locale.getDefault())
+            val addresses = geocoder.getFromLocation(lat, lng, 1)
+            if (addresses != null && addresses.isNotEmpty()) {
+                val address = addresses[0].getAddressLine(0)
+                binding.tvAlamatLengkap.text = address
+            } else {
+                binding.tvAlamatLengkap.text = "Alamat tidak ditemukan ($lat, $lng)"
+            }
+        } catch (e: Exception) {
+            binding.tvAlamatLengkap.text = "Gagal memuat alamat ($lat, $lng)"
+            e.printStackTrace()
+        }
     }
 
     private fun updateMapPosition(point: GeoPoint) {
         binding.mapView.controller.animateTo(point)
-        if (userMarker == null) { userMarker = Marker(binding.mapView); binding.mapView.overlays.add(userMarker) }
+        if (userMarker == null) { 
+            userMarker = Marker(binding.mapView)
+            binding.mapView.overlays.add(userMarker) 
+        }
         userMarker?.position = point
         binding.mapView.invalidate()
     }

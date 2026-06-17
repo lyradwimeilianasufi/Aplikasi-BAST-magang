@@ -6,25 +6,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".LocationAbsenActivity">
+    tools:context=".features.attendance.presentation.activity.LocationAbsenActivity">
 
     <!-- Header -->
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
+        android:layout_height="60dp"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="130dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_lokasi_absen" />
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_back_white"
+            app:tint="@color/black" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tvHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@id/btnBack"
+            android:fontFamily="@font/barlow_semi_condensed"
+            android:text="LOKASI ABSEN"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="#E0E0E0" />
+    </RelativeLayout>
 
     <!-- Map View -->
     <org.osmdroid.views.MapView
@@ -45,20 +65,29 @@
         android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- Label Title (Dynamic) -->
+        <!-- Target Icon + Title -->
+        <ImageView
+            android:id="@+id/ivTargetIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_location_fill"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/tvLabelTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:fontFamily="@font/barlow_semi_condensed"
             android:text="Lokasi Terkini Anda"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@id/ivTargetIcon"
+            app:layout_constraintStart_toEndOf="@id/ivTargetIcon"
+            app:layout_constraintTop_toTopOf="@id/ivTargetIcon" />
 
-        <!-- Label Waktu (Hanya muncul saat View Only) -->
         <TextView
             android:id="@+id/tvWaktuDetail"
             android:layout_width="wrap_content"
@@ -71,44 +100,47 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Icon -->
-        <ImageView
-            android:id="@+id/ivLocationIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/ic_target_location"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvLabelTitle"
-            app:tint="#5D2D91" />
-
-        <!-- Kotak Alamat -->
+        <!-- Address Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/addressCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="20dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="#F5EEFF"
             app:strokeWidth="0dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivLocationIcon"
-            app:layout_constraintTop_toBottomOf="@id/tvLabelTitle">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivTargetIcon">
 
-            <TextView
-                android:id="@+id/tvAlamatLengkap"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:text="Mencari lokasi..."
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:fontFamily="@font/barlow_semi_condensed" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:id="@+id/ivPinIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_target_location"
+                    app:tint="#5D2D91" />
+
+                <TextView
+                    android:id="@+id/tvAlamatLengkap"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/barlow_semi_condensed"
+                    android:text="Mencari lokasi..."
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Info Jarak Radius -->
+        <!-- Info Jarak Radius (Corrected constraint: changed toTopOf to bottomOf addressCard) -->
         <TextView
             android:id="@+id/tvDistanceInfo"
             android:layout_width="wrap_content"
@@ -119,7 +151,8 @@
             android:textColor="#5D2D91"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/addressCard"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/addressCard" />
 
         <!-- Tombol Absen -->
@@ -127,7 +160,7 @@
             android:id="@+id/btnAbsenMasuk"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:text="ABSEN MASUK"
             android:textColor="@color/white"
             android:textStyle="bold"
