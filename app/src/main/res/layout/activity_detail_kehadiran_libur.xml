@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8F9FA"
+    android:fontFamily="@font/barlow_semi_condensed"
     tools:context=".DetailKehadiranLiburActivity">
 
     <!-- Header / Toolbar Wrapper -->
@@ -17,7 +18,6 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Konten Toolbar Utama -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp">
@@ -78,7 +78,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="12dp"
+                    android:paddingVertical="10dp"
                     android:paddingHorizontal="12dp">
 
                     <androidx.constraintlayout.widget.Guideline
@@ -91,8 +91,8 @@
                     <!-- Tanggal Kerja Section -->
                     <ImageView
                         android:id="@+id/ivCalendar"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
                         android:src="@drawable/ic_material_symbols_date_range"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -106,7 +106,7 @@
                         android:fontFamily="@font/barlow_semi_condensed"
                         android:text="Tanggal Kerja"
                         android:textColor="#BDBDBD"
-                        android:textSize="11sp"
+                        android:textSize="10sp"
                         app:layout_constraintEnd_toStartOf="@id/guideline"
                         app:layout_constraintStart_toEndOf="@id/ivCalendar"
                         app:layout_constraintTop_toTopOf="@id/ivCalendar" />
@@ -119,7 +119,7 @@
                         android:text="Jumat, 03 Jan 2025"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@id/guideline"
                         app:layout_constraintStart_toStartOf="@id/labelTanggal"
                         app:layout_constraintTop_toBottomOf="@id/labelTanggal" />
@@ -127,9 +127,9 @@
                     <!-- Jam Kerja Section -->
                     <ImageView
                         android:id="@+id/ivClock"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginStart="12dp"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="8dp"
                         android:src="@drawable/ic_mingcute_time_line"
                         app:layout_constraintStart_toEndOf="@id/guideline"
                         app:layout_constraintTop_toTopOf="@id/ivCalendar"
@@ -143,7 +143,7 @@
                         android:fontFamily="@font/barlow_semi_condensed"
                         android:text="Jam Kerja"
                         android:textColor="#BDBDBD"
-                        android:textSize="11sp"
+                        android:textSize="10sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/ivClock"
                         app:layout_constraintTop_toTopOf="@id/labelTanggal" />
@@ -153,14 +153,13 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/barlow_semi_condensed"
-                        android:text=" - "
+                        android:text="Reguler (09:00 - 17:00)"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@id/labelJam"
                         app:layout_constraintTop_toTopOf="@id/tvTanggalKerja" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -168,32 +167,34 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp">
+                android:layout_marginTop="20dp">
 
-                <TextView
-                    android:id="@+id/labelTotal"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/barlow_semi_condensed"
-                    android:text="Total Jam Kerja : "
-                    android:textColor="#424242"
-                    android:textSize="14sp"
+                    android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/tvTotalJamKerja"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/barlow_semi_condensed"
-                    android:text=" - "
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="@id/labelTotal"
-                    app:layout_constraintStart_toEndOf="@id/labelTotal"
-                    app:layout_constraintTop_toTopOf="@id/labelTotal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barlow_semi_condensed"
+                        android:text="Total Jam Kerja : "
+                        android:textColor="#424242"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvTotalJamKerja"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barlow_semi_condensed"
+                        android:text="-"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="13sp" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvStatusBadge"
@@ -202,22 +203,21 @@
                     android:background="@drawable/bg_badge_pill"
                     android:backgroundTint="#9E9E9E"
                     android:fontFamily="@font/barlow_semi_condensed"
-                    android:paddingHorizontal="24dp"
-                    android:paddingVertical="6dp"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="4dp"
                     android:text="Libur"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Garis Abu-abu Terang -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:background="#E0E0E0" />
 
         </LinearLayout>

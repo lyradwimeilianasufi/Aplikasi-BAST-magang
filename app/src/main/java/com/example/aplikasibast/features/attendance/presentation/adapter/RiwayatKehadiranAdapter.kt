@@ -102,7 +102,7 @@ class RiwayatKehadiranAdapter(
     inner class IzinViewHolder(private val binding: ItemRiwayatIzinBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.IzinData) {
             binding.tvTanggal.text = item.tanggal
-            binding.tvStatus.text = "Izin"
+            binding.tvStatus.text = "Izin" // Tetap "Izin" sesuai permintaan
             binding.root.setOnClickListener { onItemClick(item) }
         }
     }

@@ -34,6 +34,7 @@
         <activity android:name=".features.attendance.presentation.activity.KehadiranActivity" android:exported="false" />
         <activity android:name=".features.attendance.presentation.activity.RiwayatKehadiranActivity" android:exported="false" />
         <activity android:name=".features.attendance.presentation.activity.DetailKehadiranActivity" android:exported="false" />
+        <activity android:name=".features.attendance.presentation.activity.DetailKehadiranIzinActivity" android:exported="false" />
         <activity android:name=".features.attendance.presentation.activity.LocationAbsenActivity" android:exported="false" />
         <activity android:name=".features.attendance.presentation.activity.CameraAbsenActivity" android:exported="false" />
         <activity android:name=".features.attendance.presentation.activity.PreviewFotoAbsenActivity" android:exported="false" />

@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit
 
 object DateUtils {
     private const val DB_FORMAT = "yyyy-MM-dd"
-    // EEEE = Senin, d = 8, MMM = Jun, yyyy = 2026
-    private const val UI_FORMAT = "EEEE, d MMM yyyy"
+    // EEEE = Senin, dd = 08, MMM = Jun, yyyy = 2026
+    private const val UI_FORMAT = "EEEE, dd MMM yyyy"
 
     fun getTodayDb(): String {
         return SimpleDateFormat(DB_FORMAT, Locale.US).format(Calendar.getInstance().time)

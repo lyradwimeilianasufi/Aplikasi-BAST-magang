@@ -34,12 +34,19 @@ class DetailKehadiranActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val kehadiranId = intent.getIntExtra("KEHADIRAN_ID", -1)
+        val initialTanggal = intent.getStringExtra("TANGGAL")
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { _, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             binding.toolbarLayout.updatePadding(top = systemBars.top)
             insets
         }
+
+        // Set tanggal awal dari intent agar UI langsung berubah tanpa menunggu load data
+        initialTanggal?.let {
+            binding.tvTanggalKerja.text = DateUtils.formatToUi(it)
+        }
+        binding.tvJamKerja.text = viewModel.workHours
 
         if (kehadiranId != -1) {
             loadData(kehadiranId)
@@ -83,6 +90,7 @@ class DetailKehadiranActivity : AppCompatActivity() {
             val colorRes = when (status) {
                 "Izin" -> R.color.purple_badge 
                 "Alpa" -> R.color.red_badge_bg
+                "Libur" -> R.color.gray_light
                 else -> R.color.gray_light
             }
             
@@ -98,6 +106,7 @@ class DetailKehadiranActivity : AppCompatActivity() {
     }
 
     private fun showAttendanceDetails(kehadiran: Kehadiran) {
+        binding.layoutDetailAbsen.visibility = View.VISIBLE
         binding.tvWaktuMasuk.text = kehadiran.jamMasuk
         binding.tvWaktuKeluar.text = kehadiran.jamKeluar
         
@@ -131,10 +140,7 @@ class DetailKehadiranActivity : AppCompatActivity() {
     }
 
     private fun hideAttendanceSections() {
-        binding.layoutFotoMasuk.visibility = View.GONE
-        binding.layoutFotoKeluar.visibility = View.GONE
-        binding.btnLihatLokasiMasuk.visibility = View.GONE
-        binding.btnLihatLokasiKeluar.visibility = View.GONE
+        binding.layoutDetailAbsen.visibility = View.GONE
         binding.tvTotalJamKerja.text = "-"
     }
 

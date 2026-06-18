@@ -23,7 +23,7 @@ class AttendanceViewModel(
     private val getPengajuanByStatusUseCase: GetPengajuanByStatusUseCase
 ) : ViewModel() {
 
-    val workHours = "Reguler (09:00-17:00)"
+    val workHours = "Reguler (09:00 - 17:00)"
     
     val allKehadiran: Flow<List<Kehadiran>> = getAllKehadiranUseCase()
 
@@ -35,19 +35,19 @@ class AttendanceViewModel(
 
         kehadiranList.forEach { entity ->
             val formattedTanggal = DateUtils.formatToUi(entity.tanggal)
-            when (entity.status) {
-                "Hadir", "Telat" -> items.add(RiwayatItem.KehadiranData(
+            when {
+                entity.status == "Hadir" || entity.status == "Telat" -> items.add(RiwayatItem.KehadiranData(
                     id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, status = entity.status,
                     jamMasuk = entity.jamMasuk, jamKeluar = entity.jamKeluar, totalJam = entity.totalJam
                 ))
-                "Izin" -> items.add(RiwayatItem.IzinData(
-                    id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, jenisIzin = "Izin",
+                entity.status == "Izin" || entity.status == "Cuti" -> items.add(RiwayatItem.IzinData(
+                    id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, jenisIzin = entity.status,
                     periode = "-", durasi = "-", status = "Izin"
                 ))
-                "Sakit" -> items.add(RiwayatItem.SakitData(
+                entity.status == "Sakit" -> items.add(RiwayatItem.SakitData(
                     id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, status = "Sakit", periode = "-", durasi = "-"
                 ))
-                "Alpa" -> items.add(RiwayatItem.AlpaData(
+                entity.status == "Alpa" -> items.add(RiwayatItem.AlpaData(
                     id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, status = "Alpa"
                 ))
                 else -> items.add(RiwayatItem.LiburData(

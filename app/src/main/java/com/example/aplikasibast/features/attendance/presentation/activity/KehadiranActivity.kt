@@ -44,7 +44,13 @@ class KehadiranActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = RiwayatKehadiranAdapter { item ->
-            val intent = Intent(this, DetailKehadiranActivity::class.java)
+            val intent = when (item) {
+                is RiwayatItem.IzinData, is RiwayatItem.SakitData ->
+                    Intent(this, DetailKehadiranIzinActivity::class.java)
+                else ->
+                    Intent(this, DetailKehadiranActivity::class.java)
+            }
+
             val id = when(item) {
                 is RiwayatItem.KehadiranData -> item.id
                 is RiwayatItem.IzinData -> item.id
@@ -53,6 +59,7 @@ class KehadiranActivity : AppCompatActivity() {
                 is RiwayatItem.SakitData -> item.id
             }
             intent.putExtra("KEHADIRAN_ID", id)
+            intent.putExtra("TANGGAL", item.rawDate)
             startActivity(intent)
         }
         
