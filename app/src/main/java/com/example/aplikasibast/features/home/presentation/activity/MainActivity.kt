@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -24,6 +25,7 @@ import com.example.aplikasibast.features.permission.presentation.activity.Daftar
 import com.example.aplikasibast.features.home.presentation.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
@@ -130,6 +132,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToAbsen(isMasuk: Boolean) {
+        if (!isMasuk) {
+            val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+            if (hour < 17) {
+                Toast.makeText(this, "Absen keluar hanya bisa dilakukan mulai pukul 17:00 WIB", Toast.LENGTH_LONG).show()
+                return
+            }
+        }
         val intent = Intent(this, LocationAbsenActivity::class.java)
         intent.putExtra("IS_MASUK", isMasuk)
         startActivity(intent)

@@ -35,19 +35,22 @@ class AttendanceViewModel(
 
         kehadiranList.forEach { entity ->
             val formattedTanggal = DateUtils.formatToUi(entity.tanggal)
+            // Normalisasi status: "Telat" dikonversi menjadi "Hadir" untuk UI
+            val displayStatus = if (entity.status == "Telat") "Hadir" else entity.status
+            
             when {
-                entity.status == "Hadir" || entity.status == "Telat" -> items.add(RiwayatItem.KehadiranData(
-                    id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, status = entity.status,
+                displayStatus == "Hadir" -> items.add(RiwayatItem.KehadiranData(
+                    id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, status = "Hadir",
                     jamMasuk = entity.jamMasuk, jamKeluar = entity.jamKeluar, totalJam = entity.totalJam
                 ))
-                entity.status == "Izin" || entity.status == "Cuti" -> items.add(RiwayatItem.IzinData(
+                displayStatus == "Izin" || displayStatus == "Cuti" -> items.add(RiwayatItem.IzinData(
                     id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, jenisIzin = entity.status,
                     periode = "-", durasi = "-", status = "Izin"
                 ))
-                entity.status == "Sakit" -> items.add(RiwayatItem.SakitData(
+                displayStatus == "Sakit" -> items.add(RiwayatItem.SakitData(
                     id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, status = "Sakit", periode = "-", durasi = "-"
                 ))
-                entity.status == "Alpa" -> items.add(RiwayatItem.AlpaData(
+                displayStatus == "Alpa" -> items.add(RiwayatItem.AlpaData(
                     id = entity.id, rawDate = entity.tanggal, tanggal = formattedTanggal, status = "Alpa"
                 ))
                 else -> items.add(RiwayatItem.LiburData(

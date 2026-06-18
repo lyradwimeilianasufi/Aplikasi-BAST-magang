@@ -75,26 +75,24 @@ class DetailKehadiranActivity : AppCompatActivity() {
     }
 
     private fun setupStatusUI(status: String) {
-        binding.tvStatusBadge.text = status
+        // Perubahan: Anggap "Telat" sebagai "Hadir" di UI
+        val displayStatus = if (status == "Telat") "Hadir" else status
+        binding.tvStatusBadge.text = displayStatus
         
-        if (status == "Telat") {
-            binding.tvStatusBadgeHadir.visibility = View.VISIBLE
-            binding.tvStatusBadge.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F39C12"))
-            binding.tvStatusBadge.setTextColor(Color.WHITE)
-        } else if (status == "Hadir") {
+        if (displayStatus == "Hadir") {
             binding.tvStatusBadgeHadir.visibility = View.GONE
             binding.tvStatusBadge.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
             binding.tvStatusBadge.setTextColor(Color.WHITE)
         } else {
             binding.tvStatusBadgeHadir.visibility = View.GONE
-            val colorRes = when (status) {
+            val colorRes = when (displayStatus) {
                 "Izin" -> R.color.purple_badge 
                 "Alpa" -> R.color.red_badge_bg
                 "Libur" -> R.color.gray_light
                 else -> R.color.gray_light
             }
             
-            val textColorRes = when (status) {
+            val textColorRes = when (displayStatus) {
                 "Izin" -> R.color.purple_badge_text
                 "Alpa" -> R.color.red_badge_text
                 else -> R.color.black

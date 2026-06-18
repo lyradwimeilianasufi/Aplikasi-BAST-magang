@@ -69,12 +69,8 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val limit = Calendar.getInstance().apply {
-                    time = now
-                    set(Calendar.HOUR_OF_DAY, 9)
-                    set(Calendar.MINUTE, 0)
-                }
-                val status = if (now.after(limit.time)) "Telat" else "Hadir"
+                // Nonaktifkan absen telat, jadikan hadir saja
+                val status = "Hadir"
 
                 if (existingKehadiran != null) {
                     // Jika record ada (misal status 'Alpa'), maka kita update
@@ -105,6 +101,18 @@ class PreviewFotoAbsenActivity : AppCompatActivity() {
                 finishWithSuccess(true)
             } else {
                 // Logika Absen Keluar
+                
+                // Validasi waktu: Absen keluar hanya bisa dilakukan mulai jam 17:00
+                val calendar = Calendar.getInstance()
+                calendar.time = now
+                val hour = calendar.get(Calendar.HOUR_OF_DAY)
+                
+                if (hour < 17) {
+                    Toast.makeText(this@PreviewFotoAbsenActivity, "Absen keluar hanya bisa dilakukan mulai pukul 17:00 WIB", Toast.LENGTH_LONG).show()
+                    finish()
+                    return@launch
+                }
+
                 if (existingKehadiran != null) {
                     if (existingKehadiran.jamKeluar != "-") {
                         Toast.makeText(this@PreviewFotoAbsenActivity, "Anda sudah absen keluar hari ini", Toast.LENGTH_LONG).show()

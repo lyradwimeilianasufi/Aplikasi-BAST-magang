@@ -80,17 +80,11 @@ class RiwayatKehadiranAdapter(
     inner class KehadiranViewHolder(private val binding: ItemRiwayatHadirBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.KehadiranData) {
             binding.tvTanggal.text = formatTakeOverText(item.tanggal)
-            binding.tvStatus.text = item.status
             
-            if (item.status.equals("Telat", true)) {
-                binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F39C12"))
-                binding.tvStatusHadir.visibility = View.VISIBLE
-            } else if (item.status.equals("Hadir", true)) {
-                binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
-                binding.tvStatusHadir.visibility = View.GONE
-            } else {
-                binding.tvStatusHadir.visibility = View.GONE
-            }
+            // Perubahan: Anggap semua status Kehadiran (Hadir/Telat) sebagai Hadir di UI
+            binding.tvStatus.text = "Hadir"
+            binding.tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#27AE60"))
+            binding.tvStatusHadir.visibility = View.GONE
 
             binding.tvJamMasuk.text = item.jamMasuk
             binding.tvJamKeluar.text = item.jamKeluar
@@ -102,7 +96,7 @@ class RiwayatKehadiranAdapter(
     inner class IzinViewHolder(private val binding: ItemRiwayatIzinBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RiwayatItem.IzinData) {
             binding.tvTanggal.text = item.tanggal
-            binding.tvStatus.text = "Izin" // Tetap "Izin" sesuai permintaan
+            binding.tvStatus.text = "Izin"
             binding.root.setOnClickListener { onItemClick(item) }
         }
     }
