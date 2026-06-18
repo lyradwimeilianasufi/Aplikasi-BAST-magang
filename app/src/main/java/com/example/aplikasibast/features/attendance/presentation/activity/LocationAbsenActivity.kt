@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -39,9 +40,12 @@ class LocationAbsenActivity : AppCompatActivity() {
     
     private var currentLat: Double = 0.0
     private var currentLng: Double = 0.0
+    private var currentDistance: Float = -1f
 
-    private val OFFICE_LAT = -6.162164
-    private val OFFICE_LNG = 106.830588
+    // Titik Kantor PT Sumber Berkah Logistik (SBL)
+    // Jl. Krekot Bunder Raya No.22, Pasar Baru, Sawah Besar, Jakarta Pusat
+    private val OFFICE_LAT = -6.1599721
+    private val OFFICE_LNG = 106.832255
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -101,6 +105,11 @@ class LocationAbsenActivity : AppCompatActivity() {
                 Toast.makeText(this, "Mendapatkan lokasi...", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            if (currentDistance > 100) {
+                Toast.makeText(this, "Gagal: Anda berada di luar radius kantor (Maks 100m)", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             
             val intent = Intent(this, CameraAbsenActivity::class.java).apply {
                 putExtra("IS_MASUK", isMasuk)
@@ -120,7 +129,7 @@ class LocationAbsenActivity : AppCompatActivity() {
         val officePoint = GeoPoint(OFFICE_LAT, OFFICE_LNG)
         val officeMarker = Marker(binding.mapView)
         officeMarker.position = officePoint
-        officeMarker.title = "Kantor BAST"
+        officeMarker.title = "Titik Kantor"
         binding.mapView.overlays.add(officeMarker)
     }
 
@@ -133,28 +142,44 @@ class LocationAbsenActivity : AppCompatActivity() {
     private fun getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return
         
-        // Menggunakan getCurrentLocation (fresh) alih-alih lastLocation (sering null)
         fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
             .addOnSuccessListener { location ->
                 location?.let {
-                    currentLat = it.latitude
-                    currentLng = it.longitude
-                    updateMapPosition(GeoPoint(it.latitude, it.longitude))
-                    getAddressFromLocation(it.latitude, it.longitude)
+                    handleNewLocation(it.latitude, it.longitude)
                 } ?: run {
-                    // Jika getCurrentLocation null, coba lastLocation sebagai cadangan
                     fusedLocationClient.lastLocation.addOnSuccessListener { lastLoc ->
                         lastLoc?.let {
-                            currentLat = it.latitude
-                            currentLng = it.longitude
-                            updateMapPosition(GeoPoint(it.latitude, it.longitude))
-                            getAddressFromLocation(it.latitude, it.longitude)
+                            handleNewLocation(it.latitude, it.longitude)
                         } ?: run {
                             Toast.makeText(this, "Gagal mendapatkan lokasi. Pastikan GPS aktif.", Toast.LENGTH_LONG).show()
                         }
                     }
                 }
             }
+    }
+
+    private fun handleNewLocation(lat: Double, lng: Double) {
+        currentLat = lat
+        currentLng = lng
+        updateMapPosition(GeoPoint(lat, lng))
+        getAddressFromLocation(lat, lng)
+        checkDistance(lat, lng)
+    }
+
+    private fun checkDistance(lat: Double, lng: Double) {
+        val results = FloatArray(1)
+        Location.distanceBetween(OFFICE_LAT, OFFICE_LNG, lat, lng, results)
+        currentDistance = results[0]
+
+        binding.tvDistanceInfo.visibility = View.VISIBLE
+        // DEBUG: Tampilkan koordinat di UI agar bisa dibaca AI
+        binding.tvDistanceInfo.text = "COORD: $lat, $lng | Jarak: ${currentDistance.toInt()}m"
+        
+        if (currentDistance <= 100) {
+            binding.tvDistanceInfo.setTextColor(Color.parseColor("#27AE60"))
+        } else {
+            binding.tvDistanceInfo.setTextColor(Color.parseColor("#D32F2F"))
+        }
     }
 
     private fun getAddressFromLocation(lat: Double, lng: Double) {
